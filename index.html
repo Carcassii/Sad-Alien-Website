@@ -67,15 +67,9 @@
       z-index: 2;
     }
     .draw-path {
-      fill: none;
-      stroke: #ffea6b;
-      stroke-width: 3px;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-      stroke-dasharray: 20000;
-      stroke-dashoffset: 20000;
-      animation: draw-line 8s ease forwards;
-      filter: drop-shadow(0 0 6px #ffea6b);
+    fill: none;
+    stroke: none; /* <- hide the visible stroke */
+    }
     }
     @keyframes draw-line {
       to {
