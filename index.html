@@ -3,107 +3,35 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mystery on the Mountain</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Patrick Hand', cursive;
-      background: #f5f1ee;
-      color: #402c1f;
-      text-align: center;
-      line-height: 1.6;
-    }
-
-    header {
-      background: #ffb347;
-      padding: 1rem;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    header nav a {
-      margin: 0 1rem;
-      color: #402c1f;
-      text-decoration: none;
-      font-size: 1.2rem;
-    }
-
-    section {
-      padding: 4rem 1rem;
-      max-width: 900px;
-      margin: auto;
-      animation: fadeIn 1s ease-in;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    img.poster {
-      width: 90%;
-      max-width: 600px;
-      border-radius: 16px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-      margin: 2rem auto;
-    }
-
-    footer {
-      background: #fcd0a1;
-      padding: 1rem;
-      font-size: 0.9rem;
-    }
-  </style>
+  <title>Sad Alien Studios</title>
+  <link rel="stylesheet" href="style.css" />
+  <script defer src="script.js"></script>
 </head>
 <body>
   <header>
-    <nav>
-      <a href="#home">Home</a>
-      <a href="#about">About</a>
-      <a href="#projects">Projects</a>
-      <a href="#music">Music</a>
-      <a href="#contact">Contact</a>
+    <nav class="navbar">
+      <a href="index.html" class="logo">Sad Alien Studios</a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="music.html">Music</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
     </nav>
   </header>
 
-  <section id="home">
-    <img src="POSTER DESIGN final.png" alt="Mystery on the Mountain Poster" class="poster">
-    <h1>Mystery on the Mountain</h1>
-    <p>A whimsical skiing adventure full of secrets and silly characters.</p>
-  </section>
-
-  <section id="about">
-    <h2>About Me</h2>
-    <p>Hi! I'm a game developer creating cozy, colorful worlds. My games blend humor, music, and heart.</p>
-  </section>
-
-  <section id="projects">
-    <h2>Past Projects</h2>
-    <p>Screenshots and short descriptions of your past work will go here!</p>
-  </section>
-
-  <section id="music">
-    <h2>Music</h2>
-    <p>I also make original soundtracks! Link to your SoundCloud coming soon.</p>
-  </section>
-
-  <section id="contact">
-    <h2>Contact Me</h2>
-    <p>Email me at: <strong>hello@sad-alien.com</strong></p>
-  </section>
+  <main>
+    <section class="hero">
+      <img src="poster.png" alt="Mystery on the Mountain Poster" class="poster" />
+      <h1>Mystery on the Mountain</h1>
+      <p class="tagline">A whimsical skiing adventure full of secrets and silly characters.</p>
+    </section>
+  </main>
 
   <footer>
-    &copy; 2025 Sad Alien Studios — Made with love, snow, and bologna.
+    <p>© 2025 Sad Alien Studios — Made with love, snow, and bologna.</p>
   </footer>
 </body>
 </html>
+
