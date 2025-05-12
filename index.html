@@ -16,51 +16,16 @@
       color: #222;
       overflow-x: hidden;
     }
-    h1, h2 {
-      font-family: 'Patrick Hand', cursive;
-      transition: transform 0.3s ease;
-    }
-    h1:hover, h2:hover {
-      transform: rotate(-2deg) scale(1.05);
-    }
-    .floating-flower {
-      position: absolute;
-      width: 50px;
-      height: 50px;
-      background-image: url('Images/flower.png');
-      background-size: contain;
-      background-repeat: no-repeat;
-      opacity: 0.6;
-      animation: sparkle 8s infinite ease-in-out;
-      mix-blend-mode: multiply;
-      filter: hue-rotate(var(--hue, 0deg));
-    }
-    @keyframes sparkle {
-      0% { transform: translateY(0) scale(1); opacity: 0.3; }
-      50% { transform: translateY(-30px) scale(1.2); opacity: 1; }
-      100% { transform: translateY(0) scale(1); opacity: 0.3; }
-    }
-    .fade-in {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.8s ease, transform 0.8s ease;
-    }
-    .fade-in.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
     .navbar {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem 2rem 1.5rem;
+      position: relative;
+      height: 200px;
       background: #0a1d37;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      padding-bottom: 1rem;
       box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-      position: sticky;
-      top: 0;
       z-index: 1000;
-      height: 160px;
     }
     .nav-links {
       list-style: none;
@@ -68,7 +33,7 @@
       gap: 1.5rem;
       margin: 0;
       padding: 0;
-      z-index: 1;
+      z-index: 2;
     }
     .nav-links a {
       font-family: 'Patrick Hand', cursive;
@@ -80,58 +45,59 @@
       background: rgba(255,255,255,0.15);
       position: relative;
     }
-    .nav-links a::after {
-      content: "";
-      position: absolute;
-      bottom: -5px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 0;
-      height: 2px;
-      background: #fff;
-      transition: width 0.3s ease;
-    }
-    .nav-links a:hover::after {
-      width: 80%;
-    }
     .nav-links a:hover {
       background: #fff;
       color: #0a1d37;
       transform: translateY(-2px) scale(1.05);
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
+    .svg-container {
+      position: absolute;
+      top: 40px;
+      left: 0;
+      width: 100%;
+      height: 100px;
+      pointer-events: none;
+    }
     .spaceship {
       position: absolute;
-      top: 20px;
-      left: -100px;
-      height: 50px;
-      z-index: 0;
-      animation: drawTrail 6s ease-in-out forwards;
+      width: 50px;
+      offset-path: path('M26.56,65.74c8.5-11.63,45.94-28.94,73.88-14.58c17.25,8.89,22.91,30.06,17.64,44.33c-6.39,17.29-30.62,18.35-44.33,5.21c-9.78-9.43-11.68-23.92-10.42-37.36c1.53-16.41,15.19-24.86,32.5-27.19c14.61-2.01,29.02,0.23,43.12,4.86');
+      animation: ship-fly 6s linear forwards;
     }
-    @keyframes drawTrail {
-      0% { left: -100px; top: 20px; }
-      40% { left: 44vw; top: 40px; }
-      100% { left: 44vw; top: 40px; }
+    @keyframes ship-fly {
+      0% { offset-distance: 0%; }
+      100% { offset-distance: 100%; }
     }
-    .spaceship-trail {
+    .draw-path {
+      fill: none;
+      stroke: #ffea6b;
+      stroke-width: 2px;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-dasharray: 2000;
+      stroke-dashoffset: 2000;
+      animation: draw-line 6s ease forwards;
+      filter: drop-shadow(0 0 6px #ffea6b);
+    }
+    @keyframes draw-line {
+      to {
+        stroke-dashoffset: 0;
+      }
+    }
+    .particle {
       position: absolute;
-      top: 90px;
-      left: 44vw;
-      font-family: 'Patrick Hand', cursive;
-      color: #ffea6b;
-      font-size: 2rem;
-      text-shadow: 0 0 8px #ffea6b, 0 0 16px #ffd54f;
-      white-space: nowrap;
-      z-index: 0;
+      width: 6px;
+      height: 6px;
+      background: #ffea6b;
+      border-radius: 50%;
+      pointer-events: none;
+      animation: floaty 1s ease-out forwards;
+      filter: drop-shadow(0 0 4px #ffea6b);
     }
-    .spaceship-trail span {
-      opacity: 0;
-      animation: revealLetter 0.5s ease forwards;
-      display: inline-block;
-    }
-    @keyframes revealLetter {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
+    @keyframes floaty {
+      0% { opacity: 1; transform: scale(1); }
+      100% { opacity: 0; transform: scale(0.5) translateY(-10px); }
     }
     .content {
       text-align: center;
@@ -172,8 +138,12 @@
 <body>
   <header>
     <nav class="navbar">
-      <img src="Images/spaceship.png" alt="Spaceship" class="spaceship" />
-      <div class="spaceship-trail" id="trailText"></div>
+      <div class="svg-container">
+        <svg viewBox="0 0 500 120" preserveAspectRatio="xMidYMid meet">
+          <path class="draw-path" d="M26.56,65.74c8.5-11.63,45.94-28.94,73.88-14.58c17.25,8.89,22.91,30.06,17.64,44.33c-6.39,17.29-30.62,18.35-44.33,5.21c-9.78-9.43-11.68-23.92-10.42-37.36c1.53-16.41,15.19-24.86,32.5-27.19c14.61-2.01,29.02,0.23,43.12,4.86"/>
+        </svg>
+        <img src="Images/spaceship.png" alt="Spaceship" class="spaceship" id="spaceship" />
+      </div>
       <ul class="nav-links">
         <li><a href="index.html">Home</a></li>
         <li><a href="about.html">About</a></li>
@@ -210,24 +180,19 @@
   </div>
 
   <script>
-    const flowerCount = 15;
-    for (let i = 0; i < flowerCount; i++) {
-      const flower = document.createElement('div');
-      flower.classList.add('floating-flower');
-      flower.style.left = `${Math.random() * 100}vw`;
-      flower.style.top = `${Math.random() * 100}vh`;
-      flower.style.setProperty('--hue', `${Math.floor(Math.random() * 5) * 60}deg`);
-      document.body.appendChild(flower);
-    }
-
-    const text = "Sad Alien Studios";
-    const trailText = document.getElementById("trailText");
-    [...text].forEach((letter, i) => {
-      const span = document.createElement("span");
-      span.textContent = letter;
-      span.style.animationDelay = `${6 + i * 0.2}s`;
-      trailText.appendChild(span);
-    });
+    const spaceship = document.getElementById("spaceship");
+    let frame = 0;
+    const sparkleInterval = setInterval(() => {
+      const sparkle = document.createElement("div");
+      sparkle.className = "particle";
+      const rect = spaceship.getBoundingClientRect();
+      sparkle.style.left = rect.left + rect.width / 2 + "px";
+      sparkle.style.top = rect.top + rect.height / 2 + "px";
+      document.body.appendChild(sparkle);
+      setTimeout(() => sparkle.remove(), 1000);
+      frame++;
+      if (frame > 120) clearInterval(sparkleInterval);
+    }, 50);
   </script>
 </body>
 </html>
