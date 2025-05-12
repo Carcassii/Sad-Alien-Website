@@ -29,14 +29,15 @@
 
     .floating-flower {
       position: absolute;
-      width: 40px;
-      height: 40px;
+      width: 50px;
+      height: 50px;
       background-image: url('Images/flower.png');
       background-size: contain;
       background-repeat: no-repeat;
       opacity: 0.6;
       animation: sparkle 8s infinite ease-in-out;
       mix-blend-mode: multiply;
+      filter: hue-rotate(var(--hue, 0deg));
     }
 
     @keyframes sparkle {
@@ -59,19 +60,19 @@
     .navbar {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      padding: 1rem 2rem;
+      align-items: flex-end;
+      padding: 1.5rem 2rem 1rem;
       background: #d63a3a;
       box-shadow: 0 4px 12px rgba(0,0,0,0.2);
       position: sticky;
       top: 0;
       z-index: 1000;
-      border-radius: 0 0 12px 12px;
+      height: 120px;
     }
 
     .navbar .logo {
       font-family: 'Patrick Hand', cursive;
-      font-size: 2rem;
+      font-size: 2.5rem;
       color: #fff;
       text-decoration: none;
       transition: transform 0.3s ease;
@@ -85,7 +86,7 @@
       list-style: none;
       display: flex;
       gap: 1.5rem;
-      margin: 0;
+      margin: 0 0 10px 0;
       padding: 0;
     }
 
@@ -93,10 +94,27 @@
       font-family: 'Patrick Hand', cursive;
       text-decoration: none;
       color: #fff;
-      padding: 0.4rem 0.8rem;
+      padding: 0.6rem 1rem;
       transition: all 0.3s ease;
-      border-radius: 8px;
-      background: rgba(255,255,255,0.1);
+      border-radius: 12px;
+      background: rgba(255,255,255,0.15);
+      position: relative;
+    }
+
+    .nav-links a::after {
+      content: "";
+      position: absolute;
+      bottom: -5px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 2px;
+      background: #fff;
+      transition: width 0.3s ease;
+    }
+
+    .nav-links a:hover::after {
+      width: 80%;
     }
 
     .nav-links a:hover {
@@ -106,127 +124,18 @@
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
 
-    .hero {
-      min-height: 100vh;
-      background: linear-gradient(to bottom, #fff0f0, #fff);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      padding: 2rem;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .hero::before {
-      content: "";
-      background: url('Images/poster.png') center/cover no-repeat;
-      opacity: 0.04;
+    .spaceship {
       position: absolute;
-      top: 0; left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 0;
-    }
-
-    .hero img.poster {
-      max-width: 1000px;
-      height: auto;
-      border-radius: 10px;
-      margin-bottom: 1rem;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-      z-index: 1;
-      position: relative;
-    }
-
-    .typewriter {
-      font-size: 2.5rem;
-      font-weight: bold;
-      color: #d63a3a;
-      position: relative;
-      z-index: 1;
-    }
-
-    .tagline {
-      font-size: 1.2rem;
-      color: #666;
-      margin-top: 0.5rem;
-      z-index: 1;
-      position: relative;
-    }
-
-    .trailer, .screenshots, .description {
-      padding: 5rem 2rem;
-      max-width: 1000px;
-      margin: 0 auto;
-    }
-
-    .trailer iframe {
-      width: 100%;
-      height: 500px;
-      border-radius: 10px;
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
-    }
-
-    .screenshot-gallery {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 1.5rem;
-      margin-top: 2rem;
-    }
-
-    .screenshot-gallery img {
-      width: 100%;
-      height: auto;
-      border-radius: 12px;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .screenshot-gallery img:hover {
-      transform: scale(1.05);
-      box-shadow: 0 6px 12px rgba(0,0,0,0.1);
-    }
-
-    .description {
-      font-size: 1.1rem;
-      text-align: center;
-      line-height: 1.6;
-      color: #333;
-    }
-
-    .mascot-widget {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 70px;
-      animation: floaty 3s ease-in-out infinite;
+      top: 20px;
+      left: -100px;
+      height: 50px;
+      animation: fly 10s linear infinite;
       z-index: 999;
     }
 
-    .mascot-bubble {
-      position: fixed;
-      bottom: 100px;
-      right: 35px;
-      background: #fffbe7;
-      padding: 0.6em 1em;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      font-size: 1rem;
-    }
-
-    footer {
-      background: #ffe4b3;
-      text-align: center;
-      padding: 2rem 1rem;
-      font-size: 0.9rem;
-      font-weight: bold;
-      color: #d63a3a;
-    }
-
-    @keyframes floaty {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
+    @keyframes fly {
+      0% { left: -100px; }
+      100% { left: 100vw; }
     }
   </style>
 </head>
@@ -241,77 +150,9 @@
         <li><a href="music.html">Music</a></li>
         <li><a href="contact.html">Contact</a></li>
       </ul>
+      <img src="Images/spaceship.png" alt="Spaceship" class="spaceship" />
     </nav>
   </header>
-
-  <main>
-    <section class="hero fade-in">
-      <img src="Images/poster.png" alt="Mystery on the Mountain Poster" class="poster" />
-      <h1 class="typewriter" id="typewriter"></h1>
-      <p class="tagline">A whimsical skiing adventure full of secrets and silly characters.</p>
-    </section>
-
-    <section class="trailer fade-in" id="trailerSection">
-      <h2>Watch the Trailer</h2>
-      <iframe src="https://www.youtube.com/embed/DM5OFICkrkc" allowfullscreen></iframe>
-    </section>
-
-    <section class="screenshots fade-in">
-      <h2>Take a Peek!</h2>
-      <div class="screenshot-gallery">
-        <img src="Images/screenshot1.png" alt="Gameplay Screenshot 1" />
-        <img src="Images/screenshot2.png" alt="Gameplay Screenshot 2" />
-        <img src="Images/screenshot3.png" alt="Gameplay Screenshot 3" />
-        <img src="Images/screenshot4.png" alt="Gameplay Screenshot 4" />
-      </div>
-    </section>
-
-    <section class="description fade-in">
-      <p>Join a quirky journalist on skis in a snowy resort full of eccentric animals and odd mysteries. Race down slopes, uncover secrets, and meet unforgettable characters in this heartwarming and humorous indie adventure.</p>
-    </section>
-  </main>
-
-  <div class="mascot-bubble">Hi there! Need help?</div>
-  <img src="Images/mascot.png" alt="Sad Alien Mascot" class="mascot-widget" />
-
-  <footer>
-    <p>© 2025 Sad Alien Studios — Made with love, snow, and bologna.</p>
-  </footer>
-
-  <script>
-    const text = "Mystery on the Mountain";
-    const typewriter = document.getElementById("typewriter");
-    let i = 0;
-    function type() {
-      if (i < text.length) {
-        typewriter.innerHTML += text.charAt(i);
-        i++;
-        setTimeout(type, 100);
-      }
-    }
-    type();
-
-    const fadeInSections = document.querySelectorAll('.fade-in');
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
-      });
-    }, { threshold: 0.1 });
-    fadeInSections.forEach(section => observer.observe(section));
-
-    const flowerColors = [0, 10, 340, 350, 320];
-    for (let i = 0; i < 18; i++) {
-      const flower = document.createElement("div");
-      flower.classList.add("floating-flower");
-      flower.style.top = `${Math.random() * 100}%`;
-      flower.style.left = `${Math.random() * 100}%`;
-      flower.style.animationDelay = `${Math.random() * 6}s`;
-      flower.style.filter = `hue-rotate(${flowerColors[Math.floor(Math.random() * flowerColors.length)]}deg)`;
-      document.body.appendChild(flower);
-    }
-  </script>
 </body>
 </html>
 
