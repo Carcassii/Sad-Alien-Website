@@ -11,10 +11,22 @@
       scroll-behavior: smooth;
     }
 
+    .screenshot-gallery {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 2rem;
+    }
+
     .screenshot-gallery img,
     .poster {
+      max-width: 100%;
+      height: auto;
+      max-height: 300px;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
       cursor: pointer;
+      border-radius: 8px;
     }
 
     .screenshot-gallery img:hover,
@@ -177,6 +189,7 @@
         <img src="Images/screenshot1.png" alt="Gameplay Screenshot 1" />
         <img src="Images/screenshot2.png" alt="Gameplay Screenshot 2" />
         <img src="Images/screenshot3.png" alt="Gameplay Screenshot 3" />
+        <img src="Images/screenshot4.png" alt="Gameplay Screenshot 4" />
       </div>
     </section>
 
@@ -227,4 +240,5 @@
   </script>
 </body>
 </html>
+
 
