@@ -4,78 +4,69 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Mystery on the Mountain</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --main-bg: #f7f9fc;
-      --main-dark-bg: #2a2e42;
-      --accent: #d63a3a;
-      --text: #333;
-      --font-main: 'Patrick Hand', cursive;
-    }
-
     * {
-      box-sizing: border-box;
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
     }
 
-    html, body {
-      font-family: var(--font-main);
-      background-color: var(--main-bg);
-      color: var(--text);
-      scroll-behavior: smooth;
+    body {
+      font-family: 'Patrick Hand', cursive;
+      background: #f5f1ee;
+      color: #402c1f;
+      text-align: center;
+      line-height: 1.6;
     }
 
     header {
-      background: white;
-      padding: 1em 2em;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      background: #ffb347;
+      padding: 1rem;
       position: sticky;
       top: 0;
-      z-index: 10;
+      z-index: 1000;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
 
-    nav a {
-      margin: 0 1em;
+    header nav a {
+      margin: 0 1rem;
+      color: #402c1f;
       text-decoration: none;
-      color: var(--accent);
       font-size: 1.2rem;
     }
 
-    .hero {
-      text-align: center;
-      padding: 4em 2em;
-    }
-
-    .hero img {
-      max-width: 100%;
-      height: auto;
-      border-radius: 10px;
-      margin-bottom: 2em;
-    }
-
-    .section {
-      padding: 4em 2em;
-      max-width: 1000px;
+    section {
+      padding: 4rem 1rem;
+      max-width: 900px;
       margin: auto;
-      text-align: center;
+      animation: fadeIn 1s ease-in;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    img.poster {
+      width: 90%;
+      max-width: 600px;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      margin: 2rem auto;
     }
 
     footer {
-      padding: 2em;
-      background: #f1f1f1;
-      text-align: center;
+      background: #fcd0a1;
+      padding: 1rem;
       font-size: 0.9rem;
     }
   </style>
 </head>
 <body>
   <header>
-    <div><strong>Sad Alien</strong></div>
     <nav>
       <a href="#home">Home</a>
       <a href="#about">About</a>
@@ -85,35 +76,34 @@
     </nav>
   </header>
 
-  <section id="home" class="hero">
-    <img src="POSTER DESIGN final.png" alt="Game Poster">
-    <h1>Welcome to Mystery on the Mountain</h1>
-    <p>Explore the world of Strudel Mountains, meet oddballs, ski fast, and uncover a big mystery.</p>
+  <section id="home">
+    <img src="POSTER DESIGN final.png" alt="Mystery on the Mountain Poster" class="poster">
+    <h1>Mystery on the Mountain</h1>
+    <p>A whimsical skiing adventure full of secrets and silly characters.</p>
   </section>
 
-  <section id="about" class="section">
+  <section id="about">
     <h2>About Me</h2>
-    <p>I'm a Dutch indie dev making whimsical games and music with heart. Currently working on a mystery-filled ski adventure!</p>
+    <p>Hi! I'm a game developer creating cozy, colorful worlds. My games blend humor, music, and heart.</p>
   </section>
 
-  <section id="projects" class="section">
+  <section id="projects">
     <h2>Past Projects</h2>
-    <p>(Coming soon: GIFs, awards, and screenshots!)</p>
+    <p>Screenshots and short descriptions of your past work will go here!</p>
   </section>
 
-  <section id="music" class="section">
-    <h2>My Music</h2>
-    <p>SoundCloud embed coming here soon!</p>
+  <section id="music">
+    <h2>Music</h2>
+    <p>I also make original soundtracks! Link to your SoundCloud coming soon.</p>
   </section>
 
-  <section id="contact" class="section">
-    <h2>Contact</h2>
-    <p>Reach me via <a href="mailto:sad.alien.studios@gmail.com">sad.alien.studios@gmail.com</a></p>
+  <section id="contact">
+    <h2>Contact Me</h2>
+    <p>Email me at: <strong>hello@sad-alien.com</strong></p>
   </section>
 
   <footer>
-    <p>© 2025 Sad Alien Studios. Site powered by HTML/CSS + Cloudflare Pages.</p>
+    &copy; 2025 Sad Alien Studios — Made with love, snow, and bologna.
   </footer>
 </body>
 </html>
-
