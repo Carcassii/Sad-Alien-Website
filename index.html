@@ -6,6 +6,30 @@
   <title>Sad Alien Studios</title>
   <link rel="stylesheet" href="style.css" />
   <script defer src="script.js"></script>
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+
+    .screenshot-gallery img {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+    }
+
+    .screenshot-gallery img:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .poster {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .poster:hover {
+      transform: scale(1.03);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+  </style>
 </head>
 <body>
   <header>
@@ -27,6 +51,19 @@
       <h1>Mystery on the Mountain</h1>
       <p class="tagline">A whimsical skiing adventure full of secrets and silly characters.</p>
     </section>
+
+    <section class="screenshots">
+      <h2>Take a Peek!</h2>
+      <div class="screenshot-gallery">
+        <img src="screenshot1.png" alt="Gameplay Screenshot 1" />
+        <img src="screenshot2.png" alt="Gameplay Screenshot 2" />
+        <img src="screenshot3.png" alt="Gameplay Screenshot 3" />
+      </div>
+    </section>
+
+    <section class="description">
+      <p>Join a quirky journalist on skis in a snowy resort full of eccentric animals and odd mysteries. Race down slopes, uncover secrets, and meet unforgettable characters in this heartwarming and humorous indie adventure.</p>
+    </section>
   </main>
 
   <footer>
@@ -34,4 +71,3 @@
   </footer>
 </body>
 </html>
-
