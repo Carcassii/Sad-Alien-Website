@@ -12,13 +12,13 @@
     body {
       margin: 0;
       font-family: 'Work Sans', sans-serif;
-      background: linear-gradient(to bottom, #0a1d37 0%, #a0d2ff 300px, #fffdf9 600px);
+      background: linear-gradient(to bottom, #0a1d37 0%, #a0d2ff 400px, #fffdf9 800px);
       color: #222;
       overflow-x: hidden;
     }
     .navbar {
       position: relative;
-      height: 200px;
+      height: 300px;
       background: #0a1d37;
       display: flex;
       justify-content: center;
@@ -34,7 +34,7 @@
       margin: 0;
       padding: 0;
       z-index: 2;
-      transform: translateY(50px);
+      transform: translateY(60px);
     }
     .nav-links a {
       font-family: 'Patrick Hand', cursive;
@@ -57,7 +57,7 @@
       top: 0;
       left: 0;
       width: 100%;
-      height: 200px;
+      height: 300px;
       pointer-events: none;
       overflow: visible;
     }
@@ -98,14 +98,14 @@
     }
     .content {
       text-align: center;
-      padding: 2rem;
+      padding: 4rem 2rem 2rem;
     }
     .poster {
       width: 65%;
       max-width: 700px;
       border-radius: 8px;
       box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-      margin: 2rem auto;
+      margin: 4rem auto 2rem;
     }
     .trailer iframe {
       width: 90%;
@@ -136,7 +136,7 @@
   <header>
     <nav class="navbar">
       <div class="svg-container" id="svg-container">
-        <svg viewBox="0 0 1920 1080" style="height: 250px;" preserveAspectRatio="xMidYMid meet" id="trail-svg">
+        <svg viewBox="0 0 1920 1080" style="height: 300px;" preserveAspectRatio="xMidYMid meet" id="trail-svg">
           <path class="draw-path" id="trail-path" d="M 1596.9 488.8
 Q 1591.8 485.5 1588.65 485.5 1586.9 485.5 1583.4 486.85 1579.9 488.25 1576.55 489.8 1572.65 490.55 1564.45 495.65 1556.25 500.75 1549.05 505.8 1541.8 511.1 1539.85 513.05 1536.55 515 1531.25 518.9 1525.8 522.6 1521.7 525.55
 L 1517.4 528.25
@@ -262,7 +262,6 @@ Q 431.4 621.8 438.6 623.75 447.8 624.15 458.75 623.6 469.45 623 478.45 621.45 48
       sparkle.style.left = `${point.x}px`;
       sparkle.style.top = `${point.y}px`;
       container.appendChild(sparkle);
-      // setTimeout(() => sparkle.remove(), 1000);
 
       t += 0.0025;
       requestAnimationFrame(updatePosition);
