@@ -9,7 +9,6 @@
     html {
       scroll-behavior: smooth;
     }
-
     body {
       margin: 0;
       font-family: 'Work Sans', sans-serif;
@@ -17,16 +16,13 @@
       color: #222;
       overflow-x: hidden;
     }
-
     h1, h2 {
       font-family: 'Patrick Hand', cursive;
       transition: transform 0.3s ease;
     }
-
     h1:hover, h2:hover {
       transform: rotate(-2deg) scale(1.05);
     }
-
     .floating-flower {
       position: absolute;
       width: 50px;
@@ -39,45 +35,41 @@
       mix-blend-mode: multiply;
       filter: hue-rotate(var(--hue, 0deg));
     }
-
     @keyframes sparkle {
       0% { transform: translateY(0) scale(1); opacity: 0.3; }
       50% { transform: translateY(-30px) scale(1.2); opacity: 1; }
       100% { transform: translateY(0) scale(1); opacity: 0.3; }
     }
-
     .fade-in {
       opacity: 0;
       transform: translateY(20px);
       transition: opacity 0.8s ease, transform 0.8s ease;
     }
-
     .fade-in.visible {
       opacity: 1;
       transform: translateY(0);
     }
-
     .navbar {
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
+      justify-content: center;
       padding: 2rem 2rem 1.5rem;
       background: #0a1d37;
       box-shadow: 0 4px 12px rgba(0,0,0,0.3);
       position: sticky;
       top: 0;
       z-index: 1000;
-      height: 140px;
+      height: 160px;
     }
-
     .nav-links {
       list-style: none;
       display: flex;
       gap: 1.5rem;
       margin: 0;
       padding: 0;
+      z-index: 1;
     }
-
     .nav-links a {
       font-family: 'Patrick Hand', cursive;
       text-decoration: none;
@@ -88,7 +80,6 @@
       background: rgba(255,255,255,0.15);
       position: relative;
     }
-
     .nav-links a::after {
       content: "";
       position: absolute;
@@ -100,58 +91,52 @@
       background: #fff;
       transition: width 0.3s ease;
     }
-
     .nav-links a:hover::after {
       width: 80%;
     }
-
     .nav-links a:hover {
       background: #fff;
       color: #0a1d37;
       transform: translateY(-2px) scale(1.05);
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
-
     .spaceship {
       position: absolute;
       top: 20px;
       left: -100px;
       height: 50px;
-      z-index: 999;
-      animation: drawTrail 12s ease-in-out forwards;
+      z-index: 0;
+      animation: drawTrail 6s ease-in-out forwards;
     }
-
     @keyframes drawTrail {
       0% { left: -100px; top: 20px; }
-      30% { left: 40vw; top: 40px; }
-      50% { left: 47vw; top: 40px; }
-      100% { left: 47vw; top: 40px; }
+      40% { left: 44vw; top: 40px; }
+      100% { left: 44vw; top: 40px; }
     }
-
     .spaceship-trail {
       position: absolute;
-      top: 80px;
-      left: 40vw;
+      top: 90px;
+      left: 44vw;
       font-family: 'Patrick Hand', cursive;
       color: #ffea6b;
       font-size: 2rem;
-      opacity: 0;
       text-shadow: 0 0 8px #ffea6b, 0 0 16px #ffd54f;
-      animation: glowTrail 12s ease-in-out forwards;
+      white-space: nowrap;
+      z-index: 0;
     }
-
-    @keyframes glowTrail {
-      0% { opacity: 0; }
-      50% { opacity: 0; }
-      60% { opacity: 1; }
-      100% { opacity: 1; }
+    .spaceship-trail span {
+      opacity: 0;
+      animation: revealLetter 0.5s ease forwards;
+      display: inline-block;
     }
-
+    @keyframes revealLetter {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
     .content {
       text-align: center;
       padding: 2rem;
     }
-
     .poster {
       width: 65%;
       max-width: 700px;
@@ -159,7 +144,6 @@
       box-shadow: 0 8px 24px rgba(0,0,0,0.1);
       margin: 2rem auto;
     }
-
     .trailer iframe {
       width: 90%;
       max-width: 720px;
@@ -168,7 +152,6 @@
       border-radius: 12px;
       box-shadow: 0 8px 24px rgba(0,0,0,0.2);
     }
-
     .screenshot-gallery {
       display: flex;
       flex-wrap: wrap;
@@ -176,13 +159,11 @@
       gap: 1rem;
       margin-top: 2rem;
     }
-
     .screenshot-gallery img {
       width: 200px;
       border-radius: 12px;
       transition: transform 0.3s ease;
     }
-
     .screenshot-gallery img:hover {
       transform: scale(1.05);
     }
@@ -191,6 +172,8 @@
 <body>
   <header>
     <nav class="navbar">
+      <img src="Images/spaceship.png" alt="Spaceship" class="spaceship" />
+      <div class="spaceship-trail" id="trailText"></div>
       <ul class="nav-links">
         <li><a href="index.html">Home</a></li>
         <li><a href="about.html">About</a></li>
@@ -198,8 +181,6 @@
         <li><a href="music.html">Music</a></li>
         <li><a href="contact.html">Contact</a></li>
       </ul>
-      <img src="Images/spaceship.png" alt="Spaceship" class="spaceship" />
-      <div class="spaceship-trail">Sad Alien Studios</div>
     </nav>
   </header>
 
@@ -238,6 +219,15 @@
       flower.style.setProperty('--hue', `${Math.floor(Math.random() * 5) * 60}deg`);
       document.body.appendChild(flower);
     }
+
+    const text = "Sad Alien Studios";
+    const trailText = document.getElementById("trailText");
+    [...text].forEach((letter, i) => {
+      const span = document.createElement("span");
+      span.textContent = letter;
+      span.style.animationDelay = `${6 + i * 0.2}s`;
+      trailText.appendChild(span);
+    });
   </script>
 </body>
 </html>
