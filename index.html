@@ -92,6 +92,7 @@
     .nav-links a:hover {
       background: #fff;
       color: #d63a3a;
+      transform: scale(1.1);
     }
 
     .hero {
@@ -119,7 +120,7 @@
     }
 
     .hero img.poster {
-      max-width: 600px;
+      max-width: 800px;
       height: auto;
       border-radius: 10px;
       margin-bottom: 1rem;
@@ -208,6 +209,8 @@
       text-align: center;
       padding: 2rem 1rem;
       font-size: 0.9rem;
+      font-weight: bold;
+      color: #d63a3a;
     }
 
     @keyframes floaty {
@@ -277,7 +280,6 @@
     }
     type();
 
-    // Fade-in observer
     const fadeInSections = document.querySelectorAll('.fade-in');
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -286,17 +288,16 @@
         }
       });
     }, { threshold: 0.1 });
-
     fadeInSections.forEach(section => observer.observe(section));
 
-    // Floating flowers
+    const flowerColors = [0, 10, 20, 40, 60];
     for (let i = 0; i < 15; i++) {
       const flower = document.createElement("div");
       flower.classList.add("floating-flower");
       flower.style.top = `${Math.random() * 100}%`;
       flower.style.left = `${Math.random() * 100}%`;
       flower.style.animationDelay = `${Math.random() * 6}s`;
-      flower.style.filter = `hue-rotate(${Math.floor(Math.random() * 360)}deg)`;
+      flower.style.filter = `hue-rotate(${flowerColors[Math.floor(Math.random() * flowerColors.length)]}deg)`;
       document.body.appendChild(flower);
     }
   </script>
