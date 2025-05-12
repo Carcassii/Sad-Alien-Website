@@ -31,9 +31,12 @@
       position: absolute;
       width: 40px;
       height: 40px;
-      background: url('Images/flower.png') center/contain no-repeat;
-      opacity: 0.5;
+      background-image: url('Images/flower.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+      opacity: 0.6;
       animation: sparkle 8s infinite ease-in-out;
+      mix-blend-mode: multiply;
     }
 
     @keyframes sparkle {
@@ -59,17 +62,23 @@
       align-items: center;
       padding: 1rem 2rem;
       background: #d63a3a;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
       position: sticky;
       top: 0;
       z-index: 1000;
+      border-radius: 0 0 12px 12px;
     }
 
     .navbar .logo {
       font-family: 'Patrick Hand', cursive;
-      font-size: 1.8rem;
+      font-size: 2rem;
       color: #fff;
       text-decoration: none;
+      transition: transform 0.3s ease;
+    }
+
+    .navbar .logo:hover {
+      transform: scale(1.1) rotate(-2deg);
     }
 
     .nav-links {
@@ -84,15 +93,17 @@
       font-family: 'Patrick Hand', cursive;
       text-decoration: none;
       color: #fff;
-      padding: 0.3rem 0.5rem;
+      padding: 0.4rem 0.8rem;
       transition: all 0.3s ease;
-      border-radius: 5px;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.1);
     }
 
     .nav-links a:hover {
       background: #fff;
       color: #d63a3a;
-      transform: scale(1.1);
+      transform: translateY(-2px) scale(1.05);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
 
     .hero {
@@ -120,7 +131,7 @@
     }
 
     .hero img.poster {
-      max-width: 800px;
+      max-width: 1000px;
       height: auto;
       border-radius: 10px;
       margin-bottom: 1rem;
@@ -290,8 +301,8 @@
     }, { threshold: 0.1 });
     fadeInSections.forEach(section => observer.observe(section));
 
-    const flowerColors = [0, 10, 20, 40, 60];
-    for (let i = 0; i < 15; i++) {
+    const flowerColors = [0, 10, 340, 350, 320];
+    for (let i = 0; i < 18; i++) {
       const flower = document.createElement("div");
       flower.classList.add("floating-flower");
       flower.style.top = `${Math.random() * 100}%`;
@@ -303,4 +314,5 @@
   </script>
 </body>
 </html>
+
 
