@@ -3,57 +3,117 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sad Alien Website</title>
+  <title>Mystery on the Mountain</title>
+  <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
   <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #0e0e1b;
-      color: white;
+    :root {
+      --main-bg: #f7f9fc;
+      --main-dark-bg: #2a2e42;
+      --accent: #d63a3a;
+      --text: #333;
+      --font-main: 'Patrick Hand', cursive;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      font-family: var(--font-main);
+      background-color: var(--main-bg);
+      color: var(--text);
+      scroll-behavior: smooth;
+    }
+
+    header {
+      background: white;
+      padding: 1em 2em;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    nav a {
+      margin: 0 1em;
+      text-decoration: none;
+      color: var(--accent);
+      font-size: 1.2rem;
+    }
+
+    .hero {
       text-align: center;
-      padding: 50px;
+      padding: 4em 2em;
     }
 
-    h1 {
-      font-size: 2.5em;
-      margin-bottom: 0.2em;
+    .hero img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 10px;
+      margin-bottom: 2em;
     }
 
-    p {
-      font-size: 1.2em;
-      color: #bbbbbb;
+    .section {
+      padding: 4em 2em;
+      max-width: 1000px;
+      margin: auto;
+      text-align: center;
     }
 
-    .crane {
-      width: 150px;
-      margin-top: 40px;
-      animation: bob 2s ease-in-out infinite;
-    }
-
-    .alien {
-      width: 120px;
-      margin-top: 20px;
-      animation: float 3s ease-in-out infinite;
-    }
-
-    @keyframes bob {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-10px); }
-    }
-
-    @keyframes float {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-6px); }
+    footer {
+      padding: 2em;
+      background: #f1f1f1;
+      text-align: center;
+      font-size: 0.9rem;
     }
   </style>
 </head>
 <body>
+  <header>
+    <div><strong>Sad Alien</strong></div>
+    <nav>
+      <a href="#home">Home</a>
+      <a href="#about">About</a>
+      <a href="#projects">Projects</a>
+      <a href="#music">Music</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
 
-  <h1>🚧 This Website is Under Construction 🚀</h1>
-  <p>Sad Alien is working hard to finish it… please check back soon!</p>
+  <section id="home" class="hero">
+    <img src="POSTER DESIGN final.png" alt="Game Poster">
+    <h1>Welcome to Mystery on the Mountain</h1>
+    <p>Explore the world of Strudel Mountains, meet oddballs, ski fast, and uncover a big mystery.</p>
+  </section>
 
-  <img src="https://cdn-icons-png.flaticon.com/512/3534/3534010.png" alt="Crane" class="crane" />
-  <br />
-  <img src="https://cdn-icons-png.flaticon.com/512/2420/2420499.png" alt="Sad Alien" class="alien" />
+  <section id="about" class="section">
+    <h2>About Me</h2>
+    <p>I'm a Dutch indie dev making whimsical games and music with heart. Currently working on a mystery-filled ski adventure!</p>
+  </section>
 
+  <section id="projects" class="section">
+    <h2>Past Projects</h2>
+    <p>(Coming soon: GIFs, awards, and screenshots!)</p>
+  </section>
+
+  <section id="music" class="section">
+    <h2>My Music</h2>
+    <p>SoundCloud embed coming here soon!</p>
+  </section>
+
+  <section id="contact" class="section">
+    <h2>Contact</h2>
+    <p>Reach me via <a href="mailto:sad.alien.studios@gmail.com">sad.alien.studios@gmail.com</a></p>
+  </section>
+
+  <footer>
+    <p>© 2025 Sad Alien Studios. Site powered by HTML/CSS + Cloudflare Pages.</p>
+  </footer>
 </body>
 </html>
+
