@@ -59,34 +59,22 @@
 
     .navbar {
       display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      padding: 1.5rem 2rem 1rem;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem 2rem 1.5rem;
       background: #d63a3a;
       box-shadow: 0 4px 12px rgba(0,0,0,0.2);
       position: sticky;
       top: 0;
       z-index: 1000;
-      height: 120px;
-    }
-
-    .navbar .logo {
-      font-family: 'Patrick Hand', cursive;
-      font-size: 2.5rem;
-      color: #fff;
-      text-decoration: none;
-      transition: transform 0.3s ease;
-    }
-
-    .navbar .logo:hover {
-      transform: scale(1.1) rotate(-2deg);
+      height: 140px;
     }
 
     .nav-links {
       list-style: none;
       display: flex;
       gap: 1.5rem;
-      margin: 0 0 10px 0;
+      margin: 0;
       padding: 0;
     }
 
@@ -129,20 +117,81 @@
       top: 20px;
       left: -100px;
       height: 50px;
-      animation: fly 10s linear infinite;
       z-index: 999;
+      animation: drawTrail 12s ease-in-out forwards;
     }
 
-    @keyframes fly {
-      0% { left: -100px; }
-      100% { left: 100vw; }
+    @keyframes drawTrail {
+      0% { left: -100px; top: 20px; }
+      30% { left: 40vw; top: 40px; }
+      50% { left: 47vw; top: 40px; }
+      100% { left: 47vw; top: 40px; }
+    }
+
+    .spaceship-trail {
+      position: absolute;
+      top: 80px;
+      left: 40vw;
+      font-family: 'Patrick Hand', cursive;
+      color: white;
+      font-size: 2rem;
+      opacity: 0;
+      animation: writeTrail 12s ease-in-out forwards;
+    }
+
+    @keyframes writeTrail {
+      0% { opacity: 0; }
+      50% { opacity: 0; }
+      60% { opacity: 1; content: 'S'; }
+      70% { content: 'Sad'; }
+      80% { content: 'Sad Alien'; }
+      100% { content: 'Sad Alien Studios'; }
+    }
+
+    .content {
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .poster {
+      width: 65%;
+      max-width: 700px;
+      border-radius: 8px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+      margin: 2rem auto;
+    }
+
+    .trailer iframe {
+      width: 90%;
+      max-width: 720px;
+      height: 405px;
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    }
+
+    .screenshot-gallery {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .screenshot-gallery img {
+      width: 200px;
+      border-radius: 12px;
+      transition: transform 0.3s ease;
+    }
+
+    .screenshot-gallery img:hover {
+      transform: scale(1.05);
     }
   </style>
 </head>
 <body>
   <header>
     <nav class="navbar">
-      <a href="index.html" class="logo">Sad Alien Studios</a>
       <ul class="nav-links">
         <li><a href="index.html">Home</a></li>
         <li><a href="about.html">About</a></li>
@@ -151,9 +200,45 @@
         <li><a href="contact.html">Contact</a></li>
       </ul>
       <img src="Images/spaceship.png" alt="Spaceship" class="spaceship" />
+      <div class="spaceship-trail">Sad Alien Studios</div>
     </nav>
   </header>
+
+  <div class="content">
+    <img src="Images/poster.png" alt="Mystery on the Mountain Poster" class="poster" />
+    <h1>Mystery on the Mountain</h1>
+    <p>A whimsical skiing adventure full of secrets and silly characters.</p>
+
+    <section class="trailer">
+      <h2>Watch the Trailer</h2>
+      <iframe src="https://www.youtube.com/embed/DM5OFICkrkc" allowfullscreen></iframe>
+    </section>
+
+    <section class="screenshots">
+      <h2>Take a Peek!</h2>
+      <div class="screenshot-gallery">
+        <img src="Images/screenshot1.png" alt="Gameplay Screenshot 1" />
+        <img src="Images/screenshot2.png" alt="Gameplay Screenshot 2" />
+        <img src="Images/screenshot3.png" alt="Gameplay Screenshot 3" />
+        <img src="Images/screenshot4.png" alt="Gameplay Screenshot 4" />
+      </div>
+    </section>
+
+    <section class="description">
+      <p>Join a quirky journalist on skis in a snowy resort full of eccentric animals and odd mysteries.</p>
+    </section>
+  </div>
+
+  <script>
+    const flowerCount = 15;
+    for (let i = 0; i < flowerCount; i++) {
+      const flower = document.createElement('div');
+      flower.classList.add('floating-flower');
+      flower.style.left = `${Math.random() * 100}vw`;
+      flower.style.top = `${Math.random() * 100}vh`;
+      flower.style.setProperty('--hue', `${Math.floor(Math.random() * 5) * 60}deg`);
+      document.body.appendChild(flower);
+    }
+  </script>
 </body>
 </html>
-
-
