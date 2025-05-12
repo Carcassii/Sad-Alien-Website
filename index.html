@@ -13,7 +13,7 @@
     body {
       margin: 0;
       font-family: 'Work Sans', sans-serif;
-      background: #fffdf9;
+      background: linear-gradient(to bottom, #0a1d37 0%, #a0d2ff 300px, #fffdf9 600px);
       color: #222;
       overflow-x: hidden;
     }
@@ -62,8 +62,8 @@
       justify-content: center;
       align-items: center;
       padding: 2rem 2rem 1.5rem;
-      background: #d63a3a;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      background: #0a1d37;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
       position: sticky;
       top: 0;
       z-index: 1000;
@@ -107,7 +107,7 @@
 
     .nav-links a:hover {
       background: #fff;
-      color: #d63a3a;
+      color: #0a1d37;
       transform: translateY(-2px) scale(1.05);
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
@@ -133,19 +133,18 @@
       top: 80px;
       left: 40vw;
       font-family: 'Patrick Hand', cursive;
-      color: white;
+      color: #ffea6b;
       font-size: 2rem;
       opacity: 0;
-      animation: writeTrail 12s ease-in-out forwards;
+      text-shadow: 0 0 8px #ffea6b, 0 0 16px #ffd54f;
+      animation: glowTrail 12s ease-in-out forwards;
     }
 
-    @keyframes writeTrail {
+    @keyframes glowTrail {
       0% { opacity: 0; }
       50% { opacity: 0; }
-      60% { opacity: 1; content: 'S'; }
-      70% { content: 'Sad'; }
-      80% { content: 'Sad Alien'; }
-      100% { content: 'Sad Alien Studios'; }
+      60% { opacity: 1; }
+      100% { opacity: 1; }
     }
 
     .content {
