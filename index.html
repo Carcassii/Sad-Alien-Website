@@ -11,23 +11,56 @@
       scroll-behavior: smooth;
     }
 
-    .screenshot-gallery img {
+    .screenshot-gallery img,
+    .poster {
       transition: transform 0.3s ease, box-shadow 0.3s ease;
       cursor: pointer;
     }
 
-    .screenshot-gallery img:hover {
+    .screenshot-gallery img:hover,
+    .poster:hover {
       transform: scale(1.05);
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
 
-    .poster {
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    .hero {
+      background: linear-gradient(to bottom, #fff 0%, #fceadf 100%);
+      text-align: center;
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
     }
 
-    .poster:hover {
-      transform: scale(1.03);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    .hero::before {
+      content: "";
+      background: url('snowfall.gif') repeat top center;
+      opacity: 0.4;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      pointer-events: none;
+      animation: parallax 30s linear infinite;
+    }
+
+    @keyframes parallax {
+      0% { background-position-y: 0; }
+      100% { background-position-y: 1000px; }
+    }
+
+    .trailer {
+      text-align: center;
+      margin: 3rem 0;
+    }
+
+    .trailer iframe {
+      width: 80%;
+      max-width: 720px;
+      height: 405px;
+      border: none;
+      border-radius: 10px;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
     }
   </style>
 </head>
@@ -50,6 +83,11 @@
       <img src="poster.png" alt="Mystery on the Mountain Poster" class="poster" />
       <h1>Mystery on the Mountain</h1>
       <p class="tagline">A whimsical skiing adventure full of secrets and silly characters.</p>
+    </section>
+
+    <section class="trailer">
+      <h2>Watch the Trailer</h2>
+      <iframe src="https://www.youtube.com/embed/DM5OFICkrkc" allowfullscreen></iframe>
     </section>
 
     <section class="screenshots">
