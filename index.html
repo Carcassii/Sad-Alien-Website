@@ -34,7 +34,7 @@
       margin: 0;
       padding: 0;
       z-index: 2;
-      transform: translateY(25px);
+      transform: translateY(50px);
     }
     .nav-links a {
       font-family: 'Patrick Hand', cursive;
@@ -72,9 +72,9 @@
       stroke-width: 2.5px;
       stroke-linecap: round;
       stroke-linejoin: round;
-      stroke-dasharray: 2000;
-      stroke-dashoffset: 2000;
-      animation: draw-line 7s ease forwards;
+      stroke-dasharray: 3000;
+      stroke-dashoffset: 3000;
+      animation: draw-line 8s ease forwards;
       filter: drop-shadow(0 0 6px #ffea6b);
     }
     @keyframes draw-line {
@@ -136,8 +136,8 @@
   <header>
     <nav class="navbar">
       <div class="svg-container" id="svg-container">
-        <svg viewBox="0 0 800 200" preserveAspectRatio="xMidYMid meet" id="trail-svg">
-         <path class="draw-path" id="trail-path" d="M80,130 Q90,100 110,90 Q130,80 140,90 Q150,100 150,120 Q150,150 180,150 Q210,150 220,120 Q230,90 250,90 Q270,90 280,110 Q290,130 310,130 Q330,130 340,100 Q350,70 370,70 Q390,70 400,90 Q410,110 430,110 Q450,110 460,90 Q470,70 490,70 Q510,70 520,90 Q530,110 550,110 Q570,110 580,90 Q590,70 610,70 Q630,70 640,90 Q650,110 670,110 Q690,110 700,90 Q710,70 730,70 Q750,70 760,90 Q770,110 790,110"/>
+        <svg viewBox="0 0 1000 200" preserveAspectRatio="xMidYMid meet" id="trail-svg">
+          <path class="draw-path" id="trail-path" d="M80,130 Q90,100 110,90 Q130,80 140,90 Q150,100 150,120 Q150,150 180,150 Q210,150 220,120 Q230,90 250,90 Q270,90 280,110 Q290,130 310,130 Q330,130 340,100 Q350,70 370,70 Q390,70 400,90 Q410,110 430,110 Q450,110 460,90 Q470,70 490,70 Q510,70 520,90 Q530,110 550,110 Q570,110 580,90 Q590,70 610,70 Q630,70 640,90 Q650,110 670,110 Q690,110 700,90 Q710,70 730,70 Q750,70 760,90 Q770,110 790,110"/>
         </svg>
         <img src="Images/spaceship.png" alt="Spaceship" class="spaceship" id="spaceship" />
       </div>
@@ -200,7 +200,7 @@
       container.appendChild(sparkle);
       setTimeout(() => sparkle.remove(), 1000);
 
-      t += 0.0045;
+      t += 0.0035;
       requestAnimationFrame(updatePosition);
     }
 
@@ -208,3 +208,4 @@
   </script>
 </body>
 </html>
+
