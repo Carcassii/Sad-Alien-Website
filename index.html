@@ -4,8 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sad Alien Studios</title>
-  <link rel="stylesheet" href="style.css" />
-  <script defer src="script.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Work+Sans:wght@400;600&display=swap" rel="stylesheet">
   <style>
     html {
       scroll-behavior: smooth;
@@ -13,33 +12,13 @@
 
     body {
       margin: 0;
-      font-family: 'Patrick Hand', cursive, sans-serif;
+      font-family: 'Work Sans', sans-serif;
       background: #fffdf9;
       color: #222;
     }
 
-    .screenshot-gallery {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      justify-content: center;
-      margin-top: 2rem;
-    }
-
-    .screenshot-gallery img,
-    .poster {
-      max-width: 100%;
-      height: auto;
-      max-height: 220px;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      cursor: pointer;
-      border-radius: 10px;
-    }
-
-    .screenshot-gallery img:hover,
-    .poster:hover {
-      transform: scale(1.05);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    h1, h2 {
+      font-family: 'Patrick Hand', cursive;
     }
 
     .navbar {
@@ -49,6 +28,9 @@
       padding: 1rem 2rem;
       background: #ffcb6b;
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
     }
 
     .navbar .logo {
@@ -77,53 +59,74 @@
     }
 
     .hero {
+      min-height: 100vh;
+      background: linear-gradient(to bottom, #fff7ec, #fff);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
       text-align: center;
-      padding: 3rem 1rem;
-      background: #fff7ec;
+      padding: 2rem;
+      position: relative;
+    }
+
+    .hero img.poster {
+      max-width: 90%;
+      height: auto;
+      border-radius: 10px;
+      margin-bottom: 1rem;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
     }
 
     .typewriter {
-      font-size: 2.2rem;
-      margin-top: 1rem;
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: #333;
     }
 
     .tagline {
-      font-size: 1rem;
-      color: #444;
+      font-size: 1.2rem;
+      color: #666;
+      margin-top: 0.5rem;
     }
 
-    .trailer {
-      text-align: center;
-      padding: 3rem 1rem;
+    .trailer, .screenshots, .description {
+      padding: 5rem 2rem;
+      max-width: 1000px;
+      margin: 0 auto;
     }
 
     .trailer iframe {
-      width: 90%;
-      max-width: 720px;
-      height: 405px;
+      width: 100%;
+      height: 500px;
       border-radius: 10px;
       box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
     }
 
-    .screenshots {
-      padding: 3rem 1rem;
-      text-align: center;
+    .screenshot-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .screenshot-gallery img {
+      width: 100%;
+      height: auto;
+      border-radius: 12px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .screenshot-gallery img:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.1);
     }
 
     .description {
-      max-width: 800px;
-      margin: 2rem auto;
-      padding: 0 1rem;
       font-size: 1.1rem;
+      text-align: center;
       line-height: 1.6;
-      text-align: center;
-    }
-
-    footer {
-      background: #ffe4b3;
-      text-align: center;
-      padding: 1rem;
-      font-size: 0.9rem;
+      color: #333;
     }
 
     .mascot-widget {
@@ -144,6 +147,13 @@
       border-radius: 12px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
       font-size: 1rem;
+    }
+
+    footer {
+      background: #ffe4b3;
+      text-align: center;
+      padding: 2rem 1rem;
+      font-size: 0.9rem;
     }
 
     @keyframes floaty {
@@ -170,7 +180,7 @@
     <section class="hero">
       <img src="Images/poster.png" alt="Mystery on the Mountain Poster" class="poster" />
       <h1 class="typewriter" id="typewriter"></h1>
-      <p class="tagline">Mystery on the Mountain is a humorous 3D skiing adventure game in which players become an amateur blogger-journalist investigating the mysterious disappearance of a skiing champion. Explore the Strudel Mountains ski resort, meet eccentric characters, complete thrilling downhill skiing runs, gather coins, and unlock upgrades. Every slope you master and every weird interview you do brings you closer to unraveling the hidden truth. Will you be able to find the champion?</p>
+      <p class="tagline">A whimsical skiing adventure full of secrets and silly characters.</p>
     </section>
 
     <section class="trailer" id="trailerSection">
