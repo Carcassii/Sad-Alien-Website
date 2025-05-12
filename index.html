@@ -15,10 +15,43 @@
       font-family: 'Work Sans', sans-serif;
       background: #fffdf9;
       color: #222;
+      overflow-x: hidden;
     }
 
     h1, h2 {
       font-family: 'Patrick Hand', cursive;
+      transition: transform 0.3s ease;
+    }
+
+    h1:hover, h2:hover {
+      transform: rotate(-2deg) scale(1.05);
+    }
+
+    .floating-star {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: gold;
+      border-radius: 50%;
+      opacity: 0.6;
+      animation: sparkle 6s infinite ease-in-out;
+    }
+
+    @keyframes sparkle {
+      0% { transform: translateY(0) scale(1); opacity: 0.4; }
+      50% { transform: translateY(-30px) scale(1.3); opacity: 1; }
+      100% { transform: translateY(0) scale(1); opacity: 0.4; }
+    }
+
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
     }
 
     .navbar {
@@ -68,6 +101,18 @@
       text-align: center;
       padding: 2rem;
       position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: "";
+      background: url('Images/poster.png') center/cover no-repeat;
+      opacity: 0.05;
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
     }
 
     .hero img.poster {
@@ -76,18 +121,24 @@
       border-radius: 10px;
       margin-bottom: 1rem;
       box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+      z-index: 1;
+      position: relative;
     }
 
     .typewriter {
       font-size: 2.5rem;
       font-weight: bold;
       color: #333;
+      position: relative;
+      z-index: 1;
     }
 
     .tagline {
       font-size: 1.2rem;
       color: #666;
       margin-top: 0.5rem;
+      z-index: 1;
+      position: relative;
     }
 
     .trailer, .screenshots, .description {
@@ -177,18 +228,18 @@
   </header>
 
   <main>
-    <section class="hero">
+    <section class="hero fade-in">
       <img src="Images/poster.png" alt="Mystery on the Mountain Poster" class="poster" />
       <h1 class="typewriter" id="typewriter"></h1>
       <p class="tagline">A whimsical skiing adventure full of secrets and silly characters.</p>
     </section>
 
-    <section class="trailer" id="trailerSection">
+    <section class="trailer fade-in" id="trailerSection">
       <h2>Watch the Trailer</h2>
       <iframe src="https://www.youtube.com/embed/DM5OFICkrkc" allowfullscreen></iframe>
     </section>
 
-    <section class="screenshots">
+    <section class="screenshots fade-in">
       <h2>Take a Peek!</h2>
       <div class="screenshot-gallery">
         <img src="Images/screenshot1.png" alt="Gameplay Screenshot 1" />
@@ -198,7 +249,7 @@
       </div>
     </section>
 
-    <section class="description">
+    <section class="description fade-in">
       <p>Join a quirky journalist on skis in a snowy resort full of eccentric animals and odd mysteries. Race down slopes, uncover secrets, and meet unforgettable characters in this heartwarming and humorous indie adventure.</p>
     </section>
   </main>
@@ -222,6 +273,28 @@
       }
     }
     type();
+
+    // Fade-in observer
+    const fadeInSections = document.querySelectorAll('.fade-in');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    fadeInSections.forEach(section => observer.observe(section));
+
+    // Floating stars
+    for (let i = 0; i < 15; i++) {
+      const star = document.createElement("div");
+      star.classList.add("floating-star");
+      star.style.top = `${Math.random() * 100}%`;
+      star.style.left = `${Math.random() * 100}%`;
+      star.style.animationDelay = `${Math.random() * 6}s`;
+      document.body.appendChild(star);
+    }
   </script>
 </body>
 </html>
