@@ -49,6 +49,13 @@
       100% { background-position-y: 1000px; }
     }
 
+    .typewriter {
+      font-size: 2rem;
+      font-family: 'Patrick Hand', cursive;
+      margin-top: 1rem;
+      min-height: 2.5em;
+    }
+
     .trailer {
       text-align: center;
       margin: 3rem 0;
@@ -81,7 +88,7 @@
   <main>
     <section class="hero">
       <img src="poster.png" alt="Mystery on the Mountain Poster" class="poster" />
-      <h1>Mystery on the Mountain</h1>
+      <h1 class="typewriter" id="typewriter"></h1>
       <p class="tagline">A whimsical skiing adventure full of secrets and silly characters.</p>
     </section>
 
@@ -107,5 +114,19 @@
   <footer>
     <p>© 2025 Sad Alien Studios — Made with love, snow, and bologna.</p>
   </footer>
+
+  <script>
+    const text = "Mystery on the Mountain";
+    const typewriter = document.getElementById("typewriter");
+    let i = 0;
+    function type() {
+      if (i < text.length) {
+        typewriter.innerHTML += text.charAt(i);
+        i++;
+        setTimeout(type, 100);
+      }
+    }
+    type();
+  </script>
 </body>
 </html>
