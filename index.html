@@ -276,26 +276,28 @@
     let t = 0;
 
     function updatePosition() {
-      const point = path.getPointAtLength(t * totalLength);
-      
-      // Only end the animation when the spaceship reaches the end of the path
-      if (t >= 1) {
-  return; // Stop once we've reached the full path
-    }
+  const point = path.getPointAtLength(t * totalLength);
 
-      spaceship.style.left = `${point.x - 25}px`;
-      spaceship.style.top = `${point.y - 25}px`;
+  if (t >= 1) {
+    setTimeout(() => {
+      spaceship.style.transition = 'transform 3s linear';
+      spaceship.style.transform = 'translateX(200vw)';
+    }, 500); // Optional delay before flying off
+    return;
+  }
 
-      const sparkle = document.createElement("div");
-      sparkle.className = "particle";
-      sparkle.style.left = `${point.x}px`;
-      sparkle.style.top = `${point.y}px`;
-      
-      container.appendChild(sparkle);
+  spaceship.style.left = `${point.x - 25}px`;
+  spaceship.style.top = `${point.y - 25}px`;
 
-      t += 0.002;
-      requestAnimationFrame(updatePosition);
-    }
+  const sparkle = document.createElement("div");
+  sparkle.className = "particle";
+  sparkle.style.left = `${point.x}px`;
+  sparkle.style.top = `${point.y}px`;
+  container.appendChild(sparkle);
+
+  t += 0.002;
+  requestAnimationFrame(updatePosition);
+  }
 
     requestAnimationFrame(updatePosition);
 
