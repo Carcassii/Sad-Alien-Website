@@ -275,7 +275,7 @@
     const totalLength = path.getTotalLength();
     let t = 0;
 
-    function updatePosition(timestamp) {
+    function updatePosition() {
   const point = path.getPointAtLength(t * totalLength);
 
   spaceship.style.left = `${point.x - 25}px`;
@@ -288,11 +288,11 @@
   container.appendChild(sparkle);
 
   if (t >= 1) {
-    // Delay a tiny bit before flying away
+    // Let the last dot appear before flying away
     setTimeout(() => {
       spaceship.style.transition = 'transform 3s ease-in-out';
-      spaceship.style.transform = 'translate(400px, -200px)'; // Fly diagonally
-    }, 300); // Delay before flying away
+      spaceship.style.transform = 'translateX(200vw)'; // Definitely off screen to the right
+    }, 200); // Small pause after last dot
     return;
   }
 
