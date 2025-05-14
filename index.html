@@ -160,13 +160,14 @@
     }
 
     #flower-container {
-      position: absolute;
+      position: fixed;
       top: 0;
       left: 0;
       width: 100%;
-      height: 100%;
+      height: 100vh;
       pointer-events: none;
       z-index: -1;
+      background: none;
     }
 
     .floating-flower {
@@ -662,9 +663,9 @@ Q 1629.25 233.55 1630.05 226.3 1630.8 219.3 1630.6 210.5 1630.4 201.5 1628.65 19
       
       // Define sections of the page to distribute flowers
       const sections = [
-        { start: 900, end: 1200 },  // First cluster
-        { start: 1400, end: 1700 }, // Middle cluster
-        { start: 1900, end: 2200 }  // Bottom cluster
+        { start: 400, end: 600 },   // First cluster
+        { start: 700, end: 900 },   // Middle cluster
+        { start: 1000, end: 1200 }  // Bottom cluster
       ];
       
       for (let i = 0; i < numFlowers; i++) {
