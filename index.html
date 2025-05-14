@@ -279,11 +279,9 @@
       const point = path.getPointAtLength(t * totalLength);
       
       // Only end the animation when the spaceship reaches the end of the path
-      if (t * totalLength >= totalLength) {
-        spaceship.style.transition = 'transform 3s linear';
-        spaceship.style.transform = 'translateX(200vw)';
-        return;
-      }
+      if (t >= 1) {
+  return; // Stop once we've reached the full path
+    }
 
       spaceship.style.left = `${point.x - 25}px`;
       spaceship.style.top = `${point.y - 25}px`;
