@@ -520,7 +520,11 @@
     // Create floating flowers
     function createFlowers() {
       const container = document.getElementById('flower-container');
-      const numFlowers = 12; // Reduced number of flowers
+      const numFlowers = 12;
+      
+      // Set container position to a specific section
+      container.style.top = '900px'; // Position below the gradient change
+      container.style.height = '800px'; // Give specific height for flower area
       
       for (let i = 0; i < numFlowers; i++) {
         const flower = document.createElement('div');
@@ -541,9 +545,9 @@
         flower.appendChild(petals);
         flower.appendChild(center);
         
-        // Random position both horizontal and vertical
-        flower.style.left = `${Math.random() * 90 + 5}%`; // Keep away from edges
-        flower.style.top = `${Math.random() * 70 + 15}%`; // Keep in middle-ish area
+        // Random position within container
+        flower.style.left = `${Math.random() * 90 + 5}%`;
+        flower.style.top = `${Math.random() * 70 + 15}%`;
         
         // Random size variation
         const size = 40 + Math.random() * 30;
