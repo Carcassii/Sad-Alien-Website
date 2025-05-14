@@ -21,11 +21,13 @@
       height: 320px;
       background: #0a1d37;
       display: flex;
-      justify-content: center;
-      align-items: flex-end;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
       padding-bottom: 1rem;
       box-shadow: 0 4px 12px rgba(0,0,0,0.3);
       z-index: 1000;
+      overflow: hidden;
     }
     .navbar::before {
       content: "";
@@ -42,21 +44,27 @@
     .nav-links {
       list-style: none;
       display: flex;
-      gap: 1.5rem;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
       margin: 0;
       padding: 0;
       z-index: 2;
-      transform: translateY(40px);
+      width: 100%;
+      max-width: 300px;
     }
     .nav-links a {
       font-family: 'Patrick Hand', cursive;
       text-decoration: none;
       color: #fff;
-      padding: 0.6rem 1rem;
+      padding: 0.4rem 0.8rem;
       transition: all 0.3s ease;
       border-radius: 12px;
       background: rgba(255,255,255,0.15);
       position: relative;
+      width: 80%;
+      text-align: center;
+      font-size: 0.9rem;
     }
     .nav-links a:hover {
       background: #fff;
@@ -67,7 +75,8 @@
     .svg-container {
       position: absolute;
       top: 0;
-      left: 10%;
+      left: 50%;
+      transform: translateX(-50%);
       width: 100%;
       height: 1000px;
       pointer-events: none;
@@ -161,33 +170,30 @@
     /* Add responsive design */
     @media screen and (max-width: 768px) {
       .navbar {
-        height: 280px; /* Slightly smaller height on mobile */
+        height: 280px;
+        padding: 1rem;
       }
       
-      .nav-links {
-        flex-direction: column;
-        align-items: center;
-        gap: 0.8rem;
-        transform: translateY(20px);
-      }
-
-      .nav-links a {
-        padding: 0.4rem 0.8rem;
-        font-size: 0.9rem;
-      }
-
       .svg-container {
-        transform: scale(0.7); /* Scale down the SVG animation */
-        transform-origin: top left;
+        transform: translateX(-50%) scale(0.6);
+        transform-origin: center top;
+      }
+
+      #trail-svg {
+        transform: translateX(10%);
       }
 
       .spaceship {
-        width: 40px; /* Slightly smaller spaceship */
+        width: 35px;
       }
 
       .particle {
-        width: 4px; /* Slightly smaller particles */
+        width: 4px;
         height: 4px;
+      }
+
+      body {
+        overflow-x: hidden;
       }
     }
 
@@ -196,44 +202,40 @@
         height: 260px;
       }
 
-      .nav-links {
-        gap: 0.6rem;
+      .svg-container {
+        transform: translateX(-50%) scale(0.45);
+      }
+
+      #trail-svg {
+        transform: translateX(15%);
       }
 
       .nav-links a {
-        padding: 0.3rem 0.6rem;
         font-size: 0.85rem;
-      }
-
-      .svg-container {
-        transform: scale(0.5); /* Even smaller scale for very small devices */
-      }
-
-      .spaceship {
-        width: 35px;
+        padding: 0.3rem 0.6rem;
       }
     }
 
     /* Make content responsive */
     .content {
       text-align: center;
-      padding: 4rem 1rem 1rem; /* Adjusted padding for mobile */
+      padding: 4rem 1rem 1rem;
       max-width: 1200px;
       margin: 0 auto;
     }
 
     .poster {
-      width: 90%; /* Wider on mobile */
+      width: 90%;
       max-width: 700px;
       border-radius: 8px;
       box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-      margin: 2rem auto 1rem; /* Adjusted margins */
+      margin: 2rem auto 1rem;
     }
 
     .trailer iframe {
-      width: 100%; /* Full width on mobile */
+      width: 100%;
       max-width: 720px;
-      height: 56.25vw; /* Maintain 16:9 aspect ratio */
+      height: 56.25vw;
       max-height: 405px;
       border: none;
       border-radius: 12px;
@@ -253,6 +255,12 @@
       height: auto;
       border-radius: 12px;
       transition: transform 0.3s ease;
+    }
+
+    /* Adjust SVG viewBox to ensure text is visible */
+    #trail-svg {
+      transform: scale(0.8);
+      transform-origin: center top;
     }
   </style>
 </head>
@@ -373,61 +381,65 @@
     let t = 0;
 
     function updatePosition() {
-  const point = path.getPointAtLength(t * totalLength);
+      const point = path.getPointAtLength(t * totalLength);
+      
+      if (t * totalLength >= totalLength) {
+        return;
+      }
 
-  spaceship.style.left = `${point.x - 25}px`;
-  spaceship.style.top = `${point.y - 25}px`;
+      // Adjust position calculation for mobile
+      const rect = container.getBoundingClientRect();
+      const scale = window.innerWidth <= 768 ? (window.innerWidth <= 480 ? 0.45 : 0.6) : 0.8;
+      
+      spaceship.style.left = `${point.x * scale}px`;
+      spaceship.style.top = `${point.y * scale}px`;
 
-  const sparkle = document.createElement("div");
-  sparkle.className = "particle";
-  sparkle.style.left = `${point.x}px`;
-  sparkle.style.top = `${point.y}px`;
-  container.appendChild(sparkle);
+      const sparkle = document.createElement("div");
+      sparkle.className = "particle";
+      sparkle.style.left = `${point.x * scale}px`;
+      sparkle.style.top = `${point.y * scale}px`;
+      
+      container.appendChild(sparkle);
 
-  if (t >= 1) {
-    // Let the last dot appear before flying away
-    setTimeout(() => {
-      spaceship.style.transition = 'transform 3s ease-in-out';
-      spaceship.style.transform = 'translateX(200vw)'; // Definitely off screen to the right
-    }, 200); // Small pause after last dot
-    return;
-  }
+      t += 0.002;
+      requestAnimationFrame(updatePosition);
+    }
 
-  t += 0.002;
-  requestAnimationFrame(updatePosition);
-  }
+    // Handle resize events
+    window.addEventListener('resize', function() {
+      // Reset animation if needed
+      t = 0;
+      // Clear existing particles
+      const particles = container.getElementsByClassName('particle');
+      while(particles.length > 0) {
+        particles[0].parentNode.removeChild(particles[0]);
+      }
+      requestAnimationFrame(updatePosition);
+    });
 
-    requestAnimationFrame(updatePosition);
-
-    // Create random stars
     function createStars() {
       const navbar = document.querySelector('.navbar');
-      const numStars = 200; // Number of stars
+      const numStars = 200;
       
       for (let i = 0; i < numStars; i++) {
         const star = document.createElement('div');
         star.className = 'star';
         
-        // Random position
         star.style.left = `${Math.random() * 100}%`;
         star.style.top = `${Math.random() * 100}%`;
         
-        // Random size (0.5px to 2px)
         const size = 0.5 + Math.random() * 1.5;
         star.style.width = `${size}px`;
         star.style.height = `${size}px`;
         
-        // Random twinkle duration (2-6 seconds)
         star.style.setProperty('--twinkle-duration', `${2 + Math.random() * 4}s`);
         
-        // Random animation delay
         star.style.animationDelay = `${Math.random() * 4}s`;
         
         navbar.appendChild(star);
       }
     }
 
-    // Call the function when the page loads
     window.addEventListener('load', createStars);
   </script>
 </body>
