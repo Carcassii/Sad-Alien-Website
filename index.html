@@ -21,13 +21,11 @@
       height: 320px;
       background: #0a1d37;
       display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      align-items: center;
+      justify-content: center;
+      align-items: flex-end;
       padding-bottom: 1rem;
       box-shadow: 0 4px 12px rgba(0,0,0,0.3);
       z-index: 1000;
-      overflow: hidden;
     }
     .navbar::before {
       content: "";
@@ -44,27 +42,21 @@
     .nav-links {
       list-style: none;
       display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.5rem;
+      gap: 1.5rem;
       margin: 0;
       padding: 0;
       z-index: 2;
-      width: 100%;
-      max-width: 300px;
+      transform: translateY(40px);
     }
     .nav-links a {
       font-family: 'Patrick Hand', cursive;
       text-decoration: none;
       color: #fff;
-      padding: 0.4rem 0.8rem;
+      padding: 0.6rem 1rem;
       transition: all 0.3s ease;
       border-radius: 12px;
       background: rgba(255,255,255,0.15);
       position: relative;
-      width: 80%;
-      text-align: center;
-      font-size: 0.9rem;
     }
     .nav-links a:hover {
       background: #fff;
@@ -75,8 +67,7 @@
     .svg-container {
       position: absolute;
       top: 0;
-      left: 50%;
-      transform: translateX(-50%);
+      left: 10%;
       width: 100%;
       height: 1000px;
       pointer-events: none;
@@ -165,102 +156,6 @@
       0% { opacity: 0.3; transform: scale(1); }
       50% { opacity: 0.8; transform: scale(1.5); }
       100% { opacity: 0.3; transform: scale(1); }
-    }
-
-    /* Add responsive design */
-    @media screen and (max-width: 768px) {
-      .navbar {
-        height: 280px;
-        padding: 1rem;
-      }
-      
-      .svg-container {
-        transform: translateX(-50%) scale(0.6);
-        transform-origin: center top;
-      }
-
-      #trail-svg {
-        transform: translateX(10%);
-      }
-
-      .spaceship {
-        width: 35px;
-      }
-
-      .particle {
-        width: 4px;
-        height: 4px;
-      }
-
-      body {
-        overflow-x: hidden;
-      }
-    }
-
-    @media screen and (max-width: 480px) {
-      .navbar {
-        height: 260px;
-      }
-
-      .svg-container {
-        transform: translateX(-50%) scale(0.45);
-      }
-
-      #trail-svg {
-        transform: translateX(15%);
-      }
-
-      .nav-links a {
-        font-size: 0.85rem;
-        padding: 0.3rem 0.6rem;
-      }
-    }
-
-    /* Make content responsive */
-    .content {
-      text-align: center;
-      padding: 4rem 1rem 1rem;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    .poster {
-      width: 90%;
-      max-width: 700px;
-      border-radius: 8px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-      margin: 2rem auto 1rem;
-    }
-
-    .trailer iframe {
-      width: 100%;
-      max-width: 720px;
-      height: 56.25vw;
-      max-height: 405px;
-      border: none;
-      border-radius: 12px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-    }
-
-    .screenshot-gallery {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 1rem;
-      padding: 0 1rem;
-      margin-top: 2rem;
-    }
-
-    .screenshot-gallery img {
-      width: 100%;
-      height: auto;
-      border-radius: 12px;
-      transition: transform 0.3s ease;
-    }
-
-    /* Adjust SVG viewBox to ensure text is visible */
-    #trail-svg {
-      transform: scale(0.8);
-      transform-origin: center top;
     }
   </style>
 </head>
@@ -381,68 +276,62 @@
     let t = 0;
 
     function updatePosition() {
-      const point = path.getPointAtLength(t * totalLength);
-      
-      if (t * totalLength >= totalLength) {
-        return;
-      }
+  const point = path.getPointAtLength(t * totalLength);
 
-      // Adjust position calculation for mobile
-      const rect = container.getBoundingClientRect();
-      const scale = window.innerWidth <= 768 ? (window.innerWidth <= 480 ? 0.45 : 0.6) : 0.8;
-      
-      spaceship.style.left = `${point.x * scale}px`;
-      spaceship.style.top = `${point.y * scale}px`;
+  spaceship.style.left = ${point.x - 25}px;
+  spaceship.style.top = ${point.y - 25}px;
 
-      const sparkle = document.createElement("div");
-      sparkle.className = "particle";
-      sparkle.style.left = `${point.x * scale}px`;
-      sparkle.style.top = `${point.y * scale}px`;
-      
-      container.appendChild(sparkle);
+  const sparkle = document.createElement("div");
+  sparkle.className = "particle";
+  sparkle.style.left = ${point.x}px;
+  sparkle.style.top = ${point.y}px;
+  container.appendChild(sparkle);
 
-      t += 0.002;
-      requestAnimationFrame(updatePosition);
-    }
+  if (t >= 1) {
+    // Let the last dot appear before flying away
+    setTimeout(() => {
+      spaceship.style.transition = 'transform 3s ease-in-out';
+      spaceship.style.transform = 'translateX(200vw)'; // Definitely off screen to the right
+    }, 200); // Small pause after last dot
+    return;
+  }
 
-    // Handle resize events
-    window.addEventListener('resize', function() {
-      // Reset animation if needed
-      t = 0;
-      // Clear existing particles
-      const particles = container.getElementsByClassName('particle');
-      while(particles.length > 0) {
-        particles[0].parentNode.removeChild(particles[0]);
-      }
-      requestAnimationFrame(updatePosition);
-    });
+  t += 0.002;
+  requestAnimationFrame(updatePosition);
+  }
 
+    requestAnimationFrame(updatePosition);
+
+    // Create random stars
     function createStars() {
       const navbar = document.querySelector('.navbar');
-      const numStars = 200;
+      const numStars = 200; // Number of stars
       
       for (let i = 0; i < numStars; i++) {
         const star = document.createElement('div');
         star.className = 'star';
         
-        star.style.left = `${Math.random() * 100}%`;
-        star.style.top = `${Math.random() * 100}%`;
+        // Random position
+        star.style.left = ${Math.random() * 100}%;
+        star.style.top = ${Math.random() * 100}%;
         
+        // Random size (0.5px to 2px)
         const size = 0.5 + Math.random() * 1.5;
-        star.style.width = `${size}px`;
-        star.style.height = `${size}px`;
+        star.style.width = ${size}px;
+        star.style.height = ${size}px;
         
-        star.style.setProperty('--twinkle-duration', `${2 + Math.random() * 4}s`);
+        // Random twinkle duration (2-6 seconds)
+        star.style.setProperty('--twinkle-duration', ${2 + Math.random() * 4}s);
         
-        star.style.animationDelay = `${Math.random() * 4}s`;
+        // Random animation delay
+        star.style.animationDelay = ${Math.random() * 4}s;
         
         navbar.appendChild(star);
       }
     }
 
+    // Call the function when the page loads
     window.addEventListener('load', createStars);
   </script>
 </body>
 </html>
-
-
