@@ -96,13 +96,13 @@
     }
     .particle {
       position: absolute;
-      width: 4px;
-      height: 4px;
+      width: 6px;
+      height: 6px;
       background: #ffea6b;
       border-radius: 50%;
       pointer-events: none;
       animation: floaty 1s ease-out forwards;
-      filter: drop-shadow(0 0 8px #ffea6b) drop-shadow(0 0 25px #ffea6b);
+      filter: drop-shadow(0 0 10px #ffea6b) drop-shadow(0 0 30px #ffea6b);
     }
     @keyframes floaty {
       0% { opacity: 1; transform: scale(1); }
@@ -292,7 +292,7 @@
       
       container.appendChild(sparkle);
 
-      t += 0.0025;
+      t += 0.002;
       requestAnimationFrame(updatePosition);
     }
 
