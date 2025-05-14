@@ -12,31 +12,42 @@
     body {
       margin: 0;
       font-family: 'Work Sans', sans-serif;
-      background: linear-gradient(to bottom, #0a1d37 0%, #a0d2ff 800px, #fffdf9 1200px);
+      background: linear-gradient(to bottom, #0a1d37 0%, #0a1d37 200px, #a0d2ff 800px, #fffdf9 1200px);
       color: #222;
       overflow-x: hidden;
     }
-  .navbar {
-  position: relative;
-  height: 800px;
-  background: #0a1d37;
-  display: flex;
-  justify-content: center;
-  align-items: center; /* changed from flex-end */
-  padding-bottom: 1rem;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-  z-index: 1000;
-  flex-direction: column; /* allow nav-links to stack properly */
-}
-.nav-links {
-  list-style: none;
-  display: flex;
-  gap: 1.5rem;
-  margin: 0;
-  padding: 0;
-  z-index: 2;
-  margin-top: 40px; /* instead of transform */
-}
+    .navbar {
+      position: relative;
+      height: 1000px;
+      background: #0a1d37;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      padding-bottom: 1rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      z-index: 1000;
+    }
+    .navbar::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: radial-gradient(#ffffff30 1px, transparent 1px);
+      background-size: 3px 3px;
+      opacity: 0.25;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 1.5rem;
+      margin: 0;
+      padding: 0;
+      z-index: 2;
+      transform: translateY(60px);
     }
     .nav-links a {
       font-family: 'Patrick Hand', cursive;
@@ -54,41 +65,46 @@
       transform: translateY(-2px) scale(1.05);
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
- .svg-container {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 1920px; /* match your SVG width */
-  height: 800px;
-  pointer-events: none;
-  overflow: visible;
-}
+    .svg-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 1000px;
+      pointer-events: none;
+      overflow: visible;
+    }
     .spaceship {
       position: absolute;
       width: 50px;
       z-index: 2;
     }
     .draw-path {
-    fill: none;
-    stroke: none; /* <- hide the visible stroke */
-    }
+      fill: none;
+      stroke: #ffea6b;
+      stroke-width: 3px;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-dasharray: 20000;
+      stroke-dashoffset: 20000;
+      animation: draw-line 8s ease forwards;
+      filter: drop-shadow(0 0 6px #ffea6b);
     }
     @keyframes draw-line {
       to {
         stroke-dashoffset: 0;
       }
     }
-.particle {
-  position: absolute;
-  width: 6px;
-  height: 6px;
-  background: #ffea6b;
-  border-radius: 50%;
-  pointer-events: none;
-  animation: floaty 1s ease-out forwards;
-  filter: drop-shadow(0 0 6px #ffea6b) drop-shadow(0 0 12px #ffea6b);
-}
+    .particle {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: #ffea6b;
+      border-radius: 50%;
+      pointer-events: none;
+      animation: floaty 1s ease-out forwards;
+      filter: drop-shadow(0 0 4px #ffea6b) drop-shadow(0 0 8px #ffea6b);
+    }
     @keyframes floaty {
       0% { opacity: 1; transform: scale(1); }
       100% { opacity: 1; transform: scale(1); }
@@ -133,7 +149,7 @@
   <header>
     <nav class="navbar">
       <div class="svg-container" id="svg-container">
-        <svg viewBox="0 0 1920 1080" style="height: 800px;" preserveAspectRatio="xMidYMid meet" id="trail-svg">
+        <svg viewBox="0 0 1920 1080" style="height: 1000px;" preserveAspectRatio="xMidYMid meet" id="trail-svg">
           <path class="draw-path" id="trail-path" d="M 616.9 43.7
 Q 615.5 33.95 610.25 27.3 604.75 20.45 596.55 16.15 588.35 12.05 578.4 11.65 567.65 11.65 550.85 17.5 534.05 23.6 507.1 36.45 499.1 44.1 492.45 46.8 485.65 49.55 483.7 50.7
 L 482.5 50.7
@@ -269,3 +285,4 @@ Q 1629.25 233.55 1630.05 226.3 1630.8 219.3 1630.6 210.5 1630.4 201.5 1628.65 19
   </script>
 </body>
 </html>
+
