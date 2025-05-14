@@ -6,17 +6,6 @@
   <title>Sad Alien Studios</title>
   <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Work+Sans:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    html {
-      scroll-behavior: smooth;
-    }
-    body {
-      margin: 0;
-      font-family: 'Work Sans', sans-serif;
-      background: linear-gradient(to bottom, #0a1d37 0%, #0a1d37 320px, #3c75b4 460px, #a0d2ff 640px, #fffdf9 900px);
-      color: #222;
-      overflow-x: hidden;
-    }
-  
     .navbar {
       position: relative;
       width: 100%;
@@ -32,178 +21,63 @@
       z-index: 1000;
       overflow: hidden;
     }
+  
     .svg-container {
       position: absolute;
-      top: 0; left: 0;
-      width: 100%;
-      height: 100%;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 320px;
       display: flex;
       justify-content: center;
       align-items: flex-start;
       pointer-events: none;
       z-index: 1;
-      overflow: hidden;
+      overflow: visible;
     }
-    /* SVG is responsive and always centered */
-    .svg-container svg {
+    .svg-inner {
+      position: relative;
       width: 100%;
       height: 100%;
-      max-width: 100vw;
-      max-height: 100%;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .svg-inner svg {
       display: block;
+      width: 100%;
+      height: 100%;
       object-fit: contain;
     }
-  
-    .navbar::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-image: none;
-      pointer-events: none;
-      z-index: 0;
-      overflow: hidden;
-    }
-    .nav-links {
-      list-style: none;
-      display: flex;
-      gap: 1.5rem;
-      margin: 0;
-      padding: 0;
-      z-index: 2;
-      transform: translateY(40px);
-    }
-    .nav-links a {
-      font-family: 'Patrick Hand', cursive;
-      text-decoration: none;
-      color: #fff;
-      padding: 0.6rem 1rem;
-      transition: all 0.3s ease;
-      border-radius: 12px;
-      background: rgba(255,255,255,0.15);
-      position: relative;
-    }
-    .nav-links a:hover {
-      background: #fff;
-      color: #0a1d37;
-      transform: translateY(-2px) scale(1.05);
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    }
-  
     .spaceship {
       position: absolute;
       width: 50px;
       z-index: 2;
-    }
-    .draw-path {
-      fill: none;
-      stroke: none;
-      stroke-width: 3px;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-      stroke-dasharray: 20000;
-      stroke-dashoffset: 20000;
-      animation: draw-line 8s ease forwards;
-      filter: drop-shadow(0 0 10px #ffea6b) drop-shadow(0 0 18px #ffea6b);
-    }
-    @keyframes draw-line {
-      to {
-        stroke-dashoffset: 0;
-      }
-    }
-    .particle {
-      position: absolute;
-      width: 6px;
-      height: 6px;
-      background: #ffea6b;
-      border-radius: 50%;
       pointer-events: none;
-      animation: floaty 1s ease-out forwards;
-      filter: drop-shadow(0 0 10px #ffea6b) drop-shadow(0 0 30px #ffea6b);
     }
-    @keyframes floaty {
-      0% { opacity: 1; transform: scale(1); }
-      100% { opacity: 1; transform: scale(1); }
-    }
-  
-    .star {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      background: #fff8cc;
-      border-radius: 50%;
-      opacity: 0.3;
-      animation: twinkle var(--twinkle-duration) infinite alternate;
-      box-shadow: 0 0 2px #fff8cc;
-    }
-    @keyframes twinkle {
-      0% { opacity: 0.3; transform: scale(1); }
-      50% { opacity: 0.8; transform: scale(1.5); }
-      100% { opacity: 0.3; transform: scale(1); }
-    }
-  
-    /* Responsive navbar and SVG heights */
     @media (max-width: 1000px) {
       .navbar, .svg-container {
         height: 200px;
       }
-      .spaceship { width: 40px; }
-      .particle { width: 4px; height: 4px; }
+      .svg-inner {
+        max-width: 600px;
+      }
+      .spaceship { width: 34px; }
     }
     @media (max-width: 600px) {
       .navbar, .svg-container {
-        height: 100px;
+        height: 110px;
       }
-      .spaceship { width: 22px; }
-      .particle { width: 3px; height: 3px; }
-    }
-  
-    /* Make content responsive */
-    .content {
-      text-align: center;
-      padding: 4rem 1rem 1rem; /* Adjusted padding for mobile */
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-    .poster {
-      width: 90%; /* Wider on mobile */
-      max-width: 700px;
-      border-radius: 8px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-      margin: 2rem auto 1rem; /* Adjusted margins */
-    }
-    .trailer iframe {
-      width: 100%; /* Full width on mobile */
-      max-width: 720px;
-      height: 56.25vw; /* Maintain 16:9 aspect ratio */
-      max-height: 405px;
-      border: none;
-      border-radius: 12px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-    }
-    .screenshot-gallery {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 1rem;
-      padding: 0 1rem;
-      margin-top: 2rem;
-    }
-    .screenshot-gallery img {
-      width: 100%;
-      height: auto;
-      border-radius: 12px;
-      transition: transform 0.3s ease;
+      .svg-inner {
+        max-width: 330px;
+      }
+      .spaceship { width: 18px; }
     }
   </style>
-</head>
-<body>
-  <header>
-    <nav class="navbar">
-      <div class="svg-container" id="svg-container">
-        <!-- No fixed height here! -->
-        <svg viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid meet" id="trail-svg">
+  
+  <nav class="navbar">
+    <div class="svg-container" id="svg-container">
+      <div class="svg-inner">
+        <svg viewBox="350 0 1220 350" style="height: 100%; width: 100%;" preserveAspectRatio="xMidYMid meet" id="trail-svg">
           <path class="draw-path" id="trail-path" d="M 616.9 43.7
           Q 615.5 33.95 610.25 27.3 604.75 20.45 596.55 16.15 588.35 12.05 578.4 11.65 567.65 11.65 550.85 17.5 534.05 23.6 507.1 36.45 499.1 44.1 492.45 46.8 485.65 49.55 483.7 50.7
           L 482.5 50.7
@@ -273,14 +147,15 @@
         </svg>
         <img src="Images/spaceship.png" alt="Spaceship" class="spaceship" id="spaceship" />
       </div>
-      <ul class="nav-links">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="about.html">About</a></li>
-        <li><a href="projects.html">Projects</a></li>
-        <li><a href="music.html">Music</a></li>
-        <li><a href="contact.html">Contact</a></li>
-      </ul>
-    </nav>
+    </div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="projects.html">Projects</a></li>
+      <li><a href="music.html">Music</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
   </header>
 
   <div class="content">
