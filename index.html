@@ -157,6 +157,103 @@
       50% { opacity: 0.8; transform: scale(1.5); }
       100% { opacity: 0.3; transform: scale(1); }
     }
+
+    /* Add responsive design */
+    @media screen and (max-width: 768px) {
+      .navbar {
+        height: 280px; /* Slightly smaller height on mobile */
+      }
+      
+      .nav-links {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.8rem;
+        transform: translateY(20px);
+      }
+
+      .nav-links a {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.9rem;
+      }
+
+      .svg-container {
+        transform: scale(0.7); /* Scale down the SVG animation */
+        transform-origin: top left;
+      }
+
+      .spaceship {
+        width: 40px; /* Slightly smaller spaceship */
+      }
+
+      .particle {
+        width: 4px; /* Slightly smaller particles */
+        height: 4px;
+      }
+    }
+
+    @media screen and (max-width: 480px) {
+      .navbar {
+        height: 260px;
+      }
+
+      .nav-links {
+        gap: 0.6rem;
+      }
+
+      .nav-links a {
+        padding: 0.3rem 0.6rem;
+        font-size: 0.85rem;
+      }
+
+      .svg-container {
+        transform: scale(0.5); /* Even smaller scale for very small devices */
+      }
+
+      .spaceship {
+        width: 35px;
+      }
+    }
+
+    /* Make content responsive */
+    .content {
+      text-align: center;
+      padding: 4rem 1rem 1rem; /* Adjusted padding for mobile */
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .poster {
+      width: 90%; /* Wider on mobile */
+      max-width: 700px;
+      border-radius: 8px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+      margin: 2rem auto 1rem; /* Adjusted margins */
+    }
+
+    .trailer iframe {
+      width: 100%; /* Full width on mobile */
+      max-width: 720px;
+      height: 56.25vw; /* Maintain 16:9 aspect ratio */
+      max-height: 405px;
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    }
+
+    .screenshot-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      padding: 0 1rem;
+      margin-top: 2rem;
+    }
+
+    .screenshot-gallery img {
+      width: 100%;
+      height: auto;
+      border-radius: 12px;
+      transition: transform 0.3s ease;
+    }
   </style>
 </head>
 <body>
