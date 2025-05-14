@@ -656,8 +656,16 @@ Q 1629.25 233.55 1630.05 226.3 1630.8 219.3 1630.6 210.5 1630.4 201.5 1628.65 19
       const container = document.getElementById('flower-container');
       const numFlowers = 15; // Increased number of flowers
       
-      // Remove fixed positioning to allow flowers throughout the page
-      container.style.height = '100%';
+      // Get the main content height to properly distribute flowers
+      const contentHeight = document.querySelector('.content').offsetHeight;
+      container.style.height = contentHeight + 'px';
+      
+      // Define sections of the page to distribute flowers
+      const sections = [
+        { start: 900, end: 1200 },  // First cluster
+        { start: 1400, end: 1700 }, // Middle cluster
+        { start: 1900, end: 2200 }  // Bottom cluster
+      ];
       
       for (let i = 0; i < numFlowers; i++) {
         const flower = document.createElement('div');
@@ -678,9 +686,13 @@ Q 1629.25 233.55 1630.05 226.3 1630.8 219.3 1630.6 210.5 1630.4 201.5 1628.65 19
         flower.appendChild(petals);
         flower.appendChild(center);
         
-        // Random position throughout the entire page
+        // Choose a random section and position within it
+        const section = sections[Math.floor(i / 5)]; // Distribute flowers evenly across sections
+        const top = section.start + Math.random() * (section.end - section.start);
+        
+        // Position the flower
         flower.style.left = `${Math.random() * 90 + 5}%`;
-        flower.style.top = `${Math.random() * 200 + 50}%`; // Spread vertically throughout the page
+        flower.style.top = `${top}px`;
         
         // Random size variation
         const size = 40 + Math.random() * 30;
