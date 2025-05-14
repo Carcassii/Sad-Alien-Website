@@ -309,6 +309,48 @@
       margin: 0 auto;
     }
 
+    .title-section {
+      margin: 2rem auto 4rem;
+      max-width: 800px;
+      padding: 2rem;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(8px);
+    }
+
+    .title-section h1 {
+      font-family: 'Patrick Hand', cursive;
+      font-size: 3.5rem;
+      margin: 0 0 1rem;
+      color: #0a1d37;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .title-section .subtitle {
+      font-size: 1.4rem;
+      line-height: 1.6;
+      margin: 0;
+      color: #3c75b4;
+      font-family: 'Work Sans', sans-serif;
+      font-weight: 600;
+    }
+
+    @media screen and (max-width: 768px) {
+      .title-section {
+        margin: 1.5rem 1rem 3rem;
+        padding: 1.5rem;
+      }
+
+      .title-section h1 {
+        font-size: 2.5rem;
+      }
+
+      .title-section .subtitle {
+        font-size: 1.2rem;
+      }
+    }
+
     .description {
       text-align: center;
       max-width: 800px;
@@ -581,8 +623,10 @@ Q 1629.25 233.55 1630.05 226.3 1630.8 219.3 1630.6 210.5 1630.4 201.5 1628.65 19
 
   <div class="content">
     <img src="Images/poster.png" alt="Mystery on the Mountain Poster" class="poster" />
-    <h1>Mystery on the Mountain</h1>
-    <p>A whimsical skiing adventure full of secrets and silly characters.</p>
+    <div class="title-section">
+      <h1>Mystery on the Mountain</h1>
+      <p class="subtitle">A whimsical skiing adventure full of secrets and silly characters.</p>
+    </div>
 
     <section class="trailer">
       <h2>Watch the Trailer</h2>
