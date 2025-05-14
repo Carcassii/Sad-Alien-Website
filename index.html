@@ -292,25 +292,10 @@
       
       container.appendChild(sparkle);
 
-      // Remove particles after animation completes to prevent memory issues
-      setTimeout(() => {
-        sparkle.remove();
-      }, 1000);
-
-      // Slow down the animation slightly
-      t += 0.001; // Changed from 0.0025 to 0.001 for slower movement
-
+      t += 0.0025;
       requestAnimationFrame(updatePosition);
     }
 
-    // Clean up existing particles before starting
-    function cleanupParticles() {
-      const existingParticles = document.querySelectorAll('.particle');
-      existingParticles.forEach(particle => particle.remove());
-    }
-
-    // Start the animation
-    cleanupParticles();
     requestAnimationFrame(updatePosition);
 
     // Create random stars
