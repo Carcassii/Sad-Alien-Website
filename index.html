@@ -141,6 +141,7 @@
     }
     .screenshot-gallery img:hover {
       transform: scale(1.05);
+      cursor: pointer;
     }
     .star {
       position: absolute;
@@ -339,6 +340,102 @@
       border-radius: 12px;
       transition: transform 0.3s ease;
     }
+
+    /* Modal styles */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(10, 29, 55, 0.9);
+      z-index: 1000;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal-backdrop.active {
+      opacity: 1;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.9);
+      z-index: 1001;
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+
+    .modal.active {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    .modal img {
+      max-width: 90vw;
+      max-height: 80vh;
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: -40px;
+      right: 0;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 8px;
+      transition: transform 0.2s ease;
+    }
+
+    .modal-close:hover {
+      transform: scale(1.1);
+    }
+
+    .modal-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border: none;
+      padding: 16px 12px;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .modal-nav:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-50%) scale(1.1);
+    }
+
+    .modal-prev {
+      left: -60px;
+    }
+
+    .modal-next {
+      right: -60px;
+    }
+
+    @media screen and (max-width: 768px) {
+      .modal-nav {
+        padding: 12px 8px;
+      }
+      .modal-prev {
+        left: -40px;
+      }
+      .modal-next {
+        right: -40px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -452,6 +549,15 @@
 
   <div id="flower-container"></div>
 
+  <!-- Add Modal Structure -->
+  <div class="modal-backdrop"></div>
+  <div class="modal">
+    <button class="modal-close">×</button>
+    <img src="" alt="Full size screenshot" />
+    <button class="modal-nav modal-prev">❮</button>
+    <button class="modal-nav modal-next">❯</button>
+  </div>
+
   <script>
     const spaceship = document.getElementById("spaceship");
     const path = document.getElementById("trail-path");
@@ -564,6 +670,70 @@
 
     // Create new flowers only once
     window.addEventListener('load', createFlowers);
+
+    // Modal functionality
+    const modal = document.querySelector('.modal');
+    const modalImg = modal.querySelector('img');
+    const modalBackdrop = document.querySelector('.modal-backdrop');
+    const modalClose = document.querySelector('.modal-close');
+    const modalPrev = document.querySelector('.modal-prev');
+    const modalNext = document.querySelector('.modal-next');
+    const screenshots = document.querySelectorAll('.screenshot-gallery img');
+    let currentImageIndex = 0;
+
+    function openModal(image) {
+      currentImageIndex = Array.from(screenshots).indexOf(image);
+      modalImg.src = image.src;
+      modalImg.alt = image.alt;
+      modal.style.display = 'block';
+      modalBackdrop.style.display = 'block';
+      // Trigger reflow
+      modal.offsetHeight;
+      modalBackdrop.offsetHeight;
+      // Add active class for animation
+      modal.classList.add('active');
+      modalBackdrop.classList.add('active');
+      // Disable scroll
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      modal.classList.remove('active');
+      modalBackdrop.classList.remove('active');
+      setTimeout(() => {
+        modal.style.display = 'none';
+        modalBackdrop.style.display = 'none';
+        // Re-enable scroll
+        document.body.style.overflow = '';
+      }, 300);
+    }
+
+    function showImage(index) {
+      currentImageIndex = (index + screenshots.length) % screenshots.length;
+      const image = screenshots[currentImageIndex];
+      modalImg.src = image.src;
+      modalImg.alt = image.alt;
+    }
+
+    // Event Listeners
+    screenshots.forEach(img => {
+      img.addEventListener('click', () => openModal(img));
+    });
+
+    modalClose.addEventListener('click', closeModal);
+    modalBackdrop.addEventListener('click', closeModal);
+
+    modalPrev.addEventListener('click', () => showImage(currentImageIndex - 1));
+    modalNext.addEventListener('click', () => showImage(currentImageIndex + 1));
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (!modal.classList.contains('active')) return;
+      
+      if (e.key === 'Escape') closeModal();
+      if (e.key === 'ArrowLeft') showImage(currentImageIndex - 1);
+      if (e.key === 'ArrowRight') showImage(currentImageIndex + 1);
+    });
   </script>
 </body>
 </html>
