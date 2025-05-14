@@ -12,13 +12,13 @@
     body {
       margin: 0;
       font-family: 'Work Sans', sans-serif;
-      background: linear-gradient(to bottom, #0a1d37 0%, #0a1d37 450px, #3c75b4 600px, #a0d2ff 750px, #fffdf9 1000px);
+      background: linear-gradient(to bottom, #0a1d37 0%, #0a1d37 320px, #3c75b4 460px, #a0d2ff 640px, #fffdf9 900px);
       color: #222;
       overflow-x: hidden;
     }
     .navbar {
       position: relative;
-      height: 500px;
+      height: 320px;
       background: #0a1d37;
       display: flex;
       justify-content: center;
@@ -35,19 +35,17 @@
       width: 100%;
       height: 100%;
       background-image:
-        radial-gradient(#fff8cc 1px, transparent 1px),
-        radial-gradient(#fff8cc88 1.5px, transparent 1.5px),
-        radial-gradient(#fff8cc44 2px, transparent 2px);
-      background-size: 200px 200px, 300px 300px, 400px 400px;
-      background-position: 10% 30%, 50% 70%, 80% 20%;
-      opacity: 0.5;
+        radial-gradient(#fff8cc 0.5px, transparent 0.5px);
+      background-size: 4px 4px;
+      opacity: 0.3;
       pointer-events: none;
       z-index: 0;
-      animation: twinkle 5s infinite ease-in-out alternate;
+      animation: twinkle 4s infinite alternate;
+      mask-image: radial-gradient(circle, white 60%, transparent 100%);
     }
     @keyframes twinkle {
-      0% { opacity: 0.4; }
-      100% { opacity: 0.9; }
+      0% { opacity: 0.3; }
+      100% { opacity: 0.8; }
     }
     .nav-links {
       list-style: none;
@@ -56,7 +54,7 @@
       margin: 0;
       padding: 0;
       z-index: 2;
-      transform: translateY(60px);
+      transform: translateY(40px);
     }
     .nav-links a {
       font-family: 'Patrick Hand', cursive;
@@ -77,7 +75,7 @@
     .svg-container {
       position: absolute;
       top: 0;
-      left: 0;
+      left: 10%;
       width: 100%;
       height: 1000px;
       pointer-events: none;
@@ -90,14 +88,14 @@
     }
     .draw-path {
       fill: none;
-      stroke: #ffea6b;
+      stroke: none;
       stroke-width: 3px;
       stroke-linecap: round;
       stroke-linejoin: round;
       stroke-dasharray: 20000;
       stroke-dashoffset: 20000;
       animation: draw-line 8s ease forwards;
-      filter: drop-shadow(0 0 6px #ffea6b);
+      filter: drop-shadow(0 0 10px #ffea6b) drop-shadow(0 0 18px #ffea6b);
     }
     @keyframes draw-line {
       to {
@@ -112,7 +110,7 @@
       border-radius: 50%;
       pointer-events: none;
       animation: floaty 1s ease-out forwards;
-      filter: drop-shadow(0 0 4px #ffea6b) drop-shadow(0 0 8px #ffea6b);
+      filter: drop-shadow(0 0 6px #ffea6b) drop-shadow(0 0 20px #ffea6b);
     }
     @keyframes floaty {
       0% { opacity: 1; transform: scale(1); }
@@ -284,6 +282,11 @@ Q 1629.25 233.55 1630.05 226.3 1630.8 219.3 1630.6 210.5 1630.4 201.5 1628.65 19
       sparkle.className = "particle";
       sparkle.style.left = `${point.x}px`;
       sparkle.style.top = `${point.y}px`;
+
+      const size = Math.random() > 0.95 ? 10 : 6;
+      sparkle.style.width = `${size}px`;
+      sparkle.style.height = `${size}px`;
+
       container.appendChild(sparkle);
 
       t += 0.0025;
