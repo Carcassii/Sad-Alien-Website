@@ -12,13 +12,13 @@
     body {
       margin: 0;
       font-family: 'Work Sans', sans-serif;
-      background: linear-gradient(to bottom, #0a1d37 0%, #0a1d37 200px, #a0d2ff 800px, #fffdf9 1200px);
+      background: linear-gradient(to bottom, #0a1d37 0%, #0a1d37 300px, #a0d2ff 700px, #fffdf9 1200px);
       color: #222;
       overflow-x: hidden;
     }
     .navbar {
       position: relative;
-      height: 1000px;
+      height: 1200px;
       background: #0a1d37;
       display: flex;
       justify-content: center;
@@ -34,9 +34,13 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background-image: radial-gradient(#ffffff30 1px, transparent 1px);
-      background-size: 3px 3px;
-      opacity: 0.25;
+      background-image:
+        radial-gradient(#ffffff30 1px, transparent 1px),
+        radial-gradient(#ffffff10 2px, transparent 2px),
+        radial-gradient(#ffffff20 0.5px, transparent 0.5px);
+      background-size: 4px 4px, 10px 10px, 2px 2px;
+      background-position: 0 0, 50px 50px, 25px 25px;
+      opacity: 0.3;
       pointer-events: none;
       z-index: 0;
     }
@@ -47,7 +51,7 @@
       margin: 0;
       padding: 0;
       z-index: 2;
-      transform: translateY(60px);
+      transform: translateY(80px);
     }
     .nav-links a {
       font-family: 'Patrick Hand', cursive;
@@ -65,14 +69,14 @@
       transform: translateY(-2px) scale(1.05);
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
-    .svg-container {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 1000px;
-      pointer-events: none;
-      overflow: visible;
+    //.svg-container {
+    //  position: absolute;
+      //top: 0;
+     // left: 0;
+     // width: 100%;
+    //  height: 1000px;
+    //  pointer-events: none;
+     // overflow: visible;
     }
     .spaceship {
       position: absolute;
@@ -285,4 +289,5 @@ Q 1629.25 233.55 1630.05 226.3 1630.8 219.3 1630.6 210.5 1630.4 201.5 1628.65 19
   </script>
 </body>
 </html>
+
 
