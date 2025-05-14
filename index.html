@@ -12,13 +12,13 @@
     body {
       margin: 0;
       font-family: 'Work Sans', sans-serif;
-      background: linear-gradient(to bottom, #0a1d37 0%, #0a1d37 500px, #3c75b4 600px, #a0d2ff 750px, #fffdf9 1000px);
+      background: linear-gradient(to bottom, #0a1d37 0%, #0a1d37 450px, #3c75b4 600px, #a0d2ff 750px, #fffdf9 1000px);
       color: #222;
       overflow-x: hidden;
     }
     .navbar {
       position: relative;
-      height: 580px;
+      height: 500px;
       background: #0a1d37;
       display: flex;
       justify-content: center;
@@ -35,19 +35,19 @@
       width: 100%;
       height: 100%;
       background-image:
-        radial-gradient(#fff8cc 0.8px, transparent 0.8px),
-        radial-gradient(#fff8cc88 1px, transparent 1px),
-        radial-gradient(#fff8cc44 1.5px, transparent 1.5px);
-      background-size: 40px 40px, 80px 80px, 120px 120px;
-      background-position: 0 0, 20px 30px, 60px 90px;
-      opacity: 0.7;
+        radial-gradient(#fff8cc 1px, transparent 1px),
+        radial-gradient(#fff8cc88 1.5px, transparent 1.5px),
+        radial-gradient(#fff8cc44 2px, transparent 2px);
+      background-size: 200px 200px, 300px 300px, 400px 400px;
+      background-position: 10% 30%, 50% 70%, 80% 20%;
+      opacity: 0.5;
       pointer-events: none;
       z-index: 0;
-      animation: twinkle 4s infinite ease-in-out alternate;
+      animation: twinkle 5s infinite ease-in-out alternate;
     }
     @keyframes twinkle {
-      0% { opacity: 0.6; }
-      100% { opacity: 0.85; }
+      0% { opacity: 0.4; }
+      100% { opacity: 0.9; }
     }
     .nav-links {
       list-style: none;
@@ -56,7 +56,7 @@
       margin: 0;
       padding: 0;
       z-index: 2;
-      transform: translateY(80px);
+      transform: translateY(60px);
     }
     .nav-links a {
       font-family: 'Patrick Hand', cursive;
