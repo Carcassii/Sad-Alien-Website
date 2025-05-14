@@ -158,6 +158,47 @@
       100% { opacity: 0.3; transform: scale(1); }
     }
 
+    .floating-flower {
+      position: fixed;
+      pointer-events: none;
+      width: 40px;
+      height: 40px;
+      z-index: -1;
+      opacity: 0.7;
+      animation: floatUpward 15s linear infinite;
+    }
+
+    .flower-petal-1 .petals {
+      filter: hue-rotate(0deg) saturate(1.2);
+    }
+
+    .flower-petal-2 .petals {
+      filter: hue-rotate(60deg) saturate(1.2);
+    }
+
+    .flower-petal-3 .petals {
+      filter: hue-rotate(120deg) saturate(1.2);
+    }
+
+    .flower-petal-4 .petals {
+      filter: hue-rotate(200deg) saturate(1.2);
+    }
+
+    .flower-petal-5 .petals {
+      filter: hue-rotate(280deg) saturate(1.2);
+    }
+
+    @keyframes floatUpward {
+      0% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0.7;
+      }
+      100% {
+        transform: translateY(-100vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
     /* Add responsive design */
     @media screen and (max-width: 768px) {
       .navbar {
@@ -383,6 +424,8 @@
     </section>
   </div>
 
+  <div id="flower-container"></div>
+
   <script>
     const spaceship = document.getElementById("spaceship");
     const path = document.getElementById("trail-path");
@@ -391,29 +434,29 @@
     let t = 0;
 
     function updatePosition() {
-  const point = path.getPointAtLength(t * totalLength);
+      const point = path.getPointAtLength(t * totalLength);
 
-  spaceship.style.left = `${point.x - 25}px`;
-  spaceship.style.top = `${point.y - 25}px`;
+      spaceship.style.left = `${point.x - 25}px`;
+      spaceship.style.top = `${point.y - 25}px`;
 
-  const sparkle = document.createElement("div");
-  sparkle.className = "particle";
-  sparkle.style.left = `${point.x}px`;
-  sparkle.style.top = `${point.y}px`;
-  container.appendChild(sparkle);
+      const sparkle = document.createElement("div");
+      sparkle.className = "particle";
+      sparkle.style.left = `${point.x}px`;
+      sparkle.style.top = `${point.y}px`;
+      container.appendChild(sparkle);
 
-  if (t >= 1) {
-    // Let the last dot appear before flying away
-    setTimeout(() => {
-      spaceship.style.transition = 'transform 3s ease-in-out';
-      spaceship.style.transform = 'translateX(200vw)'; // Definitely off screen to the right
-    }, 200); // Small pause after last dot
-    return;
-  }
+      if (t >= 1) {
+        // Let the last dot appear before flying away
+        setTimeout(() => {
+          spaceship.style.transition = 'transform 3s ease-in-out';
+          spaceship.style.transform = 'translateX(200vw)'; // Definitely off screen to the right
+        }, 200); // Small pause after last dot
+        return;
+      }
 
-  t += 0.002;
-  requestAnimationFrame(updatePosition);
-  }
+      t += 0.002;
+      requestAnimationFrame(updatePosition);
+    }
 
     requestAnimationFrame(updatePosition);
 
@@ -447,6 +490,65 @@
 
     // Call the function when the page loads
     window.addEventListener('load', createStars);
+
+    // Create floating flowers
+    function createFlowers() {
+      const container = document.getElementById('flower-container');
+      const numFlowers = 15; // Number of flowers
+      
+      for (let i = 0; i < numFlowers; i++) {
+        setTimeout(() => {
+          const flower = document.createElement('div');
+          flower.className = `floating-flower flower-petal-${Math.floor(Math.random() * 5) + 1}`;
+          
+          // Create two separate images for petals and center
+          const petals = document.createElement('img');
+          petals.src = 'Images/flower.png';
+          petals.className = 'petals';
+          petals.style.position = 'absolute';
+          petals.style.width = '100%';
+          petals.style.height = '100%';
+          
+          const center = document.createElement('img');
+          center.src = 'Images/flower.png';
+          center.style.position = 'absolute';
+          center.style.width = '100%';
+          center.style.height = '100%';
+          center.style.filter = 'hue-rotate(0deg)'; // Keep original color for center
+          center.style.mixBlendMode = 'multiply'; // This will keep the center visible
+          
+          flower.appendChild(petals);
+          flower.appendChild(center);
+          
+          // Random horizontal position
+          flower.style.left = `${Math.random() * 100}%`;
+          
+          // Random size variation
+          const size = 30 + Math.random() * 20;
+          flower.style.width = `${size}px`;
+          flower.style.height = `${size}px`;
+          
+          // Random animation duration
+          flower.style.animationDuration = `${15 + Math.random() * 10}s`;
+          
+          container.appendChild(flower);
+          
+          // Remove the flower after animation completes
+          flower.addEventListener('animationend', () => {
+            container.removeChild(flower);
+          });
+        }, i * 1000); // Stagger the creation of flowers
+      }
+    }
+
+    // Create new flowers periodically
+    function startFlowerGeneration() {
+      createFlowers();
+      setInterval(createFlowers, 20000); // Create new batch every 20 seconds
+    }
+
+    // Start generating flowers when the page loads
+    window.addEventListener('load', startFlowerGeneration);
   </script>
 </body>
 </html>
