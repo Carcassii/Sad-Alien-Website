@@ -160,11 +160,11 @@
     }
 
     #flower-container {
-      position: absolute;
+      position: fixed;
       top: 0;
       left: 0;
       width: 100%;
-      height: 100vh;
+      height: 100%;
       pointer-events: none;
       z-index: -1;
     }
@@ -287,7 +287,7 @@
         left: -80%;
         width: 150%;
         height: 260px;
-        transform: scale(0.4);
+        transform: scale(0.35);
         transform-origin: center top;
       }
 
@@ -654,11 +654,10 @@ Q 1629.25 233.55 1630.05 226.3 1630.8 219.3 1630.6 210.5 1630.4 201.5 1628.65 19
     // Create floating flowers
     function createFlowers() {
       const container = document.getElementById('flower-container');
-      const numFlowers = 12;
+      const numFlowers = 15; // Increased number of flowers
       
-      // Set container position to a specific section
-      container.style.top = '900px'; // Position below the gradient change
-      container.style.height = '800px'; // Give specific height for flower area
+      // Remove fixed positioning to allow flowers throughout the page
+      container.style.height = '100%';
       
       for (let i = 0; i < numFlowers; i++) {
         const flower = document.createElement('div');
@@ -679,9 +678,9 @@ Q 1629.25 233.55 1630.05 226.3 1630.8 219.3 1630.6 210.5 1630.4 201.5 1628.65 19
         flower.appendChild(petals);
         flower.appendChild(center);
         
-        // Random position within container
+        // Random position throughout the entire page
         flower.style.left = `${Math.random() * 90 + 5}%`;
-        flower.style.top = `${Math.random() * 70 + 15}%`;
+        flower.style.top = `${Math.random() * 200 + 50}%`; // Spread vertically throughout the page
         
         // Random size variation
         const size = 40 + Math.random() * 30;
