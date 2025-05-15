@@ -313,13 +313,14 @@
     }
 
     /* Position black keys with proper spacing */
-    .key[data-note="C#4"] { left: 32px; }
-    .key[data-note="D#4"] { left: 82px; }
-    .key[data-note="F#4"] { left: 182px; }
-    .key[data-note="G#4"] { left: 232px; }
-    .key[data-note="A#4"] { left: 282px; }
-    .key[data-note="C#5"] { left: 382px; }
-    .key[data-note="D#5"] { left: 432px; }
+    /* Each white key is 45px wide, black key should be positioned relative to that */
+    .key[data-note="C#4"] { left: calc(45px * 0.7); }  /* After C4 (A) */
+    .key[data-note="D#4"] { left: calc(45px * 1.7); }  /* After D4 (S) */
+    .key[data-note="F#4"] { left: calc(45px * 3.7); }  /* After F4 (F) */
+    .key[data-note="G#4"] { left: calc(45px * 4.7); }  /* After G4 (G) */
+    .key[data-note="A#4"] { left: calc(45px * 5.7); }  /* After A4 (H) */
+    .key[data-note="C#5"] { left: calc(45px * 7.7); }  /* After C5 (K) */
+    .key[data-note="D#5"] { left: calc(45px * 8.7); }  /* After D5 (L) */
 
     .key:hover {
       background: #f0f0f0;
