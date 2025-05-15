@@ -725,23 +725,66 @@
     // Initialize samplers
     async function initSamplers() {
       const instrumentSamples = {
-        clarinet: 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/clarinet/A3.mp3',
-        flute: 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/flute/A3.mp3',
-        harpsichord: 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/harpsichord/A3.mp3',
-        guitar: 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/guitar-acoustic/A3.mp3',
-        trumpet: 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/trumpet/A3.mp3',
-        oboe: 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/oboe/A3.mp3',
-        organ: 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/organ/A3.mp3',
-        strings: 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/violin/A3.mp3',
-        woof: 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/bassoon/A3.mp3'
+        clarinet: {
+          'C4': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/clarinet/C4.mp3',
+          'E4': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/clarinet/E4.mp3',
+          'G4': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/clarinet/G4.mp3',
+          'C5': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/clarinet/C5.mp3'
+        },
+        flute: {
+          'C4': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/flute/C4.mp3',
+          'E4': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/flute/E4.mp3',
+          'G4': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/flute/G4.mp3',
+          'C5': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/flute/C5.mp3'
+        },
+        harpsichord: {
+          'C4': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/harpsichord/C4.mp3',
+          'E4': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/harpsichord/E4.mp3',
+          'G4': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/harpsichord/G4.mp3',
+          'C5': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/harpsichord/C5.mp3'
+        },
+        guitar: {
+          'C4': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/guitar-acoustic/C4.mp3',
+          'E4': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/guitar-acoustic/E4.mp3',
+          'G4': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/guitar-acoustic/G4.mp3',
+          'C5': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/guitar-acoustic/C5.mp3'
+        },
+        trumpet: {
+          'C4': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/trumpet/C4.mp3',
+          'E4': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/trumpet/E4.mp3',
+          'G4': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/trumpet/G4.mp3',
+          'C5': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/trumpet/C5.mp3'
+        },
+        oboe: {
+          'C4': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/oboe/C4.mp3',
+          'E4': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/oboe/E4.mp3',
+          'G4': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/oboe/G4.mp3',
+          'C5': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/oboe/C5.mp3'
+        },
+        organ: {
+          'C4': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/organ/C4.mp3',
+          'E4': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/organ/E4.mp3',
+          'G4': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/organ/G4.mp3',
+          'C5': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/organ/C5.mp3'
+        },
+        strings: {
+          'C4': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/violin/C4.mp3',
+          'E4': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/violin/E4.mp3',
+          'G4': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/violin/G4.mp3',
+          'C5': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/violin/C5.mp3'
+        },
+        woof: {
+          'C4': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/bassoon/C4.mp3',
+          'E4': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/bassoon/E4.mp3',
+          'G4': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/bassoon/G4.mp3',
+          'C5': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/bassoon/C5.mp3'
+        }
       };
 
       try {
-        for (const [name, url] of Object.entries(instrumentSamples)) {
+        for (const [name, urls] of Object.entries(instrumentSamples)) {
           samplers[name] = new Tone.Sampler({
-            urls: {
-              'A3': url
-            },
+            urls: urls,
             release: 1,
             baseUrl: ''
           }).connect(gain);
