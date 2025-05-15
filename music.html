@@ -516,6 +516,14 @@
           <option value="off">Off</option>
         </select>
       </div>
+      <div class="knob">
+        <label for="volume">Volume</label>
+        <input id="volume" type="range" min="0" max="1" step="0.01" value="0.7">
+      </div>
+      <div class="knob">
+        <label for="delay">Delay</label>
+        <input id="delay" type="range" min="0" max="1" step="0.01" value="0">
+      </div>
     </div>
 
     <div class="keyboard" id="keyboard">
@@ -603,14 +611,16 @@
     const filter = new Tone.Filter(1500, "lowpass");
     const reverb = new Tone.Reverb(2);
     const distortion = new Tone.Distortion(0);
-    const limiter = new Tone.Limiter(-3); // Add a limiter to prevent clipping
-    const gain = new Tone.Gain(0.7); // Add gain control
+    const limiter = new Tone.Limiter(-3);
+    const gain = new Tone.Gain(0.7);
     const analyser = new Tone.Analyser("waveform", 128);
+    const delay = new Tone.FeedbackDelay("8n", 0);
 
     // Chain the effects in a better order
-    synth.chain(gain, filter, distortion, reverb, limiter, analyser, Tone.Destination);
+    synth.chain(gain, filter, distortion, delay, reverb, limiter, analyser, Tone.Destination);
 
     reverb.wet.value = 0.2;
+    delay.wet.value = 0;
 
     const oscillatorTypes = ['sawtooth', 'square', 'sine', 'triangle'];
 
@@ -844,6 +854,14 @@
     document.getElementById('oscillator').addEventListener('input', (e) => {
       const type = oscillatorTypes[Math.floor(e.target.value)];
       synth.oscillator.type = type;
+    });
+
+    document.getElementById('volume').addEventListener('input', (e) => {
+      gain.gain.value = e.target.value;
+    });
+
+    document.getElementById('delay').addEventListener('input', (e) => {
+      delay.wet.value = e.target.value;
     });
 
     // Instrument presets
