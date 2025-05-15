@@ -229,20 +229,34 @@
       border-radius: 15px;
       box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
       transition: transform 0.2s, box-shadow 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .knob::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        120deg,
+        transparent,
+        rgba(255, 94, 165, 0.2),
+        transparent
+      );
+      transition: 0.5s;
+    }
+
+    .knob:hover::before {
+      left: 100%;
     }
 
     .knob:hover {
       transform: translateY(-2px);
       box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2),
                   0 5px 15px rgba(255, 94, 165, 0.3);
-    }
-
-    label {
-      font-size: 1.2em;
-      margin-bottom: 12px;
-      display: block;
-      color: #ff5ea5;
-      text-shadow: 0 0 5px rgba(255, 94, 165, 0.3);
     }
 
     input[type=range] {
@@ -252,6 +266,14 @@
       background: rgba(255, 255, 255, 0.1);
       border-radius: 4px;
       outline: none;
+      position: relative;
+      overflow: hidden;
+    }
+
+    input[type=range]::-webkit-slider-runnable-track {
+      height: 8px;
+      background: linear-gradient(90deg, #ff5ea5 var(--value, 0%), rgba(255, 255, 255, 0.1) var(--value, 0%));
+      border-radius: 4px;
     }
 
     input[type=range]::-webkit-slider-thumb {
@@ -259,14 +281,48 @@
       width: 20px;
       height: 20px;
       background: #ff5ea5;
+      border: 2px solid #fff;
       border-radius: 50%;
       cursor: pointer;
       transition: transform 0.2s, box-shadow 0.2s;
+      position: relative;
+      top: -6px;
+      box-shadow: 0 0 10px rgba(255, 94, 165, 0.5);
     }
 
     input[type=range]::-webkit-slider-thumb:hover {
       transform: scale(1.2);
-      box-shadow: 0 0 10px rgba(255, 94, 165, 0.5);
+      box-shadow: 0 0 15px rgba(255, 94, 165, 0.8);
+    }
+
+    input[type=range]::-webkit-slider-thumb:active {
+      transform: scale(1.1);
+      background: #ff8ebd;
+    }
+
+    label {
+      font-size: 1.2em;
+      margin-bottom: 12px;
+      display: block;
+      color: #ff5ea5;
+      text-shadow: 0 0 5px rgba(255, 94, 165, 0.3);
+      position: relative;
+      z-index: 1;
+    }
+
+    label::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: #ff5ea5;
+      transition: width 0.3s ease;
+    }
+
+    .knob:hover label::after {
+      width: 100%;
     }
 
     .keyboard {
@@ -686,7 +742,8 @@
       }
 
       isArpeggiating = true;
-      const interval = 1000 * speed;
+      // Invert the speed calculation (2.1 - speed to make it faster to the right)
+      const interval = 1000 * (2.1 - speed);
 
       if (currentArpNotes.length > 0) {
         arpInterval = setInterval(() => {
