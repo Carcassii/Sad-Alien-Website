@@ -865,44 +865,57 @@
       // Instrument-specific effect adjustments
       switch(instrumentName) {
         case 'spaceOrgan':
-          reverb.wet.value = 0.2;
-          filter.frequency.value = 2000;
+          reverb.wet.value = 0.6;
+          filter.frequency.value = 1500;
+          distortion.distortion = 0.2;
           break;
         case 'crystalBell':
-          reverb.wet.value = 0.3;
-          filter.frequency.value = 3000;
+          reverb.wet.value = 0.8;
+          filter.frequency.value = 4000;
+          distortion.distortion = 0;
+          synth.detune.value = 5;
           break;
         case 'alienVoice':
           reverb.wet.value = 0.4;
-          filter.frequency.value = 1500;
+          filter.frequency.value = 800;
+          distortion.distortion = 0.3;
+          synth.detune.value = -10;
           break;
         case 'cosmicRays':
-          reverb.wet.value = 0.2;
-          filter.frequency.value = 2200;
+          reverb.wet.value = 0.5;
+          filter.frequency.value = 3500;
+          distortion.distortion = 0.4;
+          synth.detune.value = 15;
           break;
         case 'nebulaCloud':
-          reverb.wet.value = 0.3;
-          filter.frequency.value = 2500;
-          // Add slight detune for more natural string sound
-          synth.detune.value = 3;
+          reverb.wet.value = 0.7;
+          filter.frequency.value = 600;
+          distortion.distortion = 0.1;
+          synth.detune.value = -5;
           break;
         case 'quantumWave':
-          reverb.wet.value = 0.1;
-          filter.frequency.value = 3500;
+          reverb.wet.value = 0.3;
+          filter.frequency.value = 2500;
+          distortion.distortion = 0.2;
+          synth.detune.value = 8;
           break;
         case 'blackHole':
-          reverb.wet.value = 0.15;
-          filter.frequency.value = 4000;
+          reverb.wet.value = 0.9;
+          filter.frequency.value = 200;
+          distortion.distortion = 0.5;
+          synth.detune.value = -20;
           break;
         case 'starDust':
-          reverb.wet.value = 0.4;
+          reverb.wet.value = 0.6;
           filter.frequency.value = 5000;
+          distortion.distortion = 0.1;
+          synth.detune.value = 12;
           break;
         case 'wormhole':
-          reverb.wet.value = 0.2;
-          filter.frequency.value = 3000;
-          // Add slight distortion for brass bite
-          distortion.distortion = 0.1;
+          reverb.wet.value = 0.8;
+          filter.frequency.value = 1000;
+          distortion.distortion = 0.3;
+          synth.detune.value = -15;
           break;
       }
 
