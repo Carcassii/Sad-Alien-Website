@@ -55,28 +55,15 @@
       text-decoration: none;
       color: #fff;
       padding: 0.8rem 1.4rem;
-      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      transition: all 0.3s ease;
       border-radius: 16px;
       position: relative;
       font-size: 1.2rem;
       min-width: 100px;
       text-align: center;
       backdrop-filter: blur(4px);
-      border: 2px solid rgba(255,255,255,0.2);
+      border: 1px solid rgba(255,255,255,0.2);
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      overflow: hidden;
-    }
-
-    .nav-links a::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: rgba(255,255,255,0.2);
-      transition: all 0.4s ease;
-      transform: skewX(-20deg);
     }
 
     .nav-links li:nth-child(1) a {
@@ -84,7 +71,6 @@
     }
     .nav-links li:nth-child(2) a {
       background: rgba(255, 202, 58, 0.85);  /* Crayon Yellow */
-      color: #333;
     }
     .nav-links li:nth-child(3) a {
       background: rgba(138, 201, 38, 0.85);  /* Crayon Green */
@@ -96,30 +82,10 @@
       background: rgba(255, 125, 255, 0.85);  /* Crayon Pink */
     }
 
-    .nav-links li:nth-child(1) a:hover {
-      background: rgba(255, 89, 94, 0.95);
-    }
-    .nav-links li:nth-child(2) a:hover {
-      background: rgba(255, 202, 58, 0.95);
-    }
-    .nav-links li:nth-child(3) a:hover {
-      background: rgba(138, 201, 38, 0.95);
-    }
-    .nav-links li:nth-child(4) a:hover {
-      background: rgba(25, 130, 196, 0.95);
-    }
-    .nav-links li:nth-child(5) a:hover {
-      background: rgba(255, 125, 255, 0.95);
-    }
-
     .nav-links a:hover {
-      transform: translateY(-4px) scale(1.05);
-      box-shadow: 0 12px 24px rgba(0,0,0,0.2);
-      border-color: rgba(255,255,255,0.6);
-    }
-
-    .nav-links a:hover::before {
-      left: 100%;
+      transform: translateY(-2px) scale(1.1);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      filter: brightness(1.1);
     }
     .svg-container {
       position: absolute;
