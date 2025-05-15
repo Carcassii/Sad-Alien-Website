@@ -524,14 +524,14 @@
         <label>Choose Instrument:</label>
         <div class="instrument-list">
           <button class="instrument-btn active" data-instrument="spaceOrgan">Space Organ</button>
-          <button class="instrument-btn" data-instrument="crystalBell">Crystal Bell</button>
-          <button class="instrument-btn" data-instrument="alienVoice">Alien Voice</button>
-          <button class="instrument-btn" data-instrument="cosmicRays">Cosmic Rays</button>
-          <button class="instrument-btn" data-instrument="nebulaCloud">Nebula Cloud</button>
-          <button class="instrument-btn" data-instrument="quantumWave">Quantum Wave</button>
-          <button class="instrument-btn" data-instrument="blackHole">Black Hole</button>
-          <button class="instrument-btn" data-instrument="starDust">Star Dust</button>
-          <button class="instrument-btn" data-instrument="wormhole">Wormhole</button>
+          <button class="instrument-btn" data-instrument="clarinet">Clarinet</button>
+          <button class="instrument-btn" data-instrument="flute">Flute</button>
+          <button class="instrument-btn" data-instrument="harpsichord">Harpsichord</button>
+          <button class="instrument-btn" data-instrument="guitar">Guitar</button>
+          <button class="instrument-btn" data-instrument="trumpet">Trumpet</button>
+          <button class="instrument-btn" data-instrument="oboe">Oboe</button>
+          <button class="instrument-btn" data-instrument="organ">Organ</button>
+          <button class="instrument-btn" data-instrument="strings">Strings</button>
         </div>
         <button class="randomize-btn">🎲 Randomize Settings!</button>
       </div>
@@ -924,25 +924,83 @@
     // Instrument presets
     const instruments = {
       spaceOrgan: {
-        oscillator: { 
-          type: 'custom',
-          partials: [1, 0.3, 0.8, 0.2, 0.5, 0.1], // Ethereal, spacey harmonics
-          phase: 45
-        },
-        envelope: { 
-          attack: 0.2, 
-          decay: 1.2, 
-          sustain: 0.8, 
-          release: 2.0 
-        },
-        filterEnvelope: { 
-          attack: 0.3, 
-          decay: 1.0, 
-          sustain: 0.6, 
-          release: 1.5, 
-          baseFrequency: 300, 
-          octaves: 4,
-          exponent: 3
+        type: 'synth',
+        settings: {
+          oscillator: { 
+            type: 'custom',
+            partials: [1, 0.3, 0.8, 0.2, 0.5, 0.1],
+            phase: 45
+          },
+          envelope: { 
+            attack: 0.2, 
+            decay: 1.2, 
+            sustain: 0.8, 
+            release: 2.0 
+          }
+        }
+      },
+      clarinet: {
+        type: 'sampler',
+        sample: 'Clarinet.mp3',
+        settings: {
+          attack: 0.1,
+          release: 0.5
+        }
+      },
+      flute: {
+        type: 'sampler',
+        sample: 'Flute.mp3',
+        settings: {
+          attack: 0.1,
+          release: 0.3
+        }
+      },
+      harpsichord: {
+        type: 'sampler',
+        sample: 'Harpsichord.mp3',
+        settings: {
+          attack: 0.01,
+          release: 1.0
+        }
+      },
+      guitar: {
+        type: 'sampler',
+        sample: 'Guitar.mp3',
+        settings: {
+          attack: 0.05,
+          release: 0.8
+        }
+      },
+      trumpet: {
+        type: 'sampler',
+        sample: 'Trumpet.mp3',
+        settings: {
+          attack: 0.1,
+          release: 0.4
+        }
+      },
+      oboe: {
+        type: 'sampler',
+        sample: 'Oboe.mp3',
+        settings: {
+          attack: 0.1,
+          release: 0.5
+        }
+      },
+      organ: {
+        type: 'sampler',
+        sample: 'Organ.mp3',
+        settings: {
+          attack: 0.2,
+          release: 1.0
+        }
+      },
+      strings: {
+        type: 'sampler',
+        sample: 'Strings.mp3',
+        settings: {
+          attack: 0.3,
+          release: 1.5
         }
       },
       crystalBell: {
@@ -1114,6 +1172,82 @@
         }
       }
     };
+
+    // Create samplers for each instrument
+    const samplers = {};
+    let currentInstrument = null;
+
+    async function initializeSamplers() {
+      for (const [name, config] of Object.entries(instruments)) {
+        if (config.type === 'sampler') {
+          samplers[name] = new Tone.Sampler({
+            urls: {
+              "C4": config.sample
+            },
+            baseUrl: "./",
+            attack: config.settings.attack,
+            release: config.settings.release,
+            onload: () => {
+              console.log(`Loaded ${name} sampler`);
+            }
+          }).chain(gain, filter, distortion, delay, reverb, limiter, analyser, Tone.Destination);
+        }
+      }
+      // Set initial instrument
+      currentInstrument = synth;
+    }
+
+    // Initialize samplers when the page loads
+    initializeSamplers();
+
+    // Update instrument selection handler
+    document.querySelectorAll('.instrument-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const instrumentName = btn.dataset.instrument;
+        const config = instruments[instrumentName];
+
+        // Remove active class from all buttons
+        document.querySelectorAll('.instrument-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        if (config.type === 'sampler') {
+          currentInstrument = samplers[instrumentName];
+        } else {
+          // For synth-based instruments
+          currentInstrument = synth;
+          applyInstrument(instrumentName);
+        }
+      });
+    });
+
+    // Update note triggering to use current instrument
+    function handleNoteOn(note, key) {
+        if (!isArpeggiating) {
+            Tone.start();
+            currentInstrument.triggerAttack(note);
+            activeNotes.set(note, key);
+            if (key) key.classList.add('active');
+        }
+        if (!currentArpNotes.includes(note)) {
+            currentArpNotes.push(note);
+            if (isArpeggiating) {
+                updateArpeggiator();
+            }
+        }
+    }
+
+    function handleNoteOff(note, key) {
+        if (!isArpeggiating) {
+            currentInstrument.triggerRelease([note]);
+            if (key) key.classList.remove('active');
+        }
+        activeNotes.delete(note);
+        currentArpNotes = currentArpNotes.filter(n => n !== note);
+        if (currentArpNotes.length === 0 && arpInterval) {
+            clearInterval(arpInterval);
+            arpInterval = null;
+        }
+    }
 
     // Function to apply instrument settings with additional effects
     function applyInstrument(instrumentName) {
