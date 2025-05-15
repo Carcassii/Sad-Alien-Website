@@ -635,34 +635,26 @@
     // Chain the effects for the synth
     synth.chain(gain, filter, distortion, delay, reverb, limiter, analyser, Tone.Destination);
 
-    reverb.wet.value = 0.2;
+    // Initialize with minimal effects
+    reverb.wet.value = 0.1;
     delay.wet.value = 0;
+    delay.delayTime.value = 0.25;
+    delay.feedback.value = 0.3;
+    distortion.distortion = 0;
+    filter.frequency.value = 5000;
 
-    const oscillatorTypes = ['sawtooth', 'square', 'sine', 'triangle'];
-
-    const keyMap = {
-      'a': 'C4', 'w': 'C#4', 's': 'D4', 'e': 'D#4', 'd': 'E4',
-      'f': 'F4', 't': 'F#4', 'g': 'G4', 'y': 'G#4', 'h': 'A4',
-      'u': 'A#4', 'j': 'B4', 'k': 'C5', 'o': 'C#5', 'l': 'D5',
-      'p': 'D#5', ';': 'E5'
-    };
-
-    // Update visualizer
-    function updateVisualizer() {
-      const waveform = analyser.getValue();
-      
-      for (let i = 0; i < bars.length; i++) {
-        const index = Math.floor(i * (waveform.length / bars.length));
-        const value = Math.abs(waveform[index]) * 200;
-        bars[i].style.height = `${value}%`;
-      }
-
-      requestAnimationFrame(updateVisualizer);
-    }
-    updateVisualizer();
+    // Update UI to match initial settings
+    document.getElementById('reverb').value = 0.1;
+    document.getElementById('delay').value = 0;
+    document.getElementById('delayTime').value = 0.25;
+    document.getElementById('distortion').value = 0;
+    document.getElementById('filter').value = 5000;
+    document.getElementById('volume').value = 0.7;
+    document.getElementById('arpPattern').value = 'off';
+    document.getElementById('arpSpeed').value = 0.5;
 
     // Add arpeggiator
-    let currentArpNotes = [];
+    let currentArpNotes = new Set();
     let arpInterval;
     let currentArpStep = 0;
     let isArpeggiating = false;
@@ -671,8 +663,8 @@
       up: (notes) => [...notes].sort((a, b) => Tone.Frequency(a).toFrequency() - Tone.Frequency(b).toFrequency()),
       down: (notes) => [...notes].sort((a, b) => Tone.Frequency(b).toFrequency() - Tone.Frequency(a).toFrequency()),
       upDown: (notes) => {
-        const up = patterns.up(notes);
-        const down = patterns.down(notes).slice(1, -1);
+        const up = patterns.up([...notes]);
+        const down = patterns.down([...notes]).slice(1, -1);
         return [...up, ...down];
       },
       random: (notes) => {
@@ -688,7 +680,7 @@
 
     function updateArpeggiator() {
       const pattern = document.getElementById('arpPattern').value;
-      const speed = document.getElementById('arpSpeed').value;
+      const speed = parseFloat(document.getElementById('arpSpeed').value);
       
       // Clear existing interval
       if (arpInterval) {
@@ -704,19 +696,19 @@
       isArpeggiating = true;
       const interval = 1000 * (2.1 - speed);
 
-      if (currentArpNotes.length > 0) {
+      if (currentArpNotes.size > 0) {
         arpInterval = setInterval(() => {
-          if (currentArpNotes.length === 0) return;
+          if (currentArpNotes.size === 0) return;
 
-          const arranged = patterns[pattern](currentArpNotes);
+          const arranged = patterns[pattern]([...currentArpNotes]);
           if (arranged.length === 0) return;
 
           currentArpStep = (currentArpStep + 1) % arranged.length;
           const note = arranged[currentArpStep];
           
-          // Release previous note if any
+          // Release all notes
           if (currentInstrument) {
-            currentInstrument.triggerRelease();
+            currentInstrument.releaseAll();
           }
 
           // Play the new note
@@ -724,7 +716,7 @@
             currentInstrument.triggerAttack(note);
           }
 
-          // Activate/deactivate keys visually
+          // Update key visuals
           document.querySelectorAll('.key').forEach(key => {
             key.classList.remove('active');
             if (key.dataset.note === note) {
@@ -736,575 +728,63 @@
     }
 
     // Update event handlers for key presses with improved note handling
-    const activeNotes = new Map(); // Change to Map to store note and key info
+    const activeNotes = new Set();
     let isMouseDown = false;
 
-    function releaseAllNotes() {
-        synth.releaseAll();
-        activeNotes.forEach((key, note) => {
-            if (key) key.classList.remove('active');
-        });
-        activeNotes.clear();
-        currentArpNotes = [];
-        if (arpInterval) {
-            clearInterval(arpInterval);
-            arpInterval = null;
-        }
-    }
-
     function handleNoteOn(note, key) {
-        if (!isArpeggiating) {
-            Tone.start();
-            if (currentInstrument) {
-                currentInstrument.triggerAttack(note);
-            }
-            activeNotes.set(note, key);
-            if (key) key.classList.add('active');
+      if (!isArpeggiating) {
+        if (currentInstrument) {
+          currentInstrument.triggerAttack(note);
         }
-        if (!currentArpNotes.includes(note)) {
-            currentArpNotes.push(note);
-            if (isArpeggiating) {
-                updateArpeggiator();
-            }
-        }
+        if (key) key.classList.add('active');
+      }
+      activeNotes.add(note);
+      currentArpNotes.add(note);
+      if (isArpeggiating) {
+        updateArpeggiator();
+      }
     }
 
     function handleNoteOff(note, key) {
-        if (!isArpeggiating && currentInstrument) {
-            currentInstrument.triggerRelease(note);
-            if (key) key.classList.remove('active');
-        }
-        activeNotes.delete(note);
-        currentArpNotes = currentArpNotes.filter(n => n !== note);
-        if (currentArpNotes.length === 0 && arpInterval) {
-            clearInterval(arpInterval);
-            arpInterval = null;
-        }
+      if (!isArpeggiating && currentInstrument) {
+        currentInstrument.triggerRelease(note);
+        if (key) key.classList.remove('active');
+      }
+      activeNotes.delete(note);
+      currentArpNotes.delete(note);
+      if (currentArpNotes.size === 0 && arpInterval) {
+        clearInterval(arpInterval);
+        arpInterval = null;
+      }
     }
-
-    // Update keyboard event listeners with improved handling
-    const keyboard = document.getElementById('keyboard');
-    const keys = keyboard.getElementsByClassName('key');
-
-    Array.from(keys).forEach(key => {
-        const note = key.dataset.note;
-        
-        key.addEventListener('mousedown', () => {
-            isMouseDown = true;
-            handleNoteOn(note, key);
-        });
-        
-        key.addEventListener('mouseup', () => {
-            isMouseDown = false;
-            handleNoteOff(note, key);
-        });
-        
-        key.addEventListener('mouseleave', () => {
-            if (isMouseDown && activeNotes.has(note)) {
-                handleNoteOff(note, key);
-            }
-        });
-        
-        key.addEventListener('mouseenter', () => {
-            if (isMouseDown) {
-                handleNoteOn(note, key);
-            }
-        });
-
-        key.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            handleNoteOn(note, key);
-        });
-        
-        key.addEventListener('touchend', (e) => {
-            e.preventDefault();
-            handleNoteOff(note, key);
-        });
-    });
-
-    // Update computer keyboard event listeners
-    const pressedKeys = new Set();
-    
-    document.addEventListener('keydown', (e) => {
-        if (e.repeat) return;
-        const note = keyMap[e.key.toLowerCase()];
-        if (note && !pressedKeys.has(e.key.toLowerCase())) {
-            pressedKeys.add(e.key.toLowerCase());
-            const key = Array.from(keys).find(k => k.dataset.note === note);
-            handleNoteOn(note, key);
-        }
-    });
-
-    document.addEventListener('keyup', (e) => {
-        const note = keyMap[e.key.toLowerCase()];
-        if (note) {
-            pressedKeys.delete(e.key.toLowerCase());
-            const key = Array.from(keys).find(k => k.dataset.note === note);
-            handleNoteOff(note, key);
-        }
-    });
-
-    // Add more robust cleanup events
-    window.addEventListener('blur', releaseAllNotes);
-    window.addEventListener('mouseup', () => {
-        isMouseDown = false;
-        if (!isArpeggiating) {
-            releaseAllNotes();
-        }
-    });
-    document.addEventListener('mouseleave', releaseAllNotes);
 
     // Add arpeggiator control listeners
     document.getElementById('arpPattern').addEventListener('change', updateArpeggiator);
     document.getElementById('arpSpeed').addEventListener('input', updateArpeggiator);
-
-    // Control changes
-    document.getElementById('detune').addEventListener('input', (e) => {
-      if (currentInstrument === synth) {
-        synth.detune.value = e.target.value;
-      } else {
-        currentInstrument.detune = e.target.value;
-      }
-    });
-
-    document.getElementById('filter').addEventListener('input', (e) => {
-      filter.frequency.value = e.target.value;
-    });
-
-    document.getElementById('reverb').addEventListener('input', (e) => {
-      reverb.wet.value = e.target.value;
-    });
-
-    document.getElementById('distortion').addEventListener('input', (e) => {
-      distortion.distortion = e.target.value;
-    });
-
-    document.getElementById('oscillator').addEventListener('input', (e) => {
-      if (currentInstrument === synth) {
-        const types = ['sine', 'square', 'sawtooth', 'triangle'];
-        const type = types[Math.floor(e.target.value)];
-        synth.set({
-          oscillator: { type }
-        });
-      }
-    });
-
-    document.getElementById('volume').addEventListener('input', (e) => {
-      gain.gain.value = e.target.value;
-    });
-
-    document.getElementById('delay').addEventListener('input', (e) => {
-      delay.wet.value = e.target.value;
-    });
-
-    // Add delay time control
-    document.getElementById('delayTime').addEventListener('input', (e) => {
-      delay.delayTime.value = parseFloat(e.target.value);
-    });
-
-    // Instrument presets
-    const instruments = {
-      spaceOrgan: {
-        type: 'synth',
-        settings: {
-          oscillator: { 
-            type: 'custom',
-            partials: [1, 0.3, 0.8, 0.2, 0.5, 0.1],
-            phase: 45
-          },
-          envelope: { 
-            attack: 0.2, 
-            decay: 1.2, 
-            sustain: 0.8, 
-            release: 2.0 
-          }
-        }
-      },
-      clarinet: {
-        type: 'sampler',
-        sample: 'audio/Clarinet.mp3',
-        settings: {
-          attack: 0.1,
-          release: 0.5
-        }
-      },
-      flute: {
-        type: 'sampler',
-        sample: 'audio/Flute.mp3',
-        settings: {
-          attack: 0.1,
-          release: 0.3
-        }
-      },
-      harpsichord: {
-        type: 'sampler',
-        sample: 'audio/Harpsichord.mp3',
-        settings: {
-          attack: 0.01,
-          release: 1.0
-        }
-      },
-      guitar: {
-        type: 'sampler',
-        sample: 'audio/Guitar.mp3',
-        settings: {
-          attack: 0.05,
-          release: 0.8
-        }
-      },
-      trumpet: {
-        type: 'sampler',
-        sample: 'audio/Trumpet.mp3',
-        settings: {
-          attack: 0.1,
-          release: 0.4
-        }
-      },
-      oboe: {
-        type: 'sampler',
-        sample: 'audio/Oboe.mp3',
-        settings: {
-          attack: 0.1,
-          release: 0.5
-        }
-      },
-      organ: {
-        type: 'sampler',
-        sample: 'audio/Organ.mp3',
-        settings: {
-          attack: 0.2,
-          release: 1.0
-        }
-      },
-      strings: {
-        type: 'sampler',
-        sample: 'audio/Strings.mp3',
-        settings: {
-          attack: 0.3,
-          release: 1.5
-        }
-      },
-      crystalBell: {
-        oscillator: { 
-          type: 'custom',
-          partials: [1, 0.1, 0.8, 0.1, 0.4], // Crystalline harmonics
-          phase: 90
-        },
-        envelope: { 
-          attack: 0.001, 
-          decay: 2.0, 
-          sustain: 0.1, 
-          release: 3.0 
-        },
-        filterEnvelope: { 
-          attack: 0.001, 
-          decay: 1.5, 
-          sustain: 0.2, 
-          release: 2.0, 
-          baseFrequency: 2000, 
-          octaves: 3 
-        }
-      },
-      alienVoice: {
-        oscillator: { 
-          type: 'custom',
-          partials: [0.6, 1, 0.2, 0.7, 0.1], // Otherworldly vocal harmonics
-          phase: 30
-        },
-        envelope: { 
-          attack: 0.3, 
-          decay: 0.4, 
-          sustain: 0.9, 
-          release: 0.8 
-        },
-        filterEnvelope: { 
-          attack: 0.2, 
-          decay: 0.3, 
-          sustain: 0.8, 
-          release: 0.6, 
-          baseFrequency: 500, 
-          octaves: 5 
-        }
-      },
-      cosmicRays: {
-        oscillator: { 
-          type: 'custom',
-          partials: [0.3, 1, 0.5, 0.2, 0.8, 0.1], // High-energy particle sounds
-          phase: 60
-        },
-        envelope: { 
-          attack: 0.05, 
-          decay: 0.8, 
-          sustain: 0.4, 
-          release: 1.2 
-        },
-        filterEnvelope: { 
-          attack: 0.08, 
-          decay: 0.6, 
-          sustain: 0.4, 
-          release: 1.0, 
-          baseFrequency: 1500, 
-          octaves: 6 
-        }
-      },
-      nebulaCloud: {
-        oscillator: { 
-          type: 'custom',
-          partials: [0.2, 0.4, 1, 0.3, 0.6], // Gaseous, swirling harmonics
-          phase: 120
-        },
-        envelope: { 
-          attack: 0.4, 
-          decay: 1.5, 
-          sustain: 0.7, 
-          release: 2.5 
-        },
-        filterEnvelope: { 
-          attack: 0.3, 
-          decay: 1.2, 
-          sustain: 0.6, 
-          release: 2.0, 
-          baseFrequency: 200, 
-          octaves: 5 
-        }
-      },
-      quantumWave: {
-        oscillator: { 
-          type: 'custom',
-          partials: [0.5, 1, 0.3, 0.7, 0.2, 0.4], // Quantum probability waves
-          phase: 15
-        },
-        envelope: { 
-          attack: 0.001, 
-          decay: 0.6, 
-          sustain: 0.3, 
-          release: 1.0 
-        },
-        filterEnvelope: { 
-          attack: 0.001, 
-          decay: 0.4, 
-          sustain: 0.2, 
-          release: 0.8, 
-          baseFrequency: 1000, 
-          octaves: 4 
-        }
-      },
-      blackHole: {
-        oscillator: { 
-          type: 'custom',
-          partials: [0.1, 0.3, 1, 0.2, 0.4, 0.1], // Deep space harmonics
-          phase: 180
-        },
-        envelope: { 
-          attack: 0.2, 
-          decay: 2.0, 
-          sustain: 0.8, 
-          release: 3.0 
-        },
-        filterEnvelope: { 
-          attack: 0.2, 
-          decay: 1.5, 
-          sustain: 0.6, 
-          release: 2.5, 
-          baseFrequency: 100, 
-          octaves: 7 
-        }
-      },
-      starDust: {
-        oscillator: { 
-          type: 'custom',
-          partials: [0.8, 0.4, 1, 0.2, 0.6, 0.1], // Sparkling harmonics
-          phase: 75
-        },
-        envelope: { 
-          attack: 0.01, 
-          decay: 1.0, 
-          sustain: 0.2, 
-          release: 1.5 
-        },
-        filterEnvelope: { 
-          attack: 0.01, 
-          decay: 0.8, 
-          sustain: 0.3, 
-          release: 1.2, 
-          baseFrequency: 2500, 
-          octaves: 3 
-        }
-      },
-      wormhole: {
-        oscillator: { 
-          type: 'custom',
-          partials: [0.4, 1, 0.6, 0.3, 0.8, 0.2], // Space-time bending harmonics
-          phase: 150
-        },
-        envelope: { 
-          attack: 0.15, 
-          decay: 1.8, 
-          sustain: 0.5, 
-          release: 2.2 
-        },
-        filterEnvelope: { 
-          attack: 0.1, 
-          decay: 1.4, 
-          sustain: 0.4, 
-          release: 1.8, 
-          baseFrequency: 800, 
-          octaves: 5 
-        }
-      },
-      woof: {
-        oscillator: { 
-          type: 'custom',
-          partials: [0.8, 0.4, 1, 0.2, 0.6, 0.1], // Woof harmonics
-          phase: 75
-        },
-        envelope: { 
-          attack: 0.01, 
-          decay: 1.0, 
-          sustain: 0.2, 
-          release: 1.5 
-        },
-        filterEnvelope: { 
-          attack: 0.01, 
-          decay: 0.8, 
-          sustain: 0.3, 
-          release: 1.2, 
-          baseFrequency: 2500, 
-          octaves: 3 
-        }
-      }
-    };
-
-    // Create samplers for each instrument
-    const samplers = {};
-    let currentInstrument = synth;
-
-    async function initializeSamplers() {
-      try {
-        const instrumentFiles = {
-          'clarinet': 'Clarinet.mp3',
-          'flute': 'Flute.mp3',
-          'harpsichord': 'Harpsichord.mp3',
-          'guitar': 'Guitar.mp3',
-          'trumpet': 'Trumpet.mp3',
-          'oboe': 'Oboe.mp3',
-          'organ': 'Organ.mp3',
-          'strings': 'Strings.mp3',
-          'woof': 'Woof.mp3'
-        };
-
-        for (const [name, file] of Object.entries(instrumentFiles)) {
-          console.log(`Loading ${name} sampler...`);
-          samplers[name] = new Tone.Sampler({
-            urls: {
-              "C4": `audio/${file}`
-            },
-            onload: () => {
-              console.log(`${name} sampler loaded successfully`);
-            }
-          });
-          // Connect each sampler to the effects chain
-          samplers[name].chain(gain, filter, distortion, delay, reverb, limiter, analyser, Tone.Destination);
-        }
-      } catch (error) {
-        console.error("Error loading samplers:", error);
-      }
-    }
-
-    // Initialize when page loads
-    window.addEventListener('load', async () => {
-      await Tone.start();
-      await initializeSamplers();
-    });
-
-    // Update instrument selection handler
-    document.querySelectorAll('.instrument-btn').forEach(btn => {
-      btn.addEventListener('click', async () => {
-        const instrumentName = btn.dataset.instrument;
-        
-        // Remove active class from all buttons
-        document.querySelectorAll('.instrument-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-
-        try {
-          if (instrumentName === 'spaceOrgan') {
-            currentInstrument = synth;
-            applyInstrument(instrumentName);
-          } else if (samplers[instrumentName]) {
-            await Tone.start();
-            currentInstrument = samplers[instrumentName];
-            console.log(`Switched to ${instrumentName}`);
-          }
-        } catch (error) {
-          console.error(`Error switching to ${instrumentName}:`, error);
-          currentInstrument = synth;
-        }
-      });
-    });
 
     // Function to apply instrument settings
     function applyInstrument(instrumentName) {
       const settings = instruments[instrumentName];
       if (settings.type === 'synth') {
         synth.set(settings.settings);
-        // Keep heavy effects only for the synth
-        reverb.wet.value = 0.6;
+        // Keep effects minimal initially
+        reverb.wet.value = 0.2;
         filter.frequency.value = 1500;
-        distortion.distortion = 0.2;
-        delay.wet.value = 0.2;
+        distortion.distortion = 0;
+        delay.wet.value = 0;
       } else {
         // For sampled instruments, use minimal effects to preserve natural sound
         switch(instrumentName) {
           case 'clarinet':
-            reverb.wet.value = 0.1;
-            filter.frequency.value = 5000; // Very light filtering
-            distortion.distortion = 0;
-            delay.wet.value = 0;
-            break;
           case 'flute':
-            reverb.wet.value = 0.15;
-            filter.frequency.value = 5000;
-            distortion.distortion = 0;
-            delay.wet.value = 0;
-            break;
           case 'harpsichord':
-            reverb.wet.value = 0.1;
-            filter.frequency.value = 5000;
-            distortion.distortion = 0;
-            delay.wet.value = 0;
-            break;
           case 'guitar':
-            reverb.wet.value = 0.2;
-            filter.frequency.value = 5000;
-            distortion.distortion = 0;
-            delay.wet.value = 0.1;
-            break;
           case 'trumpet':
-            reverb.wet.value = 0.1;
-            filter.frequency.value = 5000;
-            distortion.distortion = 0;
-            delay.wet.value = 0;
-            break;
           case 'oboe':
-            reverb.wet.value = 0.1;
-            filter.frequency.value = 5000;
-            distortion.distortion = 0;
-            delay.wet.value = 0;
-            break;
           case 'organ':
-            reverb.wet.value = 0.2;
-            filter.frequency.value = 5000;
-            distortion.distortion = 0;
-            delay.wet.value = 0;
-            break;
           case 'strings':
-            reverb.wet.value = 0.2;
-            filter.frequency.value = 5000;
-            distortion.distortion = 0;
-            delay.wet.value = 0.1;
-            break;
           case 'woof':
-            reverb.wet.value = 0.2;
+            reverb.wet.value = 0.1;
             filter.frequency.value = 5000;
             distortion.distortion = 0;
             delay.wet.value = 0;
@@ -1347,7 +827,27 @@
 
     // Add event listeners for instrument buttons
     document.querySelectorAll('.instrument-btn').forEach(btn => {
-      btn.addEventListener('click', () => applyInstrument(btn.dataset.instrument));
+      btn.addEventListener('click', async () => {
+        const instrumentName = btn.dataset.instrument;
+        
+        // Remove active class from all buttons
+        document.querySelectorAll('.instrument-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        try {
+          if (instrumentName === 'spaceOrgan') {
+            currentInstrument = synth;
+            applyInstrument(instrumentName);
+          } else if (samplers[instrumentName]) {
+            await Tone.start();
+            currentInstrument = samplers[instrumentName];
+            console.log(`Switched to ${instrumentName}`);
+          }
+        } catch (error) {
+          console.error(`Error switching to ${instrumentName}:`, error);
+          currentInstrument = synth;
+        }
+      });
     });
 
     // Add event listener for randomize button
