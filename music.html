@@ -662,7 +662,7 @@
         release: 0.4
       },
       volume: -12 // Reduce the overall volume to prevent distortion
-    });
+    }).toDestination();
 
     const filter = new Tone.Filter(1500, "lowpass");
     const reverb = new Tone.Reverb(2);
@@ -1188,80 +1188,36 @@
 
     // Create samplers for each instrument
     const samplers = {};
-    let currentInstrument = null;
+    let currentInstrument = synth;
 
     async function initializeSamplers() {
       try {
-        for (const [name, config] of Object.entries(instruments)) {
-          if (config.type === 'sampler') {
-            console.log(`Attempting to load ${name} sampler with file ${config.sample}`);
-            
-            // Create a map of notes for better pitch coverage
-            const noteMap = {
-              'C3': config.sample,
-              'G3': config.sample,
-              'C4': config.sample,
-              'G4': config.sample,
-              'C5': config.sample
-            };
-
-            samplers[name] = new Tone.Sampler({
-              urls: noteMap,
-              baseUrl: "",
-              attack: config.settings.attack,
-              release: config.settings.release,
-              volume: -6, // Slightly reduce volume to prevent clipping
-              curve: 'exponential',
-              onload: () => {
-                console.log(`Successfully loaded ${name} sampler`);
-              },
-              onerror: (error) => {
-                console.error(`Error loading ${name} sampler:`, error);
-              }
-            }).chain(gain, filter, distortion, delay, reverb, limiter, analyser, Tone.Destination);
-
-            // Add instrument-specific processing
-            switch(name) {
-              case 'clarinet':
-                samplers[name].set({ playbackRate: 1 });
-                break;
-              case 'flute':
-                samplers[name].set({ playbackRate: 1.2 });
-                break;
-              case 'harpsichord':
-                samplers[name].set({ playbackRate: 0.9 });
-                break;
-              case 'guitar':
-                samplers[name].set({ playbackRate: 1 });
-                break;
-              case 'trumpet':
-                samplers[name].set({ playbackRate: 1.1 });
-                break;
-              case 'oboe':
-                samplers[name].set({ playbackRate: 0.95 });
-                break;
-              case 'organ':
-                samplers[name].set({ playbackRate: 0.85 });
-                break;
-              case 'strings':
-                samplers[name].set({ playbackRate: 1.05 });
-                break;
-            }
+        const sampler = new Tone.Sampler({
+          urls: {
+            "C4": "audio/Clarinet.mp3"
+          },
+          onload: () => {
+            console.log("Test sampler loaded");
+            sampler.triggerAttackRelease("C4", 1);
           }
-        }
-        // Set initial instrument
-        currentInstrument = synth;
-        console.log('Samplers initialization complete');
+        }).toDestination();
+        
+        samplers.clarinet = sampler;
       } catch (error) {
-        console.error('Error during sampler initialization:', error);
+        console.error("Error loading sampler:", error);
       }
     }
 
-    // Wait for DOM to load before initializing
-    window.addEventListener('load', () => {
-      console.log('Page loaded, initializing samplers...');
-      initializeSamplers();
+    // Initialize when page loads
+    window.addEventListener('load', async () => {
+      await Tone.start();
+      await initializeSamplers();
     });
+
+    // Simple click to start audio
+    document.addEventListener('click', () => {
+      Tone.start();
+    }, { once: true });
 
     // Update instrument selection handler with error handling
     document.querySelectorAll('.instrument-btn').forEach(btn => {
