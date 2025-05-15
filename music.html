@@ -31,6 +31,27 @@
       z-index: 1000;
     }
 
+    .site-title {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: 'Patrick Hand', cursive;
+      font-size: 4em;
+      color: #fff;
+      text-shadow: 0 0 10px #ff5ea5,
+                   0 0 20px #ff5ea5,
+                   0 0 30px #ff5ea5,
+                   0 0 40px #ff5ea5;
+      animation: float 6s ease-in-out infinite;
+      z-index: 2;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translate(-50%, -50%); }
+      50% { transform: translate(-50%, -60%); }
+    }
+
     .nav-links {
       list-style: none;
       display: flex;
@@ -107,7 +128,7 @@
       padding: 30px;
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
       max-width: 800px;
-      margin: 20px auto;
+      margin: 120px auto 20px; /* Increased top margin */
       border: 1px solid rgba(255, 255, 255, 0.2);
     }
 
@@ -137,7 +158,8 @@
     }
 
     .knob {
-      background: rgba(0, 0, 0, 0.3);
+      background: linear-gradient(145deg, #2a1f3d, #1a1a2e);
+      border: 1px solid #ff5ea5;
       padding: 20px;
       border-radius: 15px;
       box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
@@ -185,13 +207,14 @@
     .keyboard {
       display: flex;
       justify-content: center;
-      gap: 5px;
+      position: relative;
       margin-top: 30px;
+      padding: 0 20px;
     }
 
     .key {
-      width: 40px;
-      height: 120px;
+      width: 45px;
+      height: 140px;
       background: rgba(255, 255, 255, 0.9);
       border-radius: 0 0 5px 5px;
       cursor: pointer;
@@ -203,11 +226,27 @@
       padding-bottom: 10px;
       color: #333;
       font-weight: bold;
+      margin: 0 1px;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .key.black {
+      width: 30px;
+      height: 90px;
+      background: #333;
+      position: absolute;
+      margin-left: -15px;
+      z-index: 1;
+      color: #fff;
     }
 
     .key:hover {
       background: rgba(255, 255, 255, 1);
       box-shadow: 0 0 15px rgba(255, 94, 165, 0.5);
+    }
+
+    .key.black:hover {
+      background: #444;
     }
 
     .key.active {
@@ -216,13 +255,19 @@
       color: white;
     }
 
+    .key.black.active {
+      background: #ff8ebd;
+    }
+
     .visualizer {
       height: 100px;
-      background: rgba(0, 0, 0, 0.3);
+      background: #1a1a2e;
       margin: 20px 0;
       border-radius: 10px;
       overflow: hidden;
       position: relative;
+      border: 2px solid #ff5ea5;
+      box-shadow: inset 0 0 10px rgba(255, 94, 165, 0.3);
     }
 
     .visualizer-bar {
@@ -231,6 +276,7 @@
       width: 3px;
       background: #ff5ea5;
       transition: height 0.1s;
+      box-shadow: 0 0 10px #ff5ea5;
     }
 
     @media (max-width: 768px) {
@@ -286,6 +332,7 @@
 <body>
   <header>
     <nav class="navbar">
+      <h1 class="site-title">Sad Alien</h1>
       <ul class="nav-links">
         <li><a href="index.html">Home</a></li>
         <li><a href="about.html">About</a></li>
@@ -298,7 +345,7 @@
 
   <div class="synth-container">
     <h1>🎛️ Quirky Synthesizer!</h1>
-    <p>Press keys A–K to play silly notes 🎶</p>
+    <p>Press the keys or use your keyboard to play! 🎶</p>
     
     <div class="visualizer" id="visualizer"></div>
 
@@ -327,13 +374,22 @@
 
     <div class="keyboard" id="keyboard">
       <div class="key" data-note="C4">A</div>
+      <div class="key black" data-note="C#4">W</div>
       <div class="key" data-note="D4">S</div>
+      <div class="key black" data-note="D#4">E</div>
       <div class="key" data-note="E4">D</div>
       <div class="key" data-note="F4">F</div>
+      <div class="key black" data-note="F#4">T</div>
       <div class="key" data-note="G4">G</div>
+      <div class="key black" data-note="G#4">Y</div>
       <div class="key" data-note="A4">H</div>
+      <div class="key black" data-note="A#4">U</div>
       <div class="key" data-note="B4">J</div>
       <div class="key" data-note="C5">K</div>
+      <div class="key black" data-note="C#5">O</div>
+      <div class="key" data-note="D5">L</div>
+      <div class="key black" data-note="D#5">P</div>
+      <div class="key" data-note="E5">;</div>
     </div>
   </div>
 
@@ -384,9 +440,23 @@
 
     // Set up synth with more effects
     const synth = new Tone.MonoSynth({
-      oscillator: { type: 'sawtooth' },
-      filter: { Q: 2, type: 'lowpass', rolloff: -12 },
-      envelope: { attack: 0.1, decay: 0.2, sustain: 0.5, release: 1 }
+      oscillator: {
+        type: 'square8' // More retro sound
+      },
+      envelope: {
+        attack: 0.005,
+        decay: 0.2,
+        sustain: 0.4,
+        release: 0.4
+      },
+      filterEnvelope: {
+        attack: 0.001,
+        decay: 0.7,
+        sustain: 0.1,
+        release: 0.8,
+        baseFrequency: 300,
+        octaves: 4
+      }
     });
 
     const filter = new Tone.Filter(1500, "lowpass");
@@ -401,9 +471,10 @@
     const oscillatorTypes = ['sawtooth', 'square', 'sine', 'triangle'];
 
     const keyMap = {
-      'a': 'C4', 's': 'D4', 'd': 'E4',
-      'f': 'F4', 'g': 'G4', 'h': 'A4',
-      'j': 'B4', 'k': 'C5'
+      'a': 'C4', 'w': 'C#4', 's': 'D4', 'e': 'D#4', 'd': 'E4',
+      'f': 'F4', 't': 'F#4', 'g': 'G4', 'y': 'G#4', 'h': 'A4',
+      'u': 'A#4', 'j': 'B4', 'k': 'C5', 'o': 'C#5', 'l': 'D5',
+      'p': 'D#5', ';': 'E5'
     };
 
     // Update visualizer
