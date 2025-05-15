@@ -21,6 +21,8 @@
 
     .star {
       position: absolute;
+      width: 2px;
+      height: 2px;
       background: #fff;
       border-radius: 50%;
       animation: twinkle var(--twinkle-duration) ease-in-out infinite;
@@ -28,8 +30,8 @@
     }
 
     @keyframes twinkle {
-      0%, 100% { opacity: 0.3; }
-      50% { opacity: 1; }
+      0%, 100% { opacity: 0.2; transform: scale(0.8); }
+      50% { opacity: 1; transform: scale(1.2); }
     }
 
     .navbar {
@@ -126,7 +128,7 @@
 
     .synth-container {
       position: relative;
-      background: #905CFF;
+      background: #7B2CBF;
       border: 8px solid #fff;
       border-radius: 30px;
       padding: 30px;
@@ -176,7 +178,7 @@
     }
 
     .instrument-select {
-      background: #FF61D8;
+      background: #5390D9;
       border: 6px solid #fff;
       border-radius: 25px;
       padding: 25px;
@@ -301,6 +303,14 @@
       overflow: hidden;
     }
 
+    .knob:nth-child(2n) {
+      background: #5390D9;
+    }
+
+    .knob:nth-child(3n) {
+      background: #FFB347;
+    }
+
     .knob::after {
       content: '';
       position: absolute;
@@ -366,7 +376,7 @@
       margin-top: 30px;
       padding: 20px;
       height: 160px;
-      background: #FF61D8;
+      background: #7B2CBF;
       border-radius: 20px;
       border: 4px solid #fff;
       box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.2);
@@ -403,7 +413,7 @@
     .key.black {
       width: 30px;
       height: 90px;
-      background: #905CFF;
+      background: #7B2CBF;
       position: absolute;
       z-index: 1;
       color: #fff;
@@ -419,7 +429,7 @@
     }
 
     .key.black:hover {
-      background: #A76FFF;
+      background: #9D4EDD;
     }
 
     .key.active {
@@ -446,7 +456,7 @@
 
     .visualizer {
       height: 100px;
-      background: #905CFF;
+      background: #5390D9;
       margin: 20px 0;
       border-radius: 15px;
       overflow: hidden;
@@ -676,24 +686,33 @@
     // Initialize audio context and samplers
     let currentInstrument;
     const samplers = {};
-    
-    // Define instrument settings
-    const instruments = {
-      spaceOrgan: {
-        type: 'synth',
-        settings: {
-          oscillator: {
-            type: 'square8'
-          },
-          envelope: {
-            attack: 0.005,
-            decay: 0.2,
-            sustain: 0.4,
-            release: 0.4
-          }
-        }
-      }
-    };
+
+    // Set up audio chain
+    const filter = new Tone.Filter(1500, "lowpass").toDestination();
+    const reverb = new Tone.Reverb(2).connect(filter);
+    const distortion = new Tone.Distortion(0).connect(reverb);
+    const delay = new Tone.FeedbackDelay({
+      delayTime: 0.25,
+      feedback: 0.5,
+      wet: 0
+    }).connect(distortion);
+    const gain = new Tone.Gain(0.7).connect(delay);
+    const analyser = new Tone.Analyser("waveform", 128);
+    gain.connect(analyser);
+
+    // Set up synth
+    const synth = new Tone.PolySynth(Tone.Synth, {
+      oscillator: {
+        type: 'square8'
+      },
+      envelope: {
+        attack: 0.005,
+        decay: 0.2,
+        sustain: 0.4,
+        release: 0.4
+      },
+      volume: -12
+    }).connect(gain);
 
     // Initialize samplers
     async function initSamplers() {
@@ -709,49 +728,54 @@
         woof: 'https://tonejs.github.io/audio/berklee/dog1.mp3'
       };
 
-      for (const [name, url] of Object.entries(instrumentSamples)) {
-        samplers[name] = new Tone.Sampler({
-          urls: {
-            'C4': url
-          },
-          release: 1,
-          baseUrl: ''
-        }).toDestination();
+      try {
+        for (const [name, url] of Object.entries(instrumentSamples)) {
+          samplers[name] = new Tone.Sampler({
+            urls: {
+              'C4': url
+            },
+            release: 1,
+            baseUrl: ''
+          }).connect(gain);
+          
+          // Wait for the sampler to load
+          await samplers[name].loaded();
+          console.log(`Loaded ${name} sampler`);
+        }
+      } catch (error) {
+        console.error('Error loading samplers:', error);
       }
     }
 
     // Initialize everything when the page loads
     window.addEventListener('load', async () => {
-      await Tone.start();
-      await initSamplers();
-      createStars();
-      currentInstrument = synth;
+      try {
+        await Tone.start();
+        console.log('Tone.js started');
+        await initSamplers();
+        createStars();
+        currentInstrument = synth;
+        console.log('Initialization complete');
+      } catch (error) {
+        console.error('Error during initialization:', error);
+      }
     });
 
     // Create random stars
     function createStars() {
       const navbar = document.querySelector('.navbar');
-      const numStars = 200; // Number of stars
+      const numStars = 200;
       
       for (let i = 0; i < numStars; i++) {
         const star = document.createElement('div');
         star.className = 'star';
-        
-        // Random position
         star.style.left = `${Math.random() * 100}%`;
         star.style.top = `${Math.random() * 100}%`;
-        
-        // Random size (0.5px to 2px)
         const size = 0.5 + Math.random() * 1.5;
         star.style.width = `${size}px`;
         star.style.height = `${size}px`;
-        
-        // Random twinkle duration (2-6 seconds)
         star.style.setProperty('--twinkle-duration', `${2 + Math.random() * 4}s`);
-        
-        // Random animation delay
         star.style.animationDelay = `${Math.random() * 4}s`;
-        
         navbar.appendChild(star);
       }
     }
@@ -768,43 +792,6 @@
       visualizer.appendChild(bar);
       bars.push(bar);
     }
-
-    // Set up synth with more effects
-    const synth = new Tone.PolySynth(Tone.Synth, {
-      oscillator: {
-        type: 'square8'
-      },
-      envelope: {
-        attack: 0.005,
-        decay: 0.2,
-        sustain: 0.4,
-        release: 0.4
-      },
-      volume: -12
-    });
-
-    const filter = new Tone.Filter(1500, "lowpass");
-    const reverb = new Tone.Reverb(2);
-    const distortion = new Tone.Distortion(0);
-    const limiter = new Tone.Limiter(-3);
-    const gain = new Tone.Gain(0.7);
-    const analyser = new Tone.Analyser("waveform", 128);
-    const delay = new Tone.FeedbackDelay({
-      delayTime: 0.25,
-      feedback: 0.5,
-      wet: 0
-    });
-
-    // Chain the effects for the synth
-    synth.chain(gain, filter, distortion, delay, reverb, limiter, analyser, Tone.Destination);
-
-    // Initialize with minimal effects
-    reverb.wet.value = 0.1;
-    delay.wet.value = 0;
-    delay.delayTime.value = 0.25;
-    delay.feedback.value = 0.3;
-    distortion.distortion = 0;
-    filter.frequency.value = 5000;
 
     // Update UI to match initial settings
     document.getElementById('reverb').value = 0.1;
