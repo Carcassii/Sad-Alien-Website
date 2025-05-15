@@ -37,14 +37,16 @@
       left: 50%;
       transform: translate(-50%, -50%);
       font-family: 'Patrick Hand', cursive;
-      font-size: 4em;
+      font-size: 5em;
       color: #fff;
-      text-shadow: 0 0 10px #ff5ea5,
-                   0 0 20px #ff5ea5,
-                   0 0 30px #ff5ea5,
-                   0 0 40px #ff5ea5;
+      text-shadow: 0 0 10px #FFE66D,
+                   0 0 20px #FFE66D,
+                   0 0 30px #FFE66D,
+                   0 0 40px #FFE66D;
       animation: float 6s ease-in-out infinite alternate;
       z-index: 2;
+      text-align: center;
+      width: 100%;
     }
 
     @keyframes float {
@@ -62,6 +64,9 @@
       transform: translateY(80px);
       justify-content: center;
       flex-wrap: wrap;
+      width: 100%;
+      position: absolute;
+      bottom: 20px;
     }
 
     .nav-links a {
@@ -300,13 +305,13 @@
       border: 1px solid rgba(0, 0, 0, 0.1);
     }
 
-    .key.black[data-note="C#4"] { left: 32px; }
-    .key.black[data-note="D#4"] { left: 77px; }
-    .key.black[data-note="F#4"] { left: 167px; }
-    .key.black[data-note="G#4"] { left: 212px; }
-    .key.black[data-note="A#4"] { left: 257px; }
-    .key.black[data-note="C#5"] { left: 347px; }
-    .key.black[data-note="D#5"] { left: 392px; }
+    .key.black[data-note="C#4"] { left: 156px; }
+    .key.black[data-note="D#4"] { left: 201px; }
+    .key.black[data-note="F#4"] { left: 291px; }
+    .key.black[data-note="G#4"] { left: 336px; }
+    .key.black[data-note="A#4"] { left: 381px; }
+    .key.black[data-note="C#5"] { left: 471px; }
+    .key.black[data-note="D#5"] { left: 516px; }
 
     .key.black {
       width: 30px;
