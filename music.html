@@ -595,15 +595,19 @@
         decay: 0.2,
         sustain: 0.4,
         release: 0.4
-      }
-    }).toDestination();
+      },
+      volume: -12 // Reduce the overall volume to prevent distortion
+    });
 
     const filter = new Tone.Filter(1500, "lowpass");
     const reverb = new Tone.Reverb(2);
     const distortion = new Tone.Distortion(0);
+    const limiter = new Tone.Limiter(-3); // Add a limiter to prevent clipping
+    const gain = new Tone.Gain(0.7); // Add gain control
     const analyser = new Tone.Analyser("waveform", 128);
 
-    synth.chain(filter, distortion, reverb, analyser, Tone.Destination);
+    // Chain the effects in a better order
+    synth.chain(gain, filter, distortion, reverb, limiter, analyser, Tone.Destination);
 
     reverb.wet.value = 0.2;
 
@@ -699,63 +703,75 @@
     }
 
     // Update event handlers for key presses
-    const activeNotes = new Set();
+    const activeNotes = new Map(); // Change to Map to store note and key info
 
-    function handleNoteOn(note) {
-      if (!isArpeggiating) {
-        Tone.start();
-        synth.triggerAttack(note);
-        activeNotes.add(note);
-      }
-      if (!currentArpNotes.includes(note)) {
-        currentArpNotes.push(note);
-        if (isArpeggiating) {
-          updateArpeggiator();
+    function handleNoteOn(note, key) {
+        if (!isArpeggiating) {
+            Tone.start();
+            synth.triggerAttack(note);
+            activeNotes.set(note, key);
+            if (key) key.classList.add('active');
         }
-      }
+        if (!currentArpNotes.includes(note)) {
+            currentArpNotes.push(note);
+            if (isArpeggiating) {
+                updateArpeggiator();
+            }
+        }
     }
 
-    function handleNoteOff(note) {
-      if (!isArpeggiating) {
-        synth.triggerRelease(note);
+    function handleNoteOff(note, key) {
+        if (!isArpeggiating) {
+            synth.triggerRelease(note);
+            if (key) key.classList.remove('active');
+        }
         activeNotes.delete(note);
-      }
-      currentArpNotes = currentArpNotes.filter(n => n !== note);
-      if (currentArpNotes.length === 0 && arpInterval) {
-        clearInterval(arpInterval);
-        arpInterval = null;
-      }
+        currentArpNotes = currentArpNotes.filter(n => n !== note);
+        if (currentArpNotes.length === 0 && arpInterval) {
+            clearInterval(arpInterval);
+            arpInterval = null;
+        }
     }
 
-    // Update existing keyboard event listeners
+    // Update keyboard event listeners
     const keyboard = document.getElementById('keyboard');
     const keys = keyboard.getElementsByClassName('key');
 
     Array.from(keys).forEach(key => {
-      const note = key.dataset.note;
-      key.addEventListener('mousedown', () => handleNoteOn(note));
-      key.addEventListener('mouseup', () => handleNoteOff(note));
-      key.addEventListener('mouseleave', () => handleNoteOff(note));
-      key.addEventListener('touchstart', (e) => {
-        e.preventDefault();
-        handleNoteOn(note);
-      });
-      key.addEventListener('touchend', (e) => {
-        e.preventDefault();
-        handleNoteOff(note);
-      });
+        const note = key.dataset.note;
+        key.addEventListener('mousedown', () => handleNoteOn(note, key));
+        key.addEventListener('mouseup', () => handleNoteOff(note, key));
+        key.addEventListener('mouseleave', () => {
+            if (activeNotes.has(note)) {
+                handleNoteOff(note, key);
+            }
+        });
+        key.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            handleNoteOn(note, key);
+        });
+        key.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            handleNoteOff(note, key);
+        });
     });
 
-    // Computer keyboard event listeners
+    // Update computer keyboard event listeners
     document.addEventListener('keydown', (e) => {
-      if (e.repeat) return;
-      const note = keyMap[e.key.toLowerCase()];
-      if (note) handleNoteOn(note);
+        if (e.repeat) return;
+        const note = keyMap[e.key.toLowerCase()];
+        if (note) {
+            const key = Array.from(keys).find(k => k.dataset.note === note);
+            handleNoteOn(note, key);
+        }
     });
 
     document.addEventListener('keyup', (e) => {
-      const note = keyMap[e.key.toLowerCase()];
-      if (note) handleNoteOff(note);
+        const note = keyMap[e.key.toLowerCase()];
+        if (note) {
+            const key = Array.from(keys).find(k => k.dataset.note === note);
+            handleNoteOff(note, key);
+        }
     });
 
     // Add arpeggiator control listeners
@@ -1092,6 +1108,15 @@
 
     // Initialize with spaceOrgan
     applyInstrument('spaceOrgan');
+
+    // Add window blur event to release all notes when window loses focus
+    window.addEventListener('blur', () => {
+        // Release all active notes
+        activeNotes.forEach((key, note) => {
+            handleNoteOff(note, key);
+        });
+        activeNotes.clear();
+    });
   </script>
 </body>
 </html>
