@@ -43,7 +43,7 @@
                    0 0 20px #ff5ea5,
                    0 0 30px #ff5ea5,
                    0 0 40px #ff5ea5;
-      animation: float 6s ease-in-out infinite;
+      animation: float 6s ease-in-out infinite alternate;
       z-index: 2;
     }
 
@@ -586,7 +586,7 @@
     }
 
     // Set up synth with more effects
-    const synth = new Tone.MonoSynth({
+    const synth = new Tone.PolySynth(Tone.Synth, {
       oscillator: {
         type: 'square8' // More retro sound
       },
@@ -595,16 +595,8 @@
         decay: 0.2,
         sustain: 0.4,
         release: 0.4
-      },
-      filterEnvelope: {
-        attack: 0.001,
-        decay: 0.7,
-        sustain: 0.1,
-        release: 0.8,
-        baseFrequency: 300,
-        octaves: 4
       }
-    });
+    }).toDestination();
 
     const filter = new Tone.Filter(1500, "lowpass");
     const reverb = new Tone.Reverb(2);
@@ -707,9 +699,13 @@
     }
 
     // Update event handlers for key presses
+    const activeNotes = new Set();
+
     function handleNoteOn(note) {
       if (!isArpeggiating) {
+        Tone.start();
         synth.triggerAttack(note);
+        activeNotes.add(note);
       }
       if (!currentArpNotes.includes(note)) {
         currentArpNotes.push(note);
@@ -721,7 +717,8 @@
 
     function handleNoteOff(note) {
       if (!isArpeggiating) {
-        synth.triggerRelease();
+        synth.triggerRelease(note);
+        activeNotes.delete(note);
       }
       currentArpNotes = currentArpNotes.filter(n => n !== note);
       if (currentArpNotes.length === 0 && arpInterval) {
@@ -985,11 +982,10 @@
     function applyInstrument(instrumentName) {
       const settings = instruments[instrumentName];
       
-      // Apply base settings
+      // Apply base settings to all voices
       synth.set({
         oscillator: settings.oscillator,
-        envelope: settings.envelope,
-        filterEnvelope: settings.filterEnvelope
+        envelope: settings.envelope
       });
 
       // Instrument-specific effect adjustments
@@ -1003,49 +999,49 @@
           reverb.wet.value = 0.8;
           filter.frequency.value = 4000;
           distortion.distortion = 0;
-          synth.detune.value = 5;
+          synth.set({ detune: 5 });
           break;
         case 'alienVoice':
           reverb.wet.value = 0.4;
           filter.frequency.value = 800;
           distortion.distortion = 0.3;
-          synth.detune.value = -10;
+          synth.set({ detune: -10 });
           break;
         case 'cosmicRays':
           reverb.wet.value = 0.5;
           filter.frequency.value = 3500;
           distortion.distortion = 0.4;
-          synth.detune.value = 15;
+          synth.set({ detune: 15 });
           break;
         case 'nebulaCloud':
           reverb.wet.value = 0.7;
           filter.frequency.value = 600;
           distortion.distortion = 0.1;
-          synth.detune.value = -5;
+          synth.set({ detune: -5 });
           break;
         case 'quantumWave':
           reverb.wet.value = 0.3;
           filter.frequency.value = 2500;
           distortion.distortion = 0.2;
-          synth.detune.value = 8;
+          synth.set({ detune: 8 });
           break;
         case 'blackHole':
           reverb.wet.value = 0.9;
           filter.frequency.value = 200;
           distortion.distortion = 0.5;
-          synth.detune.value = -20;
+          synth.set({ detune: -20 });
           break;
         case 'starDust':
           reverb.wet.value = 0.6;
           filter.frequency.value = 5000;
           distortion.distortion = 0.1;
-          synth.detune.value = 12;
+          synth.set({ detune: 12 });
           break;
         case 'wormhole':
           reverb.wet.value = 0.8;
           filter.frequency.value = 1000;
           distortion.distortion = 0.3;
-          synth.detune.value = -15;
+          synth.set({ detune: -15 });
           break;
       }
 
