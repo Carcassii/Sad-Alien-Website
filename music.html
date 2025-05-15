@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Quirky Web Synth</title>
+  <script src="https://unpkg.com/tone"></script>
+  <style>
+    body {
+      background: linear-gradient(to bottom, #c2f0f7, #ffffff);
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      text-align: center;
+      padding: 40px;
+    }
+    h1 {
+      font-size: 2.5em;
+      margin-bottom: 0.2em;
+    }
+    .knob {
+      margin: 20px auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    input[type=range] {
+      width: 220px;
+      accent-color: #ff5ea5;
+    }
+    label {
+      font-size: 1.2em;
+      margin-bottom: 8px;
+    }
+    .container {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 40px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎛️ Quirky Synthesizer!</h1>
+  <p>Press keys A–K to play silly notes 🎶</p>
+  <div class="container">
+    <div class="knob">
+      <label for="detune">Detune</label>
+      <input id="detune" type="range" min="-1200" max="1200" value="0">
+    </div>
+    <div class="knob">
+      <label for="filter">Filter Cutoff</label>
+      <input id="filter" type="range" min="100" max="5000" value="1500">
+    </div>
+    <div class="knob">
+      <label for="reverb">Reverb</label>
+      <input id="reverb" type="range" min="0" max="1" step="0.01" value="0.2">
+    </div>
+  </div>
+
+  <script>
+    const synth = new Tone.MonoSynth({
+      oscillator: { type: 'sawtooth' },
+      filter: { Q: 2, type: 'lowpass', rolloff: -12 },
+      envelope: { attack: 0.1, decay: 0.2, sustain: 0.5, release: 1 }
+    });
+
+    const filter = new Tone.Filter(1500, "lowpass").toDestination();
+    const reverb = new Tone.Reverb(2).toDestination();
+    reverb.wet.value = 0.2;
+
+    synth.chain(filter, reverb);
+
+    const keyMap = {
+      'a': 'C4', 's': 'D4', 'd': 'E4',
+      'f': 'F4', 'g': 'G4', 'h': 'A4',
+      'j': 'B4', 'k': 'C5'
+    };
+
+    document.addEventListener("keydown", (e) => {
+      const note = keyMap[e.key];
+      if (note) {
+        Tone.start();
+        synth.triggerAttackRelease(note, "8n");
+      }
+    });
+
+    document.getElementById('detune').addEventListener('input', (e) => {
+      synth.detune.value = e.target.value;
+    });
+
+    document.getElementById('filter').addEventListener('input', (e) => {
+      filter.frequency.value = e.target.value;
+    });
+
+    document.getElementById('reverb').addEventListener('input', (e) => {
+      reverb.wet.value = e.target.value;
+    });
+  </script>
+</body>
+</html>
