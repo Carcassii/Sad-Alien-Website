@@ -310,17 +310,17 @@
       color: #fff;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
       border: 1px solid rgba(0, 0, 0, 0.4);
-      transform: translateX(35px);
+      transform: translateX(45px);
     }
 
     /* Position black keys with proper spacing */
-    .key[data-note="C#4"] { left: 15px; }  /* Between A and S */
-    .key[data-note="D#4"] { left: 64px; }  /* Between S and D */
-    .key[data-note="F#4"] { left: 162px; }  /* Between F and G */
-    .key[data-note="G#4"] { left: 211px; }  /* Between G and H */
-    .key[data-note="A#4"] { left: 260px; }  /* Between H and J */
-    .key[data-note="C#5"] { left: 358px; }  /* Between K and L */
-    .key[data-note="D#5"] { left: 407px; }  /* Between L and ; */
+    .key[data-note="C#4"] { left: 20px; }  /* Between A and S */
+    .key[data-note="D#4"] { left: 69px; }  /* Between S and D */
+    .key[data-note="F#4"] { left: 167px; }  /* Between F and G */
+    .key[data-note="G#4"] { left: 216px; }  /* Between G and H */
+    .key[data-note="A#4"] { left: 265px; }  /* Between H and J */
+    .key[data-note="C#5"] { left: 363px; }  /* Between K and L */
+    .key[data-note="D#5"] { left: 412px; }  /* Between L and ; */
 
     .key:hover {
       background: #f0f0f0;
@@ -702,8 +702,22 @@
       }
     }
 
-    // Update event handlers for key presses
+    // Update event handlers for key presses with improved note handling
     const activeNotes = new Map(); // Change to Map to store note and key info
+    let isMouseDown = false;
+
+    function releaseAllNotes() {
+        synth.releaseAll();
+        activeNotes.forEach((key, note) => {
+            if (key) key.classList.remove('active');
+        });
+        activeNotes.clear();
+        currentArpNotes = [];
+        if (arpInterval) {
+            clearInterval(arpInterval);
+            arpInterval = null;
+        }
+    }
 
     function handleNoteOn(note, key) {
         if (!isArpeggiating) {
@@ -722,7 +736,7 @@
 
     function handleNoteOff(note, key) {
         if (!isArpeggiating) {
-            synth.triggerRelease(note);
+            synth.triggerRelease([note]); // Release specific note
             if (key) key.classList.remove('active');
         }
         activeNotes.delete(note);
@@ -733,23 +747,40 @@
         }
     }
 
-    // Update keyboard event listeners
+    // Update keyboard event listeners with improved handling
     const keyboard = document.getElementById('keyboard');
     const keys = keyboard.getElementsByClassName('key');
 
     Array.from(keys).forEach(key => {
         const note = key.dataset.note;
-        key.addEventListener('mousedown', () => handleNoteOn(note, key));
-        key.addEventListener('mouseup', () => handleNoteOff(note, key));
+        
+        key.addEventListener('mousedown', () => {
+            isMouseDown = true;
+            handleNoteOn(note, key);
+        });
+        
+        key.addEventListener('mouseup', () => {
+            isMouseDown = false;
+            handleNoteOff(note, key);
+        });
+        
         key.addEventListener('mouseleave', () => {
-            if (activeNotes.has(note)) {
+            if (isMouseDown && activeNotes.has(note)) {
                 handleNoteOff(note, key);
             }
         });
+        
+        key.addEventListener('mouseenter', () => {
+            if (isMouseDown) {
+                handleNoteOn(note, key);
+            }
+        });
+
         key.addEventListener('touchstart', (e) => {
             e.preventDefault();
             handleNoteOn(note, key);
         });
+        
         key.addEventListener('touchend', (e) => {
             e.preventDefault();
             handleNoteOff(note, key);
@@ -757,10 +788,13 @@
     });
 
     // Update computer keyboard event listeners
+    const pressedKeys = new Set();
+    
     document.addEventListener('keydown', (e) => {
         if (e.repeat) return;
         const note = keyMap[e.key.toLowerCase()];
-        if (note) {
+        if (note && !pressedKeys.has(e.key.toLowerCase())) {
+            pressedKeys.add(e.key.toLowerCase());
             const key = Array.from(keys).find(k => k.dataset.note === note);
             handleNoteOn(note, key);
         }
@@ -769,10 +803,21 @@
     document.addEventListener('keyup', (e) => {
         const note = keyMap[e.key.toLowerCase()];
         if (note) {
+            pressedKeys.delete(e.key.toLowerCase());
             const key = Array.from(keys).find(k => k.dataset.note === note);
             handleNoteOff(note, key);
         }
     });
+
+    // Add more robust cleanup events
+    window.addEventListener('blur', releaseAllNotes);
+    window.addEventListener('mouseup', () => {
+        isMouseDown = false;
+        if (!isArpeggiating) {
+            releaseAllNotes();
+        }
+    });
+    document.addEventListener('mouseleave', releaseAllNotes);
 
     // Add arpeggiator control listeners
     document.getElementById('arpPattern').addEventListener('change', updateArpeggiator);
@@ -1108,15 +1153,6 @@
 
     // Initialize with spaceOrgan
     applyInstrument('spaceOrgan');
-
-    // Add window blur event to release all notes when window loses focus
-    window.addEventListener('blur', () => {
-        // Release all active notes
-        activeNotes.forEach((key, note) => {
-            handleNoteOff(note, key);
-        });
-        activeNotes.clear();
-    });
   </script>
 </body>
 </html>
