@@ -1275,70 +1275,69 @@
       const settings = instruments[instrumentName];
       if (settings.type === 'synth') {
         synth.set(settings.settings);
-      }
-
-      // Apply effects based on instrument
-      switch(instrumentName) {
-        case 'spaceOrgan':
-          reverb.wet.value = 0.6;
-          filter.frequency.value = 1500;
-          distortion.distortion = 0.2;
-          delay.wet.value = 0.2;
-          break;
-        case 'clarinet':
-          reverb.wet.value = 0.3;
-          filter.frequency.value = 2000;
-          distortion.distortion = 0;
-          delay.wet.value = 0.1;
-          break;
-        case 'flute':
-          reverb.wet.value = 0.4;
-          filter.frequency.value = 2500;
-          distortion.distortion = 0;
-          delay.wet.value = 0.15;
-          break;
-        case 'harpsichord':
-          reverb.wet.value = 0.2;
-          filter.frequency.value = 3000;
-          distortion.distortion = 0.1;
-          delay.wet.value = 0;
-          break;
-        case 'guitar':
-          reverb.wet.value = 0.5;
-          filter.frequency.value = 2000;
-          distortion.distortion = 0.2;
-          delay.wet.value = 0.3;
-          break;
-        case 'trumpet':
-          reverb.wet.value = 0.4;
-          filter.frequency.value = 1800;
-          distortion.distortion = 0.1;
-          delay.wet.value = 0.1;
-          break;
-        case 'oboe':
-          reverb.wet.value = 0.3;
-          filter.frequency.value = 2200;
-          distortion.distortion = 0;
-          delay.wet.value = 0.1;
-          break;
-        case 'organ':
-          reverb.wet.value = 0.7;
-          filter.frequency.value = 1200;
-          distortion.distortion = 0.3;
-          delay.wet.value = 0.2;
-          break;
-        case 'strings':
-          reverb.wet.value = 0.6;
-          filter.frequency.value = 2000;
-          distortion.distortion = 0;
-          delay.wet.value = 0.3;
-          break;
-        case 'woof':
-          reverb.wet.value = 0.4;
-          filter.frequency.value = 800;  // Lower filter for more bass
-          distortion.distortion = 0.1;
-          delay.wet.value = 0.2;
-          break;
+        // Keep heavy effects only for the synth
+        reverb.wet.value = 0.6;
+        filter.frequency.value = 1500;
+        distortion.distortion = 0.2;
+        delay.wet.value = 0.2;
+      } else {
+        // For sampled instruments, use minimal effects to preserve natural sound
+        switch(instrumentName) {
+          case 'clarinet':
+            reverb.wet.value = 0.1;
+            filter.frequency.value = 5000; // Very light filtering
+            distortion.distortion = 0;
+            delay.wet.value = 0;
+            break;
+          case 'flute':
+            reverb.wet.value = 0.15;
+            filter.frequency.value = 5000;
+            distortion.distortion = 0;
+            delay.wet.value = 0;
+            break;
+          case 'harpsichord':
+            reverb.wet.value = 0.1;
+            filter.frequency.value = 5000;
+            distortion.distortion = 0;
+            delay.wet.value = 0;
+            break;
+          case 'guitar':
+            reverb.wet.value = 0.2;
+            filter.frequency.value = 5000;
+            distortion.distortion = 0;
+            delay.wet.value = 0.1;
+            break;
+          case 'trumpet':
+            reverb.wet.value = 0.1;
+            filter.frequency.value = 5000;
+            distortion.distortion = 0;
+            delay.wet.value = 0;
+            break;
+          case 'oboe':
+            reverb.wet.value = 0.1;
+            filter.frequency.value = 5000;
+            distortion.distortion = 0;
+            delay.wet.value = 0;
+            break;
+          case 'organ':
+            reverb.wet.value = 0.2;
+            filter.frequency.value = 5000;
+            distortion.distortion = 0;
+            delay.wet.value = 0;
+            break;
+          case 'strings':
+            reverb.wet.value = 0.2;
+            filter.frequency.value = 5000;
+            distortion.distortion = 0;
+            delay.wet.value = 0.1;
+            break;
+          case 'woof':
+            reverb.wet.value = 0.2;
+            filter.frequency.value = 5000;
+            distortion.distortion = 0;
+            delay.wet.value = 0;
+            break;
+        }
       }
 
       // Update UI controls to match new settings
