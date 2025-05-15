@@ -895,7 +895,11 @@
 
     // Control changes
     document.getElementById('detune').addEventListener('input', (e) => {
-      synth.detune.value = e.target.value;
+      if (currentInstrument === synth) {
+        synth.detune.value = e.target.value;
+      } else {
+        currentInstrument.detune = e.target.value;
+      }
     });
 
     document.getElementById('filter').addEventListener('input', (e) => {
@@ -911,8 +915,10 @@
     });
 
     document.getElementById('oscillator').addEventListener('input', (e) => {
-      const type = oscillatorTypes[Math.floor(e.target.value)];
-      synth.oscillator.type = type;
+      if (currentInstrument === synth) {
+        const type = oscillatorTypes[Math.floor(e.target.value)];
+        synth.set({ oscillator: { type } });
+      }
     });
 
     document.getElementById('volume').addEventListener('input', (e) => {
@@ -1241,82 +1247,76 @@
       });
     });
 
-    // Function to apply instrument settings with additional effects
+    // Function to apply instrument settings
     function applyInstrument(instrumentName) {
       const settings = instruments[instrumentName];
-      
-      // Apply base settings to all voices
-      synth.set({
-        oscillator: settings.oscillator,
-        envelope: settings.envelope
-      });
+      if (settings.type === 'synth') {
+        synth.set(settings.settings);
+      }
 
-      // Instrument-specific effect adjustments
+      // Apply effects based on instrument
       switch(instrumentName) {
         case 'spaceOrgan':
           reverb.wet.value = 0.6;
           filter.frequency.value = 1500;
           distortion.distortion = 0.2;
+          delay.wet.value = 0.2;
           break;
-        case 'crystalBell':
-          reverb.wet.value = 0.8;
-          filter.frequency.value = 4000;
-          distortion.distortion = 0;
-          synth.set({ detune: 5 });
-          break;
-        case 'alienVoice':
-          reverb.wet.value = 0.4;
-          filter.frequency.value = 800;
-          distortion.distortion = 0.3;
-          synth.set({ detune: -10 });
-          break;
-        case 'cosmicRays':
-          reverb.wet.value = 0.5;
-          filter.frequency.value = 3500;
-          distortion.distortion = 0.4;
-          synth.set({ detune: 15 });
-          break;
-        case 'nebulaCloud':
-          reverb.wet.value = 0.7;
-          filter.frequency.value = 600;
-          distortion.distortion = 0.1;
-          synth.set({ detune: -5 });
-          break;
-        case 'quantumWave':
+        case 'clarinet':
           reverb.wet.value = 0.3;
+          filter.frequency.value = 2000;
+          distortion.distortion = 0;
+          delay.wet.value = 0.1;
+          break;
+        case 'flute':
+          reverb.wet.value = 0.4;
           filter.frequency.value = 2500;
-          distortion.distortion = 0.2;
-          synth.set({ detune: 8 });
+          distortion.distortion = 0;
+          delay.wet.value = 0.15;
           break;
-        case 'blackHole':
-          reverb.wet.value = 0.9;
-          filter.frequency.value = 200;
-          distortion.distortion = 0.5;
-          synth.set({ detune: -20 });
-          break;
-        case 'starDust':
-          reverb.wet.value = 0.6;
-          filter.frequency.value = 5000;
+        case 'harpsichord':
+          reverb.wet.value = 0.2;
+          filter.frequency.value = 3000;
           distortion.distortion = 0.1;
-          synth.set({ detune: 12 });
+          delay.wet.value = 0;
           break;
-        case 'wormhole':
-          reverb.wet.value = 0.8;
-          filter.frequency.value = 1000;
+        case 'guitar':
+          reverb.wet.value = 0.5;
+          filter.frequency.value = 2000;
+          distortion.distortion = 0.2;
+          delay.wet.value = 0.3;
+          break;
+        case 'trumpet':
+          reverb.wet.value = 0.4;
+          filter.frequency.value = 1800;
+          distortion.distortion = 0.1;
+          delay.wet.value = 0.1;
+          break;
+        case 'oboe':
+          reverb.wet.value = 0.3;
+          filter.frequency.value = 2200;
+          distortion.distortion = 0;
+          delay.wet.value = 0.1;
+          break;
+        case 'organ':
+          reverb.wet.value = 0.7;
+          filter.frequency.value = 1200;
           distortion.distortion = 0.3;
-          synth.set({ detune: -15 });
+          delay.wet.value = 0.2;
+          break;
+        case 'strings':
+          reverb.wet.value = 0.6;
+          filter.frequency.value = 2000;
+          distortion.distortion = 0;
+          delay.wet.value = 0.3;
           break;
       }
-
-      // Update active button
-      document.querySelectorAll('.instrument-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.instrument === instrumentName);
-      });
 
       // Update UI controls to match new settings
       document.getElementById('reverb').value = reverb.wet.value;
       document.getElementById('filter').value = filter.frequency.value;
       document.getElementById('distortion').value = distortion.distortion;
+      document.getElementById('delay').value = delay.wet.value;
     }
 
     // Randomize function
