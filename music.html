@@ -532,6 +532,7 @@
           <button class="instrument-btn" data-instrument="oboe">Oboe</button>
           <button class="instrument-btn" data-instrument="organ">Organ</button>
           <button class="instrument-btn" data-instrument="strings">Strings</button>
+          <button class="instrument-btn" data-instrument="woof">🐕 Woof</button>
         </div>
         <button class="randomize-btn">🎲 Randomize Settings!</button>
       </div>
@@ -1178,6 +1179,27 @@
           baseFrequency: 800, 
           octaves: 5 
         }
+      },
+      woof: {
+        oscillator: { 
+          type: 'custom',
+          partials: [0.8, 0.4, 1, 0.2, 0.6, 0.1], // Woof harmonics
+          phase: 75
+        },
+        envelope: { 
+          attack: 0.01, 
+          decay: 1.0, 
+          sustain: 0.2, 
+          release: 1.5 
+        },
+        filterEnvelope: { 
+          attack: 0.01, 
+          decay: 0.8, 
+          sustain: 0.3, 
+          release: 1.2, 
+          baseFrequency: 2500, 
+          octaves: 3 
+        }
       }
     };
 
@@ -1195,7 +1217,8 @@
           'trumpet': 'Trumpet.mp3',
           'oboe': 'Oboe.mp3',
           'organ': 'Organ.mp3',
-          'strings': 'Strings.mp3'
+          'strings': 'Strings.mp3',
+          'woof': 'Woof.mp3'
         };
 
         for (const [name, file] of Object.entries(instrumentFiles)) {
@@ -1309,6 +1332,12 @@
           filter.frequency.value = 2000;
           distortion.distortion = 0;
           delay.wet.value = 0.3;
+          break;
+        case 'woof':
+          reverb.wet.value = 0.4;
+          filter.frequency.value = 800;  // Lower filter for more bass
+          distortion.distortion = 0.1;
+          delay.wet.value = 0.2;
           break;
       }
 
