@@ -19,39 +19,54 @@
       overflow-x: hidden;
     }
 
+    .star {
+      position: absolute;
+      background: #fff;
+      border-radius: 50%;
+      animation: twinkle var(--twinkle-duration) ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 1; }
+    }
+
     .navbar {
       position: relative;
       height: 320px;
       background: #0a1d37;
       display: flex;
       justify-content: center;
-      align-items: flex-end;
+      align-items: center;
       padding-bottom: 1rem;
       box-shadow: 0 4px 12px rgba(0,0,0,0.3);
       z-index: 1000;
+      overflow: hidden;
     }
 
     .site-title {
       position: absolute;
       top: 50%;
       left: 50%;
-      transform: translate(-50%, -50%);
+      transform: translate(-50%, -80%);
       font-family: 'Patrick Hand', cursive;
       font-size: 5em;
-      color: #fff;
+      color: #FFE66D;
       text-shadow: 0 0 10px #FFE66D,
                    0 0 20px #FFE66D,
                    0 0 30px #FFE66D,
                    0 0 40px #FFE66D;
-      animation: float 6s ease-in-out infinite alternate;
+      animation: float 6s ease-in-out infinite;
       z-index: 2;
       text-align: center;
       width: 100%;
+      margin: 0;
     }
 
     @keyframes float {
-      0%, 100% { transform: translate(-50%, -50%); }
-      50% { transform: translate(-50%, -60%); }
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
     }
 
     .nav-links {
@@ -111,7 +126,7 @@
 
     .synth-container {
       position: relative;
-      background: linear-gradient(145deg, #FF61D8, #905CFF, #FFB347);
+      background: #905CFF;
       border: 8px solid #fff;
       border-radius: 30px;
       padding: 30px;
@@ -161,7 +176,7 @@
     }
 
     .instrument-select {
-      background: linear-gradient(145deg, #FF61D8, #FFB347);
+      background: #FF61D8;
       border: 6px solid #fff;
       border-radius: 25px;
       padding: 25px;
@@ -224,13 +239,12 @@
     .instrument-btn.active {
       background: #fff;
       color: #905CFF;
-      box-shadow: 0 0 20px rgba(255, 255, 255, 0.5),
-                  inset 0 0 10px rgba(144, 92, 255, 0.3);
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
       transform: translateY(-2px);
     }
 
     .randomize-btn {
-      background: linear-gradient(45deg, #FFB347, #FF61D8);
+      background: #FFB347;
       border: 4px solid #fff;
       color: #fff;
       padding: 15px 25px;
@@ -276,7 +290,7 @@
     }
 
     .knob {
-      background: linear-gradient(145deg, #FF85E1, #FFB347);
+      background: #FF61D8;
       border: 4px solid #fff;
       padding: 20px;
       border-radius: 20px;
@@ -352,7 +366,7 @@
       margin-top: 30px;
       padding: 20px;
       height: 160px;
-      background: linear-gradient(145deg, #FF61D8, #905CFF);
+      background: #FF61D8;
       border-radius: 20px;
       border: 4px solid #fff;
       box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.2);
@@ -389,7 +403,7 @@
     .key.black {
       width: 30px;
       height: 90px;
-      background: linear-gradient(145deg, #905CFF, #FF61D8);
+      background: #905CFF;
       position: absolute;
       z-index: 1;
       color: #fff;
@@ -405,18 +419,18 @@
     }
 
     .key.black:hover {
-      background: linear-gradient(145deg, #A76FFF, #FF85E1);
+      background: #A76FFF;
     }
 
     .key.active {
-      background: linear-gradient(145deg, #FF61D8, #FFB347);
+      background: #FF61D8;
       transform: translateY(2px);
       color: white;
       box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
     }
 
     .key.black.active {
-      background: linear-gradient(145deg, #FFB347, #FF61D8);
+      background: #FF61D8;
       box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
     }
 
@@ -432,7 +446,7 @@
 
     .visualizer {
       height: 100px;
-      background: linear-gradient(to right, #FF61D8, #905CFF, #FFB347);
+      background: #905CFF;
       margin: 20px 0;
       border-radius: 15px;
       overflow: hidden;
