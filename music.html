@@ -444,15 +444,15 @@
       <div class="instrument-select">
         <label>Choose Instrument:</label>
         <div class="instrument-list">
-          <button class="instrument-btn active" data-instrument="piano">Piano</button>
-          <button class="instrument-btn" data-instrument="organ">Organ</button>
-          <button class="instrument-btn" data-instrument="flute">Flute</button>
-          <button class="instrument-btn" data-instrument="clarinet">Clarinet</button>
-          <button class="instrument-btn" data-instrument="violin">Violin</button>
-          <button class="instrument-btn" data-instrument="accordion">Accordion</button>
-          <button class="instrument-btn" data-instrument="harpsichord">Harpsichord</button>
-          <button class="instrument-btn" data-instrument="celesta">Celesta</button>
-          <button class="instrument-btn" data-instrument="trumpet">Trumpet</button>
+          <button class="instrument-btn active" data-instrument="spaceOrgan">Space Organ</button>
+          <button class="instrument-btn" data-instrument="crystalBell">Crystal Bell</button>
+          <button class="instrument-btn" data-instrument="alienVoice">Alien Voice</button>
+          <button class="instrument-btn" data-instrument="cosmicRays">Cosmic Rays</button>
+          <button class="instrument-btn" data-instrument="nebulaCloud">Nebula Cloud</button>
+          <button class="instrument-btn" data-instrument="quantumWave">Quantum Wave</button>
+          <button class="instrument-btn" data-instrument="blackHole">Black Hole</button>
+          <button class="instrument-btn" data-instrument="starDust">Star Dust</button>
+          <button class="instrument-btn" data-instrument="wormhole">Wormhole</button>
         </div>
         <button class="randomize-btn">🎲 Randomize Settings!</button>
       </div>
@@ -659,195 +659,194 @@
 
     // Instrument presets
     const instruments = {
-      piano: {
+      spaceOrgan: {
         oscillator: { 
           type: 'custom',
-          partials: [1, 0.6, 0.3, 0.1] // More realistic piano harmonics
-        },
-        envelope: { 
-          attack: 0.002, 
-          decay: 0.8, 
-          sustain: 0.3, 
-          release: 0.8 
-        },
-        filterEnvelope: { 
-          attack: 0.001, 
-          decay: 0.5, 
-          sustain: 0.3, 
-          release: 0.8, 
-          baseFrequency: 400, 
-          octaves: 3,
-          exponent: 2
-        }
-      },
-      organ: {
-        oscillator: { 
-          type: 'custom',
-          partials: [1, 1, 1, 0.6, 0.3, 0.1] // Hammond-like harmonics
-        },
-        envelope: { 
-          attack: 0.05, 
-          decay: 0.3, 
-          sustain: 1, 
-          release: 0.3 
-        },
-        filterEnvelope: { 
-          attack: 0.05, 
-          decay: 0.2, 
-          sustain: 1, 
-          release: 0.5, 
-          baseFrequency: 800, 
-          octaves: 1 
-        }
-      },
-      flute: {
-        oscillator: { 
-          type: 'sine',
-          phase: 0,
-          width: 0.3 // Slight breathiness
-        },
-        envelope: { 
-          attack: 0.08, 
-          decay: 0.2, 
-          sustain: 0.9, 
-          release: 0.4 
-        },
-        filterEnvelope: { 
-          attack: 0.06, 
-          decay: 0.2, 
-          sustain: 0.7, 
-          release: 0.4, 
-          baseFrequency: 1000, 
-          octaves: 1,
-          exponent: 2
-        }
-      },
-      clarinet: {
-        oscillator: { 
-          type: 'custom',
-          partials: [1, 0.7, 0.1, 0.4, 0, 0.1] // Clarinet-like odd harmonics
-        },
-        envelope: { 
-          attack: 0.06, 
-          decay: 0.2, 
-          sustain: 0.9, 
-          release: 0.3 
-        },
-        filterEnvelope: { 
-          attack: 0.05, 
-          decay: 0.2, 
-          sustain: 0.8, 
-          release: 0.3, 
-          baseFrequency: 700, 
-          octaves: 2 
-        }
-      },
-      violin: {
-        oscillator: { 
-          type: 'custom',
-          partials: [1, 0.8, 0.5, 0.3, 0.2, 0.1], // Rich string harmonics
+          partials: [1, 0.3, 0.8, 0.2, 0.5, 0.1], // Ethereal, spacey harmonics
           phase: 45
         },
         envelope: { 
-          attack: 0.1, 
-          decay: 0.3, 
+          attack: 0.2, 
+          decay: 1.2, 
           sustain: 0.8, 
-          release: 0.5 
+          release: 2.0 
         },
         filterEnvelope: { 
-          attack: 0.1, 
-          decay: 0.4, 
-          sustain: 0.7, 
-          release: 0.4, 
-          baseFrequency: 600, 
-          octaves: 2,
-          exponent: 2
+          attack: 0.3, 
+          decay: 1.0, 
+          sustain: 0.6, 
+          release: 1.5, 
+          baseFrequency: 300, 
+          octaves: 4,
+          exponent: 3
         }
       },
-      accordion: {
+      crystalBell: {
         oscillator: { 
           type: 'custom',
-          partials: [1, 0.7, 0.3, 0.5, 0.2, 0.1], // Reed-like harmonics
-          phase: 0
-        },
-        envelope: { 
-          attack: 0.04, 
-          decay: 0.1, 
-          sustain: 1, 
-          release: 0.3 
-        },
-        filterEnvelope: { 
-          attack: 0.02, 
-          decay: 0.1, 
-          sustain: 1, 
-          release: 0.4, 
-          baseFrequency: 800, 
-          octaves: 2 
-        }
-      },
-      harpsichord: {
-        oscillator: { 
-          type: 'custom',
-          partials: [1, 0.5, 0.3, 0.2, 0.1, 0.05], // Bright, plucky harmonics
-          phase: 0
+          partials: [1, 0.1, 0.8, 0.1, 0.4], // Crystalline harmonics
+          phase: 90
         },
         envelope: { 
           attack: 0.001, 
-          decay: 0.8, 
+          decay: 2.0, 
           sustain: 0.1, 
-          release: 0.3 
+          release: 3.0 
         },
         filterEnvelope: { 
           attack: 0.001, 
-          decay: 0.3, 
-          sustain: 0.1, 
-          release: 0.2, 
-          baseFrequency: 1200, 
-          octaves: 3,
-          exponent: 2
+          decay: 1.5, 
+          sustain: 0.2, 
+          release: 2.0, 
+          baseFrequency: 2000, 
+          octaves: 3 
         }
       },
-      celesta: {
+      alienVoice: {
         oscillator: { 
           type: 'custom',
-          partials: [1, 0.3, 0.15, 0.075], // Bell-like harmonics
-          phase: 0
-        },
-        envelope: { 
-          attack: 0.001, 
-          decay: 0.5, 
-          sustain: 0.2, 
-          release: 0.5 
-        },
-        filterEnvelope: { 
-          attack: 0.001, 
-          decay: 0.3, 
-          sustain: 0.2, 
-          release: 0.4, 
-          baseFrequency: 1500, 
-          octaves: 2 
-        }
-      },
-      trumpet: {
-        oscillator: { 
-          type: 'custom',
-          partials: [1, 0.8, 0.6, 0.4, 0.2, 0.1], // Brassy harmonics
+          partials: [0.6, 1, 0.2, 0.7, 0.1], // Otherworldly vocal harmonics
           phase: 30
         },
         envelope: { 
-          attack: 0.05, 
-          decay: 0.1, 
+          attack: 0.3, 
+          decay: 0.4, 
           sustain: 0.9, 
-          release: 0.2 
+          release: 0.8 
         },
         filterEnvelope: { 
-          attack: 0.05, 
-          decay: 0.2, 
+          attack: 0.2, 
+          decay: 0.3, 
           sustain: 0.8, 
-          release: 0.3, 
+          release: 0.6, 
+          baseFrequency: 500, 
+          octaves: 5 
+        }
+      },
+      cosmicRays: {
+        oscillator: { 
+          type: 'custom',
+          partials: [0.3, 1, 0.5, 0.2, 0.8, 0.1], // High-energy particle sounds
+          phase: 60
+        },
+        envelope: { 
+          attack: 0.05, 
+          decay: 0.8, 
+          sustain: 0.4, 
+          release: 1.2 
+        },
+        filterEnvelope: { 
+          attack: 0.08, 
+          decay: 0.6, 
+          sustain: 0.4, 
+          release: 1.0, 
+          baseFrequency: 1500, 
+          octaves: 6 
+        }
+      },
+      nebulaCloud: {
+        oscillator: { 
+          type: 'custom',
+          partials: [0.2, 0.4, 1, 0.3, 0.6], // Gaseous, swirling harmonics
+          phase: 120
+        },
+        envelope: { 
+          attack: 0.4, 
+          decay: 1.5, 
+          sustain: 0.7, 
+          release: 2.5 
+        },
+        filterEnvelope: { 
+          attack: 0.3, 
+          decay: 1.2, 
+          sustain: 0.6, 
+          release: 2.0, 
+          baseFrequency: 200, 
+          octaves: 5 
+        }
+      },
+      quantumWave: {
+        oscillator: { 
+          type: 'custom',
+          partials: [0.5, 1, 0.3, 0.7, 0.2, 0.4], // Quantum probability waves
+          phase: 15
+        },
+        envelope: { 
+          attack: 0.001, 
+          decay: 0.6, 
+          sustain: 0.3, 
+          release: 1.0 
+        },
+        filterEnvelope: { 
+          attack: 0.001, 
+          decay: 0.4, 
+          sustain: 0.2, 
+          release: 0.8, 
           baseFrequency: 1000, 
-          octaves: 2,
-          exponent: 2
+          octaves: 4 
+        }
+      },
+      blackHole: {
+        oscillator: { 
+          type: 'custom',
+          partials: [0.1, 0.3, 1, 0.2, 0.4, 0.1], // Deep space harmonics
+          phase: 180
+        },
+        envelope: { 
+          attack: 0.2, 
+          decay: 2.0, 
+          sustain: 0.8, 
+          release: 3.0 
+        },
+        filterEnvelope: { 
+          attack: 0.2, 
+          decay: 1.5, 
+          sustain: 0.6, 
+          release: 2.5, 
+          baseFrequency: 100, 
+          octaves: 7 
+        }
+      },
+      starDust: {
+        oscillator: { 
+          type: 'custom',
+          partials: [0.8, 0.4, 1, 0.2, 0.6, 0.1], // Sparkling harmonics
+          phase: 75
+        },
+        envelope: { 
+          attack: 0.01, 
+          decay: 1.0, 
+          sustain: 0.2, 
+          release: 1.5 
+        },
+        filterEnvelope: { 
+          attack: 0.01, 
+          decay: 0.8, 
+          sustain: 0.3, 
+          release: 1.2, 
+          baseFrequency: 2500, 
+          octaves: 3 
+        }
+      },
+      wormhole: {
+        oscillator: { 
+          type: 'custom',
+          partials: [0.4, 1, 0.6, 0.3, 0.8, 0.2], // Space-time bending harmonics
+          phase: 150
+        },
+        envelope: { 
+          attack: 0.15, 
+          decay: 1.8, 
+          sustain: 0.5, 
+          release: 2.2 
+        },
+        filterEnvelope: { 
+          attack: 0.1, 
+          decay: 1.4, 
+          sustain: 0.4, 
+          release: 1.8, 
+          baseFrequency: 800, 
+          octaves: 5 
         }
       }
     };
@@ -865,41 +864,41 @@
 
       // Instrument-specific effect adjustments
       switch(instrumentName) {
-        case 'piano':
+        case 'spaceOrgan':
           reverb.wet.value = 0.2;
           filter.frequency.value = 2000;
           break;
-        case 'organ':
+        case 'crystalBell':
           reverb.wet.value = 0.3;
           filter.frequency.value = 3000;
           break;
-        case 'flute':
+        case 'alienVoice':
           reverb.wet.value = 0.4;
           filter.frequency.value = 1500;
           break;
-        case 'clarinet':
+        case 'cosmicRays':
           reverb.wet.value = 0.2;
           filter.frequency.value = 2200;
           break;
-        case 'violin':
+        case 'nebulaCloud':
           reverb.wet.value = 0.3;
           filter.frequency.value = 2500;
           // Add slight detune for more natural string sound
           synth.detune.value = 3;
           break;
-        case 'accordion':
+        case 'quantumWave':
           reverb.wet.value = 0.1;
           filter.frequency.value = 3500;
           break;
-        case 'harpsichord':
+        case 'blackHole':
           reverb.wet.value = 0.15;
           filter.frequency.value = 4000;
           break;
-        case 'celesta':
+        case 'starDust':
           reverb.wet.value = 0.4;
           filter.frequency.value = 5000;
           break;
-        case 'trumpet':
+        case 'wormhole':
           reverb.wet.value = 0.2;
           filter.frequency.value = 3000;
           // Add slight distortion for brass bite
@@ -947,8 +946,8 @@
     // Add event listener for randomize button
     document.querySelector('.randomize-btn').addEventListener('click', randomizeSettings);
 
-    // Initialize with piano
-    applyInstrument('piano');
+    // Initialize with spaceOrgan
+    applyInstrument('spaceOrgan');
   </script>
 </body>
 </html>
