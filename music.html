@@ -370,6 +370,27 @@
       box-shadow: 0 0 10px #ff5ea5;
     }
 
+    .pattern-select {
+      width: 100%;
+      padding: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid #ff5ea5;
+      border-radius: 4px;
+      color: #fff;
+      font-family: 'Work Sans', sans-serif;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .pattern-select option {
+      background: #1a1a2e;
+      color: #fff;
+    }
+
+    .pattern-select:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
     @media (max-width: 768px) {
       .navbar {
         height: 280px;
@@ -478,6 +499,20 @@
       <div class="knob">
         <label for="oscillator">Oscillator</label>
         <input id="oscillator" type="range" min="0" max="3" step="1" value="0">
+      </div>
+      <div class="knob">
+        <label for="arpSpeed">Arp Speed</label>
+        <input id="arpSpeed" type="range" min="0.1" max="2" step="0.1" value="0.5">
+      </div>
+      <div class="knob">
+        <label for="arpPattern">Arp Pattern</label>
+        <select id="arpPattern" class="pattern-select">
+          <option value="up">Up</option>
+          <option value="down">Down</option>
+          <option value="upDown">Up & Down</option>
+          <option value="random">Random</option>
+          <option value="off">Off</option>
+        </select>
       </div>
     </div>
 
@@ -602,38 +637,132 @@
     }
     updateVisualizer();
 
-    // Keyboard interaction
-    const keyboard = document.getElementById('keyboard');
-    const keys = keyboard.getElementsByClassName('key');
+    // Add arpeggiator
+    let currentArpNotes = [];
+    let arpInterval;
+    let currentArpStep = 0;
+    let isArpeggiating = false;
 
-    function playNote(note) {
-      Tone.start();
-      synth.triggerAttackRelease(note, "8n");
+    const patterns = {
+      up: (notes) => [...notes].sort((a, b) => Tone.Frequency(a).toFrequency() - Tone.Frequency(b).toFrequency()),
+      down: (notes) => [...notes].sort((a, b) => Tone.Frequency(b).toFrequency() - Tone.Frequency(a).toFrequency()),
+      upDown: (notes) => {
+        const up = patterns.up(notes);
+        const down = patterns.down(notes).slice(1, -1);
+        return [...up, ...down];
+      },
+      random: (notes) => {
+        const shuffled = [...notes];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        return shuffled;
+      },
+      off: () => []
+    };
+
+    function updateArpeggiator() {
+      const pattern = document.getElementById('arpPattern').value;
+      const speed = document.getElementById('arpSpeed').value;
       
-      // Find and activate the corresponding key
-      for (const key of keys) {
-        if (key.dataset.note === note) {
-          key.classList.add('active');
-          setTimeout(() => key.classList.remove('active'), 200);
+      // Clear existing interval
+      if (arpInterval) {
+        clearInterval(arpInterval);
+        arpInterval = null;
+      }
+
+      if (pattern === 'off') {
+        isArpeggiating = false;
+        return;
+      }
+
+      isArpeggiating = true;
+      const interval = 1000 * speed;
+
+      if (currentArpNotes.length > 0) {
+        arpInterval = setInterval(() => {
+          if (currentArpNotes.length === 0) return;
+
+          const arranged = patterns[pattern](currentArpNotes);
+          if (arranged.length === 0) return;
+
+          currentArpStep = (currentArpStep + 1) % arranged.length;
+          const note = arranged[currentArpStep];
+          
+          // Play the note
+          synth.triggerAttackRelease(note, "16n");
+
+          // Activate/deactivate keys visually
+          document.querySelectorAll('.key').forEach(key => {
+            key.classList.remove('active');
+            if (key.dataset.note === note) {
+              key.classList.add('active');
+              setTimeout(() => key.classList.remove('active'), 100);
+            }
+          });
+        }, interval);
+      }
+    }
+
+    // Update event handlers for key presses
+    function handleNoteOn(note) {
+      if (!isArpeggiating) {
+        synth.triggerAttack(note);
+      }
+      if (!currentArpNotes.includes(note)) {
+        currentArpNotes.push(note);
+        if (isArpeggiating) {
+          updateArpeggiator();
         }
       }
     }
 
-    // Mouse interaction
+    function handleNoteOff(note) {
+      if (!isArpeggiating) {
+        synth.triggerRelease();
+      }
+      currentArpNotes = currentArpNotes.filter(n => n !== note);
+      if (currentArpNotes.length === 0 && arpInterval) {
+        clearInterval(arpInterval);
+        arpInterval = null;
+      }
+    }
+
+    // Update existing keyboard event listeners
+    const keyboard = document.getElementById('keyboard');
+    const keys = keyboard.getElementsByClassName('key');
+
     Array.from(keys).forEach(key => {
-      key.addEventListener('mousedown', () => playNote(key.dataset.note));
+      const note = key.dataset.note;
+      key.addEventListener('mousedown', () => handleNoteOn(note));
+      key.addEventListener('mouseup', () => handleNoteOff(note));
+      key.addEventListener('mouseleave', () => handleNoteOff(note));
       key.addEventListener('touchstart', (e) => {
         e.preventDefault();
-        playNote(key.dataset.note);
+        handleNoteOn(note);
+      });
+      key.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        handleNoteOff(note);
       });
     });
 
-    // Keyboard interaction
-    document.addEventListener("keydown", (e) => {
+    // Computer keyboard event listeners
+    document.addEventListener('keydown', (e) => {
       if (e.repeat) return;
       const note = keyMap[e.key.toLowerCase()];
-      if (note) playNote(note);
+      if (note) handleNoteOn(note);
     });
+
+    document.addEventListener('keyup', (e) => {
+      const note = keyMap[e.key.toLowerCase()];
+      if (note) handleNoteOff(note);
+    });
+
+    // Add arpeggiator control listeners
+    document.getElementById('arpPattern').addEventListener('change', updateArpeggiator);
+    document.getElementById('arpSpeed').addEventListener('input', updateArpeggiator);
 
     // Control changes
     document.getElementById('detune').addEventListener('input', (e) => {
@@ -949,6 +1078,11 @@
       reverb.wet.value = reverbValue;
       distortion.distortion = distortionValue;
       synth.oscillator.type = oscillatorTypes[oscillatorValue];
+
+      document.getElementById('arpSpeed').value = 0.1 + Math.random() * 1.9;
+      const patterns = ['up', 'down', 'upDown', 'random', 'off'];
+      document.getElementById('arpPattern').value = patterns[Math.floor(Math.random() * patterns.length)];
+      updateArpeggiator();
     }
 
     // Add event listeners for instrument buttons
