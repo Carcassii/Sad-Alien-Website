@@ -157,6 +157,70 @@
       padding: 20px;
     }
 
+    .controls-container {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .instrument-select {
+      flex: 1;
+      background: linear-gradient(145deg, #2a1f3d, #1a1a2e);
+      border: 1px solid #ff5ea5;
+      border-radius: 15px;
+      padding: 20px;
+      color: #fff;
+    }
+
+    .instrument-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .instrument-btn {
+      background: rgba(255, 94, 165, 0.1);
+      border: 1px solid #ff5ea5;
+      color: #fff;
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: 'Patrick Hand', cursive;
+      text-shadow: 0 0 5px rgba(255, 94, 165, 0.5);
+    }
+
+    .instrument-btn:hover {
+      background: rgba(255, 94, 165, 0.2);
+      transform: translateY(-2px);
+      box-shadow: 0 0 15px rgba(255, 94, 165, 0.3);
+    }
+
+    .instrument-btn.active {
+      background: rgba(255, 94, 165, 0.4);
+      box-shadow: 0 0 20px rgba(255, 94, 165, 0.5);
+    }
+
+    .randomize-btn {
+      background: linear-gradient(45deg, #ff5ea5, #7b2fdd);
+      border: none;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: 'Patrick Hand', cursive;
+      font-size: 1.1em;
+      transition: all 0.3s ease;
+      text-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+      margin-top: 20px;
+    }
+
+    .randomize-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px rgba(255, 94, 165, 0.5);
+    }
+
     .knob {
       background: linear-gradient(145deg, #2a1f3d, #1a1a2e);
       border: 1px solid #ff5ea5;
@@ -210,24 +274,14 @@
       position: relative;
       margin-top: 30px;
       padding: 0 20px;
+      height: 160px; /* Fixed height to ensure proper black key positioning */
     }
 
     .key {
       width: 45px;
       height: 140px;
-      background: rgba(255, 255, 255, 0.9);
-      border-radius: 0 0 5px 5px;
-      cursor: pointer;
-      transition: all 0.1s;
-      position: relative;
-      display: flex;
-      align-items: flex-end;
-      justify-content: center;
-      padding-bottom: 10px;
-      color: #333;
-      font-weight: bold;
-      margin: 0 1px;
-      border: 1px solid rgba(0, 0, 0, 0.1);
+      margin: 0 2px;
+      z-index: 0;
     }
 
     .key.black {
@@ -237,7 +291,6 @@
       position: absolute;
       margin-left: -15px;
       z-index: 1;
-      color: #fff;
     }
 
     .key:hover {
@@ -348,6 +401,24 @@
     <p>Press the keys or use your keyboard to play! 🎶</p>
     
     <div class="visualizer" id="visualizer"></div>
+
+    <div class="controls-container">
+      <div class="instrument-select">
+        <label>Choose Instrument:</label>
+        <div class="instrument-list">
+          <button class="instrument-btn active" data-instrument="piano">Piano</button>
+          <button class="instrument-btn" data-instrument="organ">Organ</button>
+          <button class="instrument-btn" data-instrument="flute">Flute</button>
+          <button class="instrument-btn" data-instrument="clarinet">Clarinet</button>
+          <button class="instrument-btn" data-instrument="violin">Violin</button>
+          <button class="instrument-btn" data-instrument="accordion">Accordion</button>
+          <button class="instrument-btn" data-instrument="harpsichord">Harpsichord</button>
+          <button class="instrument-btn" data-instrument="celesta">Celesta</button>
+          <button class="instrument-btn" data-instrument="trumpet">Trumpet</button>
+        </div>
+        <button class="randomize-btn">🎲 Randomize Settings!</button>
+      </div>
+    </div>
 
     <div class="container">
       <div class="knob">
@@ -545,6 +616,102 @@
       const type = oscillatorTypes[Math.floor(e.target.value)];
       synth.oscillator.type = type;
     });
+
+    // Instrument presets
+    const instruments = {
+      piano: {
+        oscillator: { type: 'square8' },
+        envelope: { attack: 0.005, decay: 0.2, sustain: 0.4, release: 0.4 },
+        filterEnvelope: { attack: 0.001, decay: 0.7, sustain: 0.1, release: 0.8, baseFrequency: 300, octaves: 4 }
+      },
+      organ: {
+        oscillator: { type: 'sine4' },
+        envelope: { attack: 0.02, decay: 0.3, sustain: 0.8, release: 0.4 },
+        filterEnvelope: { attack: 0.05, decay: 0.5, sustain: 0.7, release: 0.5, baseFrequency: 400, octaves: 2 }
+      },
+      flute: {
+        oscillator: { type: 'sine' },
+        envelope: { attack: 0.1, decay: 0.2, sustain: 0.7, release: 0.3 },
+        filterEnvelope: { attack: 0.1, decay: 0.3, sustain: 0.6, release: 0.4, baseFrequency: 600, octaves: 2 }
+      },
+      clarinet: {
+        oscillator: { type: 'triangle8' },
+        envelope: { attack: 0.03, decay: 0.2, sustain: 0.7, release: 0.2 },
+        filterEnvelope: { attack: 0.05, decay: 0.2, sustain: 0.8, release: 0.3, baseFrequency: 500, octaves: 3 }
+      },
+      violin: {
+        oscillator: { type: 'sawtooth4' },
+        envelope: { attack: 0.1, decay: 0.3, sustain: 0.6, release: 0.5 },
+        filterEnvelope: { attack: 0.1, decay: 0.4, sustain: 0.5, release: 0.6, baseFrequency: 350, octaves: 3 }
+      },
+      accordion: {
+        oscillator: { type: 'square4' },
+        envelope: { attack: 0.04, decay: 0.1, sustain: 0.9, release: 0.3 },
+        filterEnvelope: { attack: 0.02, decay: 0.1, sustain: 0.8, release: 0.4, baseFrequency: 450, octaves: 2 }
+      },
+      harpsichord: {
+        oscillator: { type: 'square' },
+        envelope: { attack: 0.001, decay: 0.5, sustain: 0.1, release: 0.2 },
+        filterEnvelope: { attack: 0.001, decay: 0.3, sustain: 0.1, release: 0.2, baseFrequency: 700, octaves: 4 }
+      },
+      celesta: {
+        oscillator: { type: 'sine8' },
+        envelope: { attack: 0.001, decay: 0.3, sustain: 0.2, release: 0.3 },
+        filterEnvelope: { attack: 0.001, decay: 0.2, sustain: 0.2, release: 0.4, baseFrequency: 800, octaves: 3 }
+      },
+      trumpet: {
+        oscillator: { type: 'sawtooth8' },
+        envelope: { attack: 0.05, decay: 0.2, sustain: 0.8, release: 0.2 },
+        filterEnvelope: { attack: 0.05, decay: 0.2, sustain: 0.7, release: 0.3, baseFrequency: 550, octaves: 3 }
+      }
+    };
+
+    // Function to apply instrument settings
+    function applyInstrument(instrumentName) {
+      const settings = instruments[instrumentName];
+      synth.set({
+        oscillator: settings.oscillator,
+        envelope: settings.envelope,
+        filterEnvelope: settings.filterEnvelope
+      });
+
+      // Update active button
+      document.querySelectorAll('.instrument-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.instrument === instrumentName);
+      });
+    }
+
+    // Randomize function
+    function randomizeSettings() {
+      const detuneValue = Math.random() * 2400 - 1200;
+      const filterValue = Math.random() * 4900 + 100;
+      const reverbValue = Math.random();
+      const distortionValue = Math.random();
+      const oscillatorValue = Math.floor(Math.random() * 4);
+
+      document.getElementById('detune').value = detuneValue;
+      document.getElementById('filter').value = filterValue;
+      document.getElementById('reverb').value = reverbValue;
+      document.getElementById('distortion').value = distortionValue;
+      document.getElementById('oscillator').value = oscillatorValue;
+
+      synth.detune.value = detuneValue;
+      filter.frequency.value = filterValue;
+      reverb.wet.value = reverbValue;
+      distortion.distortion = distortionValue;
+      synth.oscillator.type = oscillatorTypes[oscillatorValue];
+    }
+
+    // Add event listeners for instrument buttons
+    document.querySelectorAll('.instrument-btn').forEach(btn => {
+      btn.addEventListener('click', () => applyInstrument(btn.dataset.instrument));
+    });
+
+    // Add event listener for randomize button
+    document.querySelector('.randomize-btn').addEventListener('click', randomizeSettings);
+
+    // Initialize with piano
+    applyInstrument('piano');
   </script>
 </body>
 </html>
