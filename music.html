@@ -123,14 +123,21 @@
 
     .synth-container {
       position: relative;
-      background: linear-gradient(145deg, #2a1f3d, #1a1a2e);
-      border: 2px solid #ff5ea5;
+      background: linear-gradient(145deg, #FF61D8, #905CFF);
+      border: 4px solid #fff;
       backdrop-filter: blur(10px);
-      border-radius: 20px;
+      border-radius: 30px;
       padding: 30px;
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
       max-width: 800px;
       margin: 120px auto 20px;
+      animation: float 6s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
     }
 
     h1 {
@@ -165,164 +172,114 @@
     }
 
     .instrument-select {
-      flex: 1;
-      background: linear-gradient(145deg, #2a1f3d, #1a1a2e);
-      border: 1px solid #ff5ea5;
-      border-radius: 15px;
-      padding: 20px;
+      background: linear-gradient(145deg, #905CFF, #FF61D8);
+      border: 3px solid #fff;
+      border-radius: 25px;
+      padding: 25px;
       color: #fff;
     }
 
     .instrument-list {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-      gap: 10px;
-      margin-top: 10px;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 15px;
+      margin-top: 15px;
     }
 
     .instrument-btn {
-      background: rgba(255, 94, 165, 0.1);
-      border: 1px solid #ff5ea5;
+      background: rgba(255, 255, 255, 0.2);
+      border: 2px solid #fff;
       color: #fff;
-      padding: 8px 12px;
-      border-radius: 8px;
+      padding: 12px 16px;
+      border-radius: 15px;
       cursor: pointer;
       transition: all 0.3s ease;
       font-family: 'Patrick Hand', cursive;
-      text-shadow: 0 0 5px rgba(255, 94, 165, 0.5);
+      font-size: 1.1em;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
     }
 
     .instrument-btn:hover {
-      background: rgba(255, 94, 165, 0.2);
-      transform: translateY(-2px);
-      box-shadow: 0 0 15px rgba(255, 94, 165, 0.3);
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
     }
 
     .instrument-btn.active {
-      background: rgba(255, 94, 165, 0.4);
-      box-shadow: 0 0 20px rgba(255, 94, 165, 0.5);
+      background: #fff;
+      color: #905CFF;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+      transform: translateY(-2px);
     }
 
     .randomize-btn {
-      background: linear-gradient(45deg, #ff5ea5, #7b2fdd);
-      border: none;
+      background: linear-gradient(45deg, #FFB347, #FF61D8);
+      border: 3px solid #fff;
       color: #fff;
-      padding: 10px 20px;
-      border-radius: 8px;
+      padding: 15px 25px;
+      border-radius: 20px;
       cursor: pointer;
       font-family: 'Patrick Hand', cursive;
-      font-size: 1.1em;
+      font-size: 1.3em;
       transition: all 0.3s ease;
-      text-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-      margin-top: 20px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      margin-top: 25px;
+      width: 100%;
     }
 
     .randomize-btn:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 20px rgba(255, 94, 165, 0.5);
+      transform: scale(1.05) rotate(-2deg);
+      box-shadow: 0 0 30px rgba(255, 97, 216, 0.6);
     }
 
     .knob {
-      background: linear-gradient(145deg, #2a1f3d, #1a1a2e);
-      border: 1px solid #ff5ea5;
+      background: linear-gradient(145deg, #FFB347, #FF61D8);
+      border: 3px solid #fff;
       padding: 20px;
-      border-radius: 15px;
-      box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
-      transition: transform 0.2s, box-shadow 0.2s;
+      border-radius: 20px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
       position: relative;
       overflow: hidden;
     }
 
-    .knob::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(
-        120deg,
-        transparent,
-        rgba(255, 94, 165, 0.2),
-        transparent
-      );
-      transition: 0.5s;
-    }
-
-    .knob:hover::before {
-      left: 100%;
-    }
-
     .knob:hover {
-      transform: translateY(-2px);
-      box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2),
-                  0 5px 15px rgba(255, 94, 165, 0.3);
+      transform: translateY(-5px) scale(1.02);
+      box-shadow: 0 8px 25px rgba(255, 97, 216, 0.4);
+    }
+
+    .knob label {
+      font-family: 'Patrick Hand', cursive;
+      font-size: 1.4em;
+      color: #fff;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      margin-bottom: 15px;
     }
 
     input[type=range] {
       -webkit-appearance: none;
       width: 100%;
-      height: 8px;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 4px;
+      height: 12px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
       outline: none;
-      position: relative;
-      overflow: hidden;
-    }
-
-    input[type=range]::-webkit-slider-runnable-track {
-      height: 8px;
-      background: linear-gradient(90deg, #ff5ea5 var(--value, 0%), rgba(255, 255, 255, 0.1) var(--value, 0%));
-      border-radius: 4px;
+      border: 2px solid #fff;
     }
 
     input[type=range]::-webkit-slider-thumb {
       -webkit-appearance: none;
-      width: 20px;
-      height: 20px;
-      background: #ff5ea5;
-      border: 2px solid #fff;
+      width: 28px;
+      height: 28px;
+      background: #fff;
       border-radius: 50%;
       cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.2s;
-      position: relative;
-      top: -6px;
-      box-shadow: 0 0 10px rgba(255, 94, 165, 0.5);
+      transition: all 0.2s ease;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     }
 
     input[type=range]::-webkit-slider-thumb:hover {
       transform: scale(1.2);
-      box-shadow: 0 0 15px rgba(255, 94, 165, 0.8);
-    }
-
-    input[type=range]::-webkit-slider-thumb:active {
-      transform: scale(1.1);
-      background: #ff8ebd;
-    }
-
-    label {
-      font-size: 1.2em;
-      margin-bottom: 12px;
-      display: block;
-      color: #ff5ea5;
-      text-shadow: 0 0 5px rgba(255, 94, 165, 0.3);
-      position: relative;
-      z-index: 1;
-    }
-
-    label::after {
-      content: '';
-      position: absolute;
-      bottom: -2px;
-      left: 0;
-      width: 0;
-      height: 2px;
-      background: #ff5ea5;
-      transition: width 0.3s ease;
-    }
-
-    .knob:hover label::after {
-      width: 100%;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
     }
 
     .keyboard {
@@ -332,16 +289,17 @@
       margin-top: 30px;
       padding: 20px;
       height: 160px;
-      background: rgba(20, 20, 30, 0.6);
-      border-radius: 10px;
-      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.3);
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      border: 3px solid #fff;
+      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.2);
     }
 
     .key {
       width: 45px;
       height: 140px;
       background: #ffffff;
-      border-radius: 0 0 5px 5px;
+      border-radius: 0 0 10px 10px;
       cursor: pointer;
       transition: all 0.1s;
       position: relative;
@@ -349,53 +307,43 @@
       align-items: flex-end;
       justify-content: center;
       padding-bottom: 10px;
-      color: #333;
+      color: #905CFF;
       font-weight: bold;
       margin: 0 2px;
       z-index: 0;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
       border: 1px solid rgba(0, 0, 0, 0.1);
     }
 
     .key.black {
       width: 30px;
       height: 90px;
-      background: #222;
+      background: #905CFF;
       position: absolute;
       z-index: 1;
       color: #fff;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
       border: 1px solid rgba(0, 0, 0, 0.4);
-      transform: translateX(75px);
+      border-radius: 0 0 8px 8px;
     }
-
-    /* Position black keys with proper spacing */
-    .key[data-note="C#4"] { left: 106px; }  /* Between A and S */
-    .key[data-note="D#4"] { left: 156px; }  /* Between S and D */
-    .key[data-note="F#4"] { left: 256px; }  /* Between F and G */
-    .key[data-note="G#4"] { left: 306px; }  /* Between G and H */
-    .key[data-note="A#4"] { left: 356px; }  /* Between H and J */
-    .key[data-note="C#5"] { left: 456px; }  /* Between K and L */
-    .key[data-note="D#5"] { left: 506px; }  /* Between L and ; */
 
     .key:hover {
       background: #f0f0f0;
-      box-shadow: 0 0 15px rgba(255, 94, 165, 0.5);
+      transform: translateY(1px);
     }
 
     .key.black:hover {
-      background: #333;
+      background: #7B4FD6;
     }
 
     .key.active {
-      background: #ff5ea5;
+      background: #FF61D8;
       transform: translateY(2px);
       color: white;
     }
 
     .key.black.active {
-      background: #ff8ebd;
-      transform: translate(75px, 2px);
+      background: #FF8AE2;
     }
 
     .key span {
@@ -410,43 +358,47 @@
 
     .visualizer {
       height: 100px;
-      background: #1a1a2e;
+      background: rgba(255, 255, 255, 0.1);
       margin: 20px 0;
-      border-radius: 10px;
+      border-radius: 15px;
       overflow: hidden;
       position: relative;
-      border: 2px solid #ff5ea5;
-      box-shadow: inset 0 0 10px rgba(255, 94, 165, 0.3);
+      border: 3px solid #fff;
+      box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.2);
     }
 
     .visualizer-bar {
       position: absolute;
       bottom: 0;
       width: 3px;
-      background: #ff5ea5;
+      background: linear-gradient(to top, #FF61D8, #905CFF);
       transition: height 0.1s;
-      box-shadow: 0 0 10px #ff5ea5;
+      box-shadow: 0 0 10px rgba(255, 97, 216, 0.5);
     }
 
     .pattern-select {
       width: 100%;
-      padding: 8px;
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid #ff5ea5;
-      border-radius: 4px;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.2);
+      border: 2px solid #fff;
+      border-radius: 12px;
       color: #fff;
-      font-family: 'Work Sans', sans-serif;
+      font-family: 'Patrick Hand', cursive;
+      font-size: 1.1em;
       cursor: pointer;
       outline: none;
-    }
-
-    .pattern-select option {
-      background: #1a1a2e;
-      color: #fff;
+      transition: all 0.3s ease;
     }
 
     .pattern-select:hover {
-      background: rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .pattern-select option {
+      background: #905CFF;
+      color: #fff;
+      font-family: 'Patrick Hand', cursive;
     }
 
     @media (max-width: 768px) {
@@ -578,8 +530,12 @@
         <input id="volume" type="range" min="0" max="1" step="0.01" value="0.7">
       </div>
       <div class="knob">
-        <label for="delay">Delay</label>
+        <label for="delay">Delay Mix</label>
         <input id="delay" type="range" min="0" max="1" step="0.01" value="0">
+      </div>
+      <div class="knob">
+        <label for="delayTime">Delay Time</label>
+        <input id="delayTime" type="range" min="0.05" max="1" step="0.05" value="0.25">
       </div>
     </div>
 
@@ -671,7 +627,11 @@
     const limiter = new Tone.Limiter(-3);
     const gain = new Tone.Gain(0.7);
     const analyser = new Tone.Analyser("waveform", 128);
-    const delay = new Tone.FeedbackDelay("8n", 0);
+    const delay = new Tone.FeedbackDelay({
+      delayTime: 0.25,
+      feedback: 0.5,
+      wet: 0
+    });
 
     // Chain the effects for the synth
     synth.chain(gain, filter, distortion, delay, reverb, limiter, analyser, Tone.Destination);
@@ -743,7 +703,6 @@
       }
 
       isArpeggiating = true;
-      // Invert the speed calculation (2.1 - speed to make it faster to the right)
       const interval = 1000 * (2.1 - speed);
 
       if (currentArpNotes.length > 0) {
@@ -756,15 +715,21 @@
           currentArpStep = (currentArpStep + 1) % arranged.length;
           const note = arranged[currentArpStep];
           
-          // Play the note
-          synth.triggerAttackRelease(note, "16n");
+          // Release previous note if any
+          if (currentInstrument) {
+            currentInstrument.triggerRelease();
+          }
+
+          // Play the new note
+          if (currentInstrument) {
+            currentInstrument.triggerAttack(note);
+          }
 
           // Activate/deactivate keys visually
           document.querySelectorAll('.key').forEach(key => {
             key.classList.remove('active');
             if (key.dataset.note === note) {
               key.classList.add('active');
-              setTimeout(() => key.classList.remove('active'), 100);
             }
           });
         }, interval);
@@ -917,8 +882,11 @@
 
     document.getElementById('oscillator').addEventListener('input', (e) => {
       if (currentInstrument === synth) {
-        const type = oscillatorTypes[Math.floor(e.target.value)];
-        synth.set({ oscillator: { type } });
+        const types = ['sine', 'square', 'sawtooth', 'triangle'];
+        const type = types[Math.floor(e.target.value)];
+        synth.set({
+          oscillator: { type }
+        });
       }
     });
 
@@ -928,6 +896,11 @@
 
     document.getElementById('delay').addEventListener('input', (e) => {
       delay.wet.value = e.target.value;
+    });
+
+    // Add delay time control
+    document.getElementById('delayTime').addEventListener('input', (e) => {
+      delay.delayTime.value = parseFloat(e.target.value);
     });
 
     // Instrument presets
