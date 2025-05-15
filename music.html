@@ -787,6 +787,9 @@
 
       if (pattern === 'off') {
         isArpeggiating = false;
+        if (currentInstrument) {
+          currentInstrument.releaseAll();
+        }
         return;
       }
 
@@ -794,8 +797,14 @@
       const interval = 1000 * (2.1 - speed);
 
       if (currentArpNotes.size > 0) {
+        let lastNote = null;
         arpInterval = setInterval(() => {
-          if (currentArpNotes.size === 0) return;
+          if (currentArpNotes.size === 0) {
+            if (currentInstrument) {
+              currentInstrument.releaseAll();
+            }
+            return;
+          }
 
           const arranged = patterns[pattern]([...currentArpNotes]);
           if (arranged.length === 0) return;
@@ -803,15 +812,16 @@
           currentArpStep = (currentArpStep + 1) % arranged.length;
           const note = arranged[currentArpStep];
           
-          // Release all notes
-          if (currentInstrument) {
-            currentInstrument.releaseAll();
+          // Release previous note
+          if (lastNote && currentInstrument) {
+            currentInstrument.triggerRelease(lastNote);
           }
 
           // Play the new note
           if (currentInstrument) {
             currentInstrument.triggerAttack(note);
           }
+          lastNote = note;
 
           // Update key visuals
           document.querySelectorAll('.key').forEach(key => {
@@ -829,12 +839,13 @@
     let isMouseDown = false;
 
     function handleNoteOn(note, key) {
+      Tone.start();
       if (!isArpeggiating) {
         if (currentInstrument) {
           currentInstrument.triggerAttack(note);
         }
-        if (key) key.classList.add('active');
       }
+      if (key) key.classList.add('active');
       activeNotes.add(note);
       currentArpNotes.add(note);
       if (isArpeggiating) {
@@ -845,13 +856,16 @@
     function handleNoteOff(note, key) {
       if (!isArpeggiating && currentInstrument) {
         currentInstrument.triggerRelease(note);
-        if (key) key.classList.remove('active');
       }
+      if (key) key.classList.remove('active');
       activeNotes.delete(note);
       currentArpNotes.delete(note);
       if (currentArpNotes.size === 0 && arpInterval) {
         clearInterval(arpInterval);
         arpInterval = null;
+        if (currentInstrument) {
+          currentInstrument.releaseAll();
+        }
       }
     }
 
@@ -952,6 +966,100 @@
 
     // Initialize with spaceOrgan
     applyInstrument('spaceOrgan');
+
+    const oscillatorTypes = ['sine', 'square', 'sawtooth', 'triangle'];
+
+    // Control changes
+    document.getElementById('oscillator').addEventListener('input', (e) => {
+      if (currentInstrument === synth) {
+        const type = oscillatorTypes[Math.floor(e.target.value)];
+        synth.set({
+          oscillator: { type }
+        });
+      }
+    });
+
+    // Update keyboard event listeners with improved handling
+    const keyboard = document.getElementById('keyboard');
+    const keys = keyboard.getElementsByClassName('key');
+    const keyMap = {
+      'a': 'C4', 'w': 'C#4', 's': 'D4', 'e': 'D#4', 'd': 'E4',
+      'f': 'F4', 't': 'F#4', 'g': 'G4', 'y': 'G#4', 'h': 'A4',
+      'u': 'A#4', 'j': 'B4', 'k': 'C5', 'o': 'C#5', 'l': 'D5',
+      'p': 'D#5', ';': 'E5'
+    };
+
+    Array.from(keys).forEach(key => {
+      const note = key.dataset.note;
+      
+      key.addEventListener('mousedown', () => {
+        isMouseDown = true;
+        handleNoteOn(note, key);
+      });
+      
+      key.addEventListener('mouseup', () => {
+        isMouseDown = false;
+        handleNoteOff(note, key);
+      });
+      
+      key.addEventListener('mouseleave', () => {
+        if (isMouseDown) {
+          handleNoteOff(note, key);
+        }
+      });
+      
+      key.addEventListener('mouseenter', () => {
+        if (isMouseDown) {
+          handleNoteOn(note, key);
+        }
+      });
+
+      key.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        handleNoteOn(note, key);
+      });
+      
+      key.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        handleNoteOff(note, key);
+      });
+    });
+
+    // Update computer keyboard event listeners
+    const pressedKeys = new Set();
+    
+    document.addEventListener('keydown', (e) => {
+      if (e.repeat) return;
+      const note = keyMap[e.key.toLowerCase()];
+      if (note && !pressedKeys.has(e.key.toLowerCase())) {
+        pressedKeys.add(e.key.toLowerCase());
+        const key = Array.from(keys).find(k => k.dataset.note === note);
+        handleNoteOn(note, key);
+      }
+    });
+
+    document.addEventListener('keyup', (e) => {
+      const note = keyMap[e.key.toLowerCase()];
+      if (note) {
+        pressedKeys.delete(e.key.toLowerCase());
+        const key = Array.from(keys).find(k => k.dataset.note === note);
+        handleNoteOff(note, key);
+      }
+    });
+
+    // Update visualizer
+    function updateVisualizer() {
+      const waveform = analyser.getValue();
+      
+      for (let i = 0; i < bars.length; i++) {
+        const index = Math.floor(i * (waveform.length / bars.length));
+        const value = Math.abs(waveform[index]) * 200;
+        bars[i].style.height = `${value}%`;
+      }
+
+      requestAnimationFrame(updateVisualizer);
+    }
+    updateVisualizer();
   </script>
 </body>
 </html>
