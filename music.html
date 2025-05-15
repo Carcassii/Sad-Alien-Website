@@ -790,7 +790,16 @@
     function handleNoteOn(note, key) {
         if (!isArpeggiating) {
             Tone.start();
-            synth.triggerAttack(note);
+            if (currentInstrument === synth) {
+                currentInstrument.triggerAttack(note);
+            } else {
+                // For samplers, add slight random variations to make it more natural
+                const slight_detune = (Math.random() - 0.5) * 10; // ±5 cents
+                currentInstrument.triggerAttack(note, Tone.now(), {
+                    detune: slight_detune,
+                    velocity: 0.7 + Math.random() * 0.3 // Random velocity between 0.7 and 1.0
+                });
+            }
             activeNotes.set(note, key);
             if (key) key.classList.add('active');
         }
@@ -804,7 +813,11 @@
 
     function handleNoteOff(note, key) {
         if (!isArpeggiating) {
-            synth.triggerRelease([note]); // Release specific note
+            if (currentInstrument === synth) {
+                currentInstrument.triggerRelease([note]);
+            } else {
+                currentInstrument.triggerRelease(note, Tone.now() + 0.05); // Slight release delay for more natural sound
+            }
             if (key) key.classList.remove('active');
         }
         activeNotes.delete(note);
@@ -1182,13 +1195,23 @@
         for (const [name, config] of Object.entries(instruments)) {
           if (config.type === 'sampler') {
             console.log(`Attempting to load ${name} sampler with file ${config.sample}`);
+            
+            // Create a map of notes for better pitch coverage
+            const noteMap = {
+              'C3': config.sample,
+              'G3': config.sample,
+              'C4': config.sample,
+              'G4': config.sample,
+              'C5': config.sample
+            };
+
             samplers[name] = new Tone.Sampler({
-              urls: {
-                "C4": config.sample
-              },
+              urls: noteMap,
               baseUrl: "",
               attack: config.settings.attack,
               release: config.settings.release,
+              volume: -6, // Slightly reduce volume to prevent clipping
+              curve: 'exponential',
               onload: () => {
                 console.log(`Successfully loaded ${name} sampler`);
               },
@@ -1196,6 +1219,34 @@
                 console.error(`Error loading ${name} sampler:`, error);
               }
             }).chain(gain, filter, distortion, delay, reverb, limiter, analyser, Tone.Destination);
+
+            // Add instrument-specific processing
+            switch(name) {
+              case 'clarinet':
+                samplers[name].set({ playbackRate: 1 });
+                break;
+              case 'flute':
+                samplers[name].set({ playbackRate: 1.2 });
+                break;
+              case 'harpsichord':
+                samplers[name].set({ playbackRate: 0.9 });
+                break;
+              case 'guitar':
+                samplers[name].set({ playbackRate: 1 });
+                break;
+              case 'trumpet':
+                samplers[name].set({ playbackRate: 1.1 });
+                break;
+              case 'oboe':
+                samplers[name].set({ playbackRate: 0.95 });
+                break;
+              case 'organ':
+                samplers[name].set({ playbackRate: 0.85 });
+                break;
+              case 'strings':
+                samplers[name].set({ playbackRate: 1.05 });
+                break;
+            }
           }
         }
         // Set initial instrument
