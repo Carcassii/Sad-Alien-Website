@@ -2,16 +2,21 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Space Synth - Sad Alien Studios</title>
+  <title>Quirky Web Synth - Sad Alien Studios</title>
   <script src="https://unpkg.com/tone"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Work+Sans:wght@400;600&display=swap" rel="stylesheet">
   <style>
+    html {
+      scroll-behavior: smooth;
+    }
+    
     body {
       margin: 0;
       font-family: 'Work Sans', sans-serif;
-      background: #0a1d37;
+      background: linear-gradient(to bottom, #0a1d37 0%, #0a1d37 320px, #3c75b4 460px, #a0d2ff 640px, #fffdf9 1000px, #fffdf9 100%);
       color: #fff;
       min-height: 100vh;
+      overflow-x: hidden;
     }
 
     .navbar {
@@ -31,12 +36,13 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
+      font-family: 'Patrick Hand', cursive;
       font-size: 4em;
       color: #fff;
-      text-shadow: 0 0 10px #00f7ff,
-                   0 0 20px #00f7ff,
-                   0 0 30px #00f7ff,
-                   0 0 40px #00f7ff;
+      text-shadow: 0 0 10px #ff5ea5,
+                   0 0 20px #ff5ea5,
+                   0 0 30px #ff5ea5,
+                   0 0 40px #ff5ea5;
       animation: float 6s ease-in-out infinite alternate;
       z-index: 2;
     }
@@ -59,43 +65,80 @@
     }
 
     .nav-links a {
+      font-family: 'Patrick Hand', cursive;
       text-decoration: none;
       color: #fff;
       padding: 0.8rem 1.4rem;
       transition: all 0.3s ease;
-      border-radius: 8px;
+      border-radius: 16px;
       position: relative;
-      font-size: 1.1rem;
+      font-size: 1.2rem;
       min-width: 100px;
       text-align: center;
       backdrop-filter: blur(4px);
-      border: 1px solid rgba(0, 247, 255, 0.2);
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-      background: rgba(10, 29, 55, 0.8);
+      border: 1px solid rgba(255,255,255,0.2);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2), 0 2px 4px rgba(0,0,0,0.1);
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+    }
+
+    .nav-links li:nth-child(1) a {
+      background: rgba(255, 89, 94, 0.85);  /* Crayon Red */
+    }
+    .nav-links li:nth-child(2) a {
+      background: rgba(255, 202, 58, 0.85);  /* Crayon Yellow */
+    }
+    .nav-links li:nth-child(3) a {
+      background: rgba(138, 201, 38, 0.85);  /* Crayon Green */
+    }
+    .nav-links li:nth-child(4) a {
+      background: rgba(25, 130, 196, 0.85);  /* Crayon Blue */
+    }
+    .nav-links li:nth-child(5) a {
+      background: rgba(255, 125, 255, 0.85);  /* Crayon Pink */
     }
 
     .nav-links a:hover {
-      border-color: #00f7ff;
-      box-shadow: 0 0 15px rgba(0, 247, 255, 0.4);
-      transform: translateY(-2px);
+      transform: translateY(-2px) scale(1.1);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.3), 0 3px 6px rgba(0,0,0,0.2);
+      filter: brightness(1.1);
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
     }
 
     .synth-container {
       position: relative;
-      background: rgba(10, 29, 55, 0.9);
-      border: 2px solid #00f7ff;
+      background: linear-gradient(145deg, #FF61D8, #905CFF);
+      border: 4px solid #fff;
       backdrop-filter: blur(10px);
-      border-radius: 15px;
+      border-radius: 30px;
       padding: 30px;
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
       max-width: 800px;
       margin: 120px auto 20px;
+      animation: float 6s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
     }
 
     h1 {
+      font-family: 'Patrick Hand', cursive;
       font-size: 2.5em;
       margin-bottom: 0.2em;
-      text-shadow: 0 0 10px rgba(0, 247, 255, 0.5);
+      text-shadow: 0 0 10px rgba(255, 94, 165, 0.5);
+      animation: glow 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes glow {
+      from {
+        text-shadow: 0 0 10px rgba(255, 94, 165, 0.5);
+      }
+      to {
+        text-shadow: 0 0 20px rgba(255, 94, 165, 0.8),
+                     0 0 30px rgba(255, 94, 165, 0.6);
+      }
     }
 
     .container {
@@ -112,11 +155,12 @@
     }
 
     .instrument-select {
-      background: rgba(10, 29, 55, 0.9);
-      border: 2px solid #00f7ff;
-      border-radius: 15px;
+      background: linear-gradient(145deg, #905CFF, #FF61D8);
+      border: 3px solid #fff;
+      border-radius: 25px;
       padding: 25px;
       color: #fff;
+      flex: 1;
     }
 
     .instrument-list {
@@ -127,82 +171,100 @@
     }
 
     .instrument-btn {
-      background: rgba(0, 247, 255, 0.1);
-      border: 2px solid #00f7ff;
+      background: rgba(255, 255, 255, 0.2);
+      border: 2px solid #fff;
       color: #fff;
       padding: 12px 16px;
-      border-radius: 8px;
+      border-radius: 15px;
       cursor: pointer;
       transition: all 0.3s ease;
+      font-family: 'Patrick Hand', cursive;
+      font-size: 1.1em;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
     }
 
     .instrument-btn:hover {
-      background: rgba(0, 247, 255, 0.2);
-      transform: translateY(-2px);
-      box-shadow: 0 0 15px rgba(0, 247, 255, 0.3);
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
     }
 
     .instrument-btn.active {
-      background: rgba(0, 247, 255, 0.3);
-      box-shadow: 0 0 20px rgba(0, 247, 255, 0.5);
+      background: #fff;
+      color: #905CFF;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+      transform: translateY(-2px);
     }
 
     .randomize-btn {
-      background: linear-gradient(45deg, #0a1d37, #00f7ff);
-      border: 2px solid #00f7ff;
+      background: linear-gradient(45deg, #FFB347, #FF61D8);
+      border: 3px solid #fff;
       color: #fff;
       padding: 15px 25px;
-      border-radius: 8px;
+      border-radius: 20px;
       cursor: pointer;
-      font-size: 1.2em;
+      font-family: 'Patrick Hand', cursive;
+      font-size: 1.3em;
       transition: all 0.3s ease;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
       margin-top: 25px;
       width: 100%;
     }
 
     .randomize-btn:hover {
-      transform: scale(1.02);
-      box-shadow: 0 0 30px rgba(0, 247, 255, 0.4);
+      transform: scale(1.05) rotate(-2deg);
+      box-shadow: 0 0 30px rgba(255, 97, 216, 0.6);
     }
 
     .knob {
-      background: rgba(10, 29, 55, 0.9);
-      border: 2px solid #00f7ff;
+      background: linear-gradient(145deg, #FFB347, #FF61D8);
+      border: 3px solid #fff;
       padding: 20px;
-      border-radius: 10px;
+      border-radius: 20px;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
       transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
     }
 
     .knob:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 25px rgba(0, 247, 255, 0.2);
+      transform: translateY(-5px) scale(1.02);
+      box-shadow: 0 8px 25px rgba(255, 97, 216, 0.4);
+    }
+
+    .knob label {
+      font-family: 'Patrick Hand', cursive;
+      font-size: 1.4em;
+      color: #fff;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      margin-bottom: 15px;
+      display: block;
     }
 
     input[type=range] {
       -webkit-appearance: none;
       width: 100%;
-      height: 8px;
-      background: rgba(0, 247, 255, 0.1);
-      border-radius: 4px;
+      height: 12px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
       outline: none;
-      border: 1px solid #00f7ff;
+      border: 2px solid #fff;
     }
 
     input[type=range]::-webkit-slider-thumb {
       -webkit-appearance: none;
-      width: 20px;
-      height: 20px;
-      background: #00f7ff;
+      width: 28px;
+      height: 28px;
+      background: #fff;
       border-radius: 50%;
       cursor: pointer;
       transition: all 0.2s ease;
-      box-shadow: 0 0 10px rgba(0, 247, 255, 0.5);
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     }
 
     input[type=range]::-webkit-slider-thumb:hover {
       transform: scale(1.2);
-      box-shadow: 0 0 20px rgba(0, 247, 255, 0.8);
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
     }
 
     .keyboard {
@@ -212,17 +274,17 @@
       margin-top: 30px;
       padding: 20px;
       height: 160px;
-      background: rgba(10, 29, 55, 0.9);
-      border-radius: 10px;
-      border: 2px solid #00f7ff;
-      box-shadow: inset 0 0 20px rgba(0, 247, 255, 0.1);
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      border: 3px solid #fff;
+      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.2);
     }
 
     .key {
       width: 45px;
       height: 140px;
       background: #ffffff;
-      border-radius: 0 0 6px 6px;
+      border-radius: 0 0 10px 10px;
       cursor: pointer;
       transition: all 0.1s;
       position: relative;
@@ -230,81 +292,107 @@
       align-items: flex-end;
       justify-content: center;
       padding-bottom: 10px;
-      color: #0a1d37;
+      color: #905CFF;
       font-weight: bold;
       margin: 0 2px;
       z-index: 0;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(0, 0, 0, 0.1);
     }
+
+    .key.black[data-note="C#4"] { left: 32px; }
+    .key.black[data-note="D#4"] { left: 77px; }
+    .key.black[data-note="F#4"] { left: 167px; }
+    .key.black[data-note="G#4"] { left: 212px; }
+    .key.black[data-note="A#4"] { left: 257px; }
+    .key.black[data-note="C#5"] { left: 347px; }
+    .key.black[data-note="D#5"] { left: 392px; }
 
     .key.black {
       width: 30px;
       height: 90px;
-      background: #0a1d37;
+      background: #905CFF;
       position: absolute;
       z-index: 1;
       color: #fff;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(0, 0, 0, 0.4);
+      border-radius: 0 0 8px 8px;
+      transform: translateX(-50%);
     }
 
     .key:hover {
       background: #f0f0f0;
+      transform: translateY(1px);
     }
 
     .key.black:hover {
-      background: #162b4a;
+      background: #7B4FD6;
     }
 
     .key.active {
-      background: #00f7ff;
-      color: #0a1d37;
+      background: #FF61D8;
+      transform: translateY(2px);
+      color: white;
     }
 
     .key.black.active {
-      background: #00f7ff;
-      color: #0a1d37;
+      background: #FF8AE2;
+    }
+
+    .key span {
+      font-size: 0.9em;
+      opacity: 0.8;
+    }
+
+    .key.black span {
+      color: #fff;
+      opacity: 0.9;
     }
 
     .visualizer {
       height: 100px;
-      background: rgba(10, 29, 55, 0.9);
+      background: rgba(255, 255, 255, 0.1);
       margin: 20px 0;
-      border-radius: 10px;
+      border-radius: 15px;
       overflow: hidden;
       position: relative;
-      border: 2px solid #00f7ff;
-      box-shadow: inset 0 0 15px rgba(0, 247, 255, 0.1);
+      border: 3px solid #fff;
+      box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.2);
     }
 
     .visualizer-bar {
       position: absolute;
       bottom: 0;
       width: 3px;
-      background: linear-gradient(to top, #00f7ff, #0a1d37);
+      background: linear-gradient(to top, #FF61D8, #905CFF);
       transition: height 0.1s;
-      box-shadow: 0 0 10px rgba(0, 247, 255, 0.3);
+      box-shadow: 0 0 10px rgba(255, 97, 216, 0.5);
     }
 
     .pattern-select {
       width: 100%;
       padding: 12px;
-      background: rgba(10, 29, 55, 0.9);
-      border: 2px solid #00f7ff;
-      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.2);
+      border: 2px solid #fff;
+      border-radius: 12px;
       color: #fff;
+      font-family: 'Patrick Hand', cursive;
+      font-size: 1.1em;
       cursor: pointer;
       outline: none;
       transition: all 0.3s ease;
     }
 
     .pattern-select:hover {
-      background: rgba(0, 247, 255, 0.1);
+      background: rgba(255, 255, 255, 0.3);
       transform: translateY(-2px);
     }
 
     .pattern-select option {
-      background: #0a1d37;
+      background: #905CFF;
       color: #fff;
+      font-family: 'Patrick Hand', cursive;
     }
 
     @media (max-width: 768px) {
