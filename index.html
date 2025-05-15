@@ -46,23 +46,32 @@
       margin: 0;
       padding: 0;
       z-index: 2;
-      transform: translateY(40px);
+      transform: translateY(60px);
+      justify-content: center;
+      flex-wrap: wrap;
     }
     .nav-links a {
       font-family: 'Patrick Hand', cursive;
       text-decoration: none;
       color: #fff;
-      padding: 0.6rem 1rem;
+      padding: 0.8rem 1.4rem;
       transition: all 0.3s ease;
-      border-radius: 12px;
+      border-radius: 16px;
       background: rgba(255,255,255,0.15);
       position: relative;
+      font-size: 1.2rem;
+      min-width: 100px;
+      text-align: center;
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(255,255,255,0.2);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
     .nav-links a:hover {
-      background: #fff;
+      background: rgba(255,255,255,0.95);
       color: #0a1d37;
       transform: translateY(-2px) scale(1.05);
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      border-color: rgba(255,255,255,1);
     }
     .svg-container {
       position: absolute;
@@ -235,15 +244,18 @@
       }
       
       .nav-links {
-        flex-direction: column;
-        align-items: center;
-        gap: 0.8rem;
-        transform: translateY(20px);
+        gap: 0.6rem;
+        transform: translateY(40px);
+        flex-direction: row;
+        justify-content: center;
+        flex-wrap: nowrap;
+        padding: 0 0.5rem;
       }
 
       .nav-links a {
-        padding: 0.4rem 0.8rem;
+        padding: 0.5rem 0.6rem;
         font-size: 0.9rem;
+        min-width: auto;
       }
 
       .svg-container {
