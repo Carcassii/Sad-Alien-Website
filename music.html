@@ -653,7 +653,7 @@
     // Set up synth with more effects
     const synth = new Tone.PolySynth(Tone.Synth, {
       oscillator: {
-        type: 'square8' // More retro sound
+        type: 'square8'
       },
       envelope: {
         attack: 0.005,
@@ -661,8 +661,8 @@
         sustain: 0.4,
         release: 0.4
       },
-      volume: -12 // Reduce the overall volume to prevent distortion
-    }).toDestination();
+      volume: -12
+    });
 
     const filter = new Tone.Filter(1500, "lowpass");
     const reverb = new Tone.Reverb(2);
@@ -672,7 +672,7 @@
     const analyser = new Tone.Analyser("waveform", 128);
     const delay = new Tone.FeedbackDelay("8n", 0);
 
-    // Chain the effects in a better order
+    // Chain the effects for the synth
     synth.chain(gain, filter, distortion, delay, reverb, limiter, analyser, Tone.Destination);
 
     reverb.wet.value = 0.2;
@@ -790,15 +790,8 @@
     function handleNoteOn(note, key) {
         if (!isArpeggiating) {
             Tone.start();
-            if (currentInstrument === synth) {
+            if (currentInstrument) {
                 currentInstrument.triggerAttack(note);
-            } else {
-                // For samplers, add slight random variations to make it more natural
-                const slight_detune = (Math.random() - 0.5) * 10; // ±5 cents
-                currentInstrument.triggerAttack(note, Tone.now(), {
-                    detune: slight_detune,
-                    velocity: 0.7 + Math.random() * 0.3 // Random velocity between 0.7 and 1.0
-                });
             }
             activeNotes.set(note, key);
             if (key) key.classList.add('active');
@@ -812,12 +805,8 @@
     }
 
     function handleNoteOff(note, key) {
-        if (!isArpeggiating) {
-            if (currentInstrument === synth) {
-                currentInstrument.triggerRelease([note]);
-            } else {
-                currentInstrument.triggerRelease(note, Tone.now() + 0.05); // Slight release delay for more natural sound
-            }
+        if (!isArpeggiating && currentInstrument) {
+            currentInstrument.triggerRelease(note);
             if (key) key.classList.remove('active');
         }
         activeNotes.delete(note);
@@ -1192,19 +1181,32 @@
 
     async function initializeSamplers() {
       try {
-        const sampler = new Tone.Sampler({
-          urls: {
-            "C4": "audio/Clarinet.mp3"
-          },
-          onload: () => {
-            console.log("Test sampler loaded");
-            sampler.triggerAttackRelease("C4", 1);
-          }
-        }).toDestination();
-        
-        samplers.clarinet = sampler;
+        const instrumentFiles = {
+          'clarinet': 'Clarinet.mp3',
+          'flute': 'Flute.mp3',
+          'harpsichord': 'Harpsichord.mp3',
+          'guitar': 'Guitar.mp3',
+          'trumpet': 'Trumpet.mp3',
+          'oboe': 'Oboe.mp3',
+          'organ': 'Organ.mp3',
+          'strings': 'Strings.mp3'
+        };
+
+        for (const [name, file] of Object.entries(instrumentFiles)) {
+          console.log(`Loading ${name} sampler...`);
+          samplers[name] = new Tone.Sampler({
+            urls: {
+              "C4": `audio/${file}`
+            },
+            onload: () => {
+              console.log(`${name} sampler loaded successfully`);
+            }
+          });
+          // Connect each sampler to the effects chain
+          samplers[name].chain(gain, filter, distortion, delay, reverb, limiter, analyser, Tone.Destination);
+        }
       } catch (error) {
-        console.error("Error loading sampler:", error);
+        console.error("Error loading samplers:", error);
       }
     }
 
@@ -1214,40 +1216,26 @@
       await initializeSamplers();
     });
 
-    // Simple click to start audio
-    document.addEventListener('click', () => {
-      Tone.start();
-    }, { once: true });
-
-    // Update instrument selection handler with error handling
+    // Update instrument selection handler
     document.querySelectorAll('.instrument-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
+      btn.addEventListener('click', async () => {
         const instrumentName = btn.dataset.instrument;
-        const config = instruments[instrumentName];
-        console.log(`Switching to instrument: ${instrumentName}`);
-
+        
         // Remove active class from all buttons
         document.querySelectorAll('.instrument-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
 
         try {
-          if (config.type === 'sampler') {
-            if (samplers[instrumentName]) {
-              console.log(`Activating ${instrumentName} sampler`);
-              currentInstrument = samplers[instrumentName];
-            } else {
-              console.error(`Sampler for ${instrumentName} not found!`);
-              // Fallback to synth if sampler not available
-              currentInstrument = synth;
-            }
-          } else {
-            console.log(`Activating synth with ${instrumentName} settings`);
+          if (instrumentName === 'spaceOrgan') {
             currentInstrument = synth;
             applyInstrument(instrumentName);
+          } else if (samplers[instrumentName]) {
+            await Tone.start();
+            currentInstrument = samplers[instrumentName];
+            console.log(`Switched to ${instrumentName}`);
           }
         } catch (error) {
           console.error(`Error switching to ${instrumentName}:`, error);
-          // Fallback to synth
           currentInstrument = synth;
         }
       });
