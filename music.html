@@ -726,58 +726,49 @@
     async function initSamplers() {
       const instrumentSamples = {
         clarinet: {
-          'C4': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/clarinet/C4.mp3',
-          'E4': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/clarinet/E4.mp3',
-          'G4': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/clarinet/G4.mp3',
-          'C5': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/clarinet/C5.mp3'
+          'C4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/clarinet-mp3/C4.mp3',
+          'D4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/clarinet-mp3/D4.mp3',
+          'E4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/clarinet-mp3/E4.mp3'
         },
         flute: {
-          'C4': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/flute/C4.mp3',
-          'E4': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/flute/E4.mp3',
-          'G4': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/flute/G4.mp3',
-          'C5': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/flute/C5.mp3'
+          'C4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/flute-mp3/C4.mp3',
+          'D4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/flute-mp3/D4.mp3',
+          'E4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/flute-mp3/E4.mp3'
         },
         harpsichord: {
-          'C4': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/harpsichord/C4.mp3',
-          'E4': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/harpsichord/E4.mp3',
-          'G4': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/harpsichord/G4.mp3',
-          'C5': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/harpsichord/C5.mp3'
+          'C4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/harpsichord-mp3/C4.mp3',
+          'D4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/harpsichord-mp3/D4.mp3',
+          'E4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/harpsichord-mp3/E4.mp3'
         },
         guitar: {
-          'C4': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/guitar-acoustic/C4.mp3',
-          'E4': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/guitar-acoustic/E4.mp3',
-          'G4': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/guitar-acoustic/G4.mp3',
-          'C5': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/guitar-acoustic/C5.mp3'
+          'C4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/acoustic_guitar_nylon-mp3/C4.mp3',
+          'D4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/acoustic_guitar_nylon-mp3/D4.mp3',
+          'E4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/acoustic_guitar_nylon-mp3/E4.mp3'
         },
         trumpet: {
-          'C4': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/trumpet/C4.mp3',
-          'E4': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/trumpet/E4.mp3',
-          'G4': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/trumpet/G4.mp3',
-          'C5': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/trumpet/C5.mp3'
+          'C4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/trumpet-mp3/C4.mp3',
+          'D4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/trumpet-mp3/D4.mp3',
+          'E4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/trumpet-mp3/E4.mp3'
         },
         oboe: {
-          'C4': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/oboe/C4.mp3',
-          'E4': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/oboe/E4.mp3',
-          'G4': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/oboe/G4.mp3',
-          'C5': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/oboe/C5.mp3'
+          'C4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/oboe-mp3/C4.mp3',
+          'D4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/oboe-mp3/D4.mp3',
+          'E4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/oboe-mp3/E4.mp3'
         },
         organ: {
-          'C4': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/organ/C4.mp3',
-          'E4': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/organ/E4.mp3',
-          'G4': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/organ/G4.mp3',
-          'C5': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/organ/C5.mp3'
+          'C4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/church_organ-mp3/C4.mp3',
+          'D4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/church_organ-mp3/D4.mp3',
+          'E4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/church_organ-mp3/E4.mp3'
         },
         strings: {
-          'C4': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/violin/C4.mp3',
-          'E4': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/violin/E4.mp3',
-          'G4': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/violin/G4.mp3',
-          'C5': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/violin/C5.mp3'
+          'C4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/violin-mp3/C4.mp3',
+          'D4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/violin-mp3/D4.mp3',
+          'E4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/violin-mp3/E4.mp3'
         },
         woof: {
-          'C4': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/bassoon/C4.mp3',
-          'E4': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/bassoon/E4.mp3',
-          'G4': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/bassoon/G4.mp3',
-          'C5': 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/master/samples/bassoon/C5.mp3'
+          'C4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/dog-mp3/C4.mp3',
+          'D4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/dog-mp3/D4.mp3',
+          'E4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/dog-mp3/E4.mp3'
         }
       };
 
@@ -786,14 +777,19 @@
           samplers[name] = new Tone.Sampler({
             urls: urls,
             release: 1,
-            baseUrl: ''
+            baseUrl: '',
+            onload: () => {
+              console.log(`Loaded ${name} sampler`);
+            }
           }).connect(gain);
-
-          // Wait for each sampler to load
-          await samplers[name].loaded();
-          console.log(`Loaded ${name} sampler`);
         }
-        console.log('All samplers loaded successfully');
+
+        // Wait a bit for samplers to load
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        console.log('All samplers initialized');
+        
+        // Set initial instrument
+        currentInstrument = synth;
       } catch (error) {
         console.error('Error loading samplers:', error);
       }
@@ -806,7 +802,6 @@
         console.log('Tone.js started');
         await initSamplers();
         createStars();
-        currentInstrument = synth;
         console.log('Initialization complete');
       } catch (error) {
         console.error('Error during initialization:', error);
@@ -982,8 +977,10 @@
     function applyInstrument(instrumentName) {
       if (instrumentName === 'spaceOrgan') {
         currentInstrument = synth;
+        console.log('Switched to space organ');
       } else if (samplers[instrumentName]) {
         currentInstrument = samplers[instrumentName];
+        console.log('Switched to', instrumentName);
       }
     }
 
