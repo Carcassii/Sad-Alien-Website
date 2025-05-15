@@ -57,7 +57,6 @@
       padding: 0.8rem 1.4rem;
       transition: all 0.3s ease;
       border-radius: 16px;
-      background: rgba(255,255,255,0.15);
       position: relative;
       font-size: 1.2rem;
       min-width: 100px;
@@ -66,12 +65,48 @@
       border: 1px solid rgba(255,255,255,0.2);
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
+
+    .nav-links li:nth-child(1) a {
+      background: rgba(255, 89, 94, 0.85);  /* Crayon Red */
+    }
+    .nav-links li:nth-child(2) a {
+      background: rgba(255, 202, 58, 0.85);  /* Crayon Yellow */
+    }
+    .nav-links li:nth-child(3) a {
+      background: rgba(138, 201, 38, 0.85);  /* Crayon Green */
+    }
+    .nav-links li:nth-child(4) a {
+      background: rgba(25, 130, 196, 0.85);  /* Crayon Blue */
+    }
+    .nav-links li:nth-child(5) a {
+      background: rgba(255, 125, 255, 0.85);  /* Crayon Pink */
+    }
+
+    .nav-links li:nth-child(1) a:hover {
+      background: rgba(255, 89, 94, 0.95);
+      color: white;
+    }
+    .nav-links li:nth-child(2) a:hover {
+      background: rgba(255, 202, 58, 0.95);
+      color: #333;
+    }
+    .nav-links li:nth-child(3) a:hover {
+      background: rgba(138, 201, 38, 0.95);
+      color: white;
+    }
+    .nav-links li:nth-child(4) a:hover {
+      background: rgba(25, 130, 196, 0.95);
+      color: white;
+    }
+    .nav-links li:nth-child(5) a:hover {
+      background: rgba(255, 125, 255, 0.95);
+      color: white;
+    }
+
     .nav-links a:hover {
-      background: rgba(255,255,255,0.95);
-      color: #0a1d37;
       transform: translateY(-2px) scale(1.05);
       box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-      border-color: rgba(255,255,255,1);
+      border-color: rgba(255,255,255,0.4);
     }
     .svg-container {
       position: absolute;
