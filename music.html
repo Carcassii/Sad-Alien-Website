@@ -941,7 +941,7 @@
       },
       clarinet: {
         type: 'sampler',
-        sample: 'Clarinet.mp3',
+        sample: 'audio/Clarinet.mp3',
         settings: {
           attack: 0.1,
           release: 0.5
@@ -949,7 +949,7 @@
       },
       flute: {
         type: 'sampler',
-        sample: 'Flute.mp3',
+        sample: 'audio/Flute.mp3',
         settings: {
           attack: 0.1,
           release: 0.3
@@ -957,7 +957,7 @@
       },
       harpsichord: {
         type: 'sampler',
-        sample: 'Harpsichord.mp3',
+        sample: 'audio/Harpsichord.mp3',
         settings: {
           attack: 0.01,
           release: 1.0
@@ -965,7 +965,7 @@
       },
       guitar: {
         type: 'sampler',
-        sample: 'Guitar.mp3',
+        sample: 'audio/Guitar.mp3',
         settings: {
           attack: 0.05,
           release: 0.8
@@ -973,7 +973,7 @@
       },
       trumpet: {
         type: 'sampler',
-        sample: 'Trumpet.mp3',
+        sample: 'audio/Trumpet.mp3',
         settings: {
           attack: 0.1,
           release: 0.4
@@ -981,7 +981,7 @@
       },
       oboe: {
         type: 'sampler',
-        sample: 'Oboe.mp3',
+        sample: 'audio/Oboe.mp3',
         settings: {
           attack: 0.1,
           release: 0.5
@@ -989,7 +989,7 @@
       },
       organ: {
         type: 'sampler',
-        sample: 'Organ.mp3',
+        sample: 'audio/Organ.mp3',
         settings: {
           attack: 0.2,
           release: 1.0
@@ -997,7 +997,7 @@
       },
       strings: {
         type: 'sampler',
-        sample: 'Strings.mp3',
+        sample: 'audio/Strings.mp3',
         settings: {
           attack: 0.3,
           release: 1.5
@@ -1178,76 +1178,73 @@
     let currentInstrument = null;
 
     async function initializeSamplers() {
-      for (const [name, config] of Object.entries(instruments)) {
-        if (config.type === 'sampler') {
-          samplers[name] = new Tone.Sampler({
-            urls: {
-              "C4": config.sample
-            },
-            baseUrl: "./",
-            attack: config.settings.attack,
-            release: config.settings.release,
-            onload: () => {
-              console.log(`Loaded ${name} sampler`);
-            }
-          }).chain(gain, filter, distortion, delay, reverb, limiter, analyser, Tone.Destination);
+      try {
+        for (const [name, config] of Object.entries(instruments)) {
+          if (config.type === 'sampler') {
+            console.log(`Attempting to load ${name} sampler with file ${config.sample}`);
+            samplers[name] = new Tone.Sampler({
+              urls: {
+                "C4": config.sample
+              },
+              baseUrl: "",
+              attack: config.settings.attack,
+              release: config.settings.release,
+              onload: () => {
+                console.log(`Successfully loaded ${name} sampler`);
+              },
+              onerror: (error) => {
+                console.error(`Error loading ${name} sampler:`, error);
+              }
+            }).chain(gain, filter, distortion, delay, reverb, limiter, analyser, Tone.Destination);
+          }
         }
+        // Set initial instrument
+        currentInstrument = synth;
+        console.log('Samplers initialization complete');
+      } catch (error) {
+        console.error('Error during sampler initialization:', error);
       }
-      // Set initial instrument
-      currentInstrument = synth;
     }
 
-    // Initialize samplers when the page loads
-    initializeSamplers();
+    // Wait for DOM to load before initializing
+    window.addEventListener('load', () => {
+      console.log('Page loaded, initializing samplers...');
+      initializeSamplers();
+    });
 
-    // Update instrument selection handler
+    // Update instrument selection handler with error handling
     document.querySelectorAll('.instrument-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const instrumentName = btn.dataset.instrument;
         const config = instruments[instrumentName];
+        console.log(`Switching to instrument: ${instrumentName}`);
 
         // Remove active class from all buttons
         document.querySelectorAll('.instrument-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
 
-        if (config.type === 'sampler') {
-          currentInstrument = samplers[instrumentName];
-        } else {
-          // For synth-based instruments
+        try {
+          if (config.type === 'sampler') {
+            if (samplers[instrumentName]) {
+              console.log(`Activating ${instrumentName} sampler`);
+              currentInstrument = samplers[instrumentName];
+            } else {
+              console.error(`Sampler for ${instrumentName} not found!`);
+              // Fallback to synth if sampler not available
+              currentInstrument = synth;
+            }
+          } else {
+            console.log(`Activating synth with ${instrumentName} settings`);
+            currentInstrument = synth;
+            applyInstrument(instrumentName);
+          }
+        } catch (error) {
+          console.error(`Error switching to ${instrumentName}:`, error);
+          // Fallback to synth
           currentInstrument = synth;
-          applyInstrument(instrumentName);
         }
       });
     });
-
-    // Update note triggering to use current instrument
-    function handleNoteOn(note, key) {
-        if (!isArpeggiating) {
-            Tone.start();
-            currentInstrument.triggerAttack(note);
-            activeNotes.set(note, key);
-            if (key) key.classList.add('active');
-        }
-        if (!currentArpNotes.includes(note)) {
-            currentArpNotes.push(note);
-            if (isArpeggiating) {
-                updateArpeggiator();
-            }
-        }
-    }
-
-    function handleNoteOff(note, key) {
-        if (!isArpeggiating) {
-            currentInstrument.triggerRelease([note]);
-            if (key) key.classList.remove('active');
-        }
-        activeNotes.delete(note);
-        currentArpNotes = currentArpNotes.filter(n => n !== note);
-        if (currentArpNotes.length === 0 && arpInterval) {
-            clearInterval(arpInterval);
-            arpInterval = null;
-        }
-    }
 
     // Function to apply instrument settings with additional effects
     function applyInstrument(instrumentName) {
