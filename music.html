@@ -128,7 +128,7 @@
 
     .synth-container {
       position: relative;
-      background: #7B2CBF;
+      background: #FF61D8;
       border: 8px solid #fff;
       border-radius: 30px;
       padding: 30px;
@@ -136,7 +136,6 @@
                   inset 0 0 30px rgba(255, 255, 255, 0.3);
       max-width: 800px;
       margin: 120px auto 20px;
-      animation: float 6s ease-in-out infinite;
       backdrop-filter: blur(10px);
     }
 
@@ -178,7 +177,7 @@
     }
 
     .instrument-select {
-      background: #5390D9;
+      background: #905CFF;
       border: 6px solid #fff;
       border-radius: 25px;
       padding: 25px;
@@ -287,12 +286,11 @@
 
     .randomize-btn:hover {
       transform: scale(1.05) rotate(-2deg);
-      box-shadow: 0 0 30px rgba(255, 97, 216, 0.6),
-                  inset 0 0 20px rgba(255, 255, 255, 0.2);
+      box-shadow: 0 0 30px rgba(255, 97, 216, 0.6);
     }
 
     .knob {
-      background: #FF61D8;
+      background: #905CFF;
       border: 4px solid #fff;
       padding: 20px;
       border-radius: 20px;
@@ -304,7 +302,7 @@
     }
 
     .knob:nth-child(2n) {
-      background: #5390D9;
+      background: #FF61D8;
     }
 
     .knob:nth-child(3n) {
@@ -376,7 +374,7 @@
       margin-top: 30px;
       padding: 20px;
       height: 160px;
-      background: #7B2CBF;
+      background: #905CFF;
       border-radius: 20px;
       border: 4px solid #fff;
       box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.2);
@@ -413,7 +411,7 @@
     .key.black {
       width: 30px;
       height: 90px;
-      background: #7B2CBF;
+      background: #905CFF;
       position: absolute;
       z-index: 1;
       color: #fff;
@@ -429,7 +427,7 @@
     }
 
     .key.black:hover {
-      background: #9D4EDD;
+      background: #A76FFF;
     }
 
     .key.active {
@@ -456,7 +454,7 @@
 
     .visualizer {
       height: 100px;
-      background: #5390D9;
+      background: #FF61D8;
       margin: 20px 0;
       border-radius: 15px;
       overflow: hidden;
@@ -688,17 +686,19 @@
     const samplers = {};
 
     // Set up audio chain
-    const filter = new Tone.Filter(1500, "lowpass").toDestination();
-    const reverb = new Tone.Reverb(2).connect(filter);
-    const distortion = new Tone.Distortion(0).connect(reverb);
+    const gain = new Tone.Gain(0.7);
+    const filter = new Tone.Filter(1500, "lowpass");
+    const reverb = new Tone.Reverb(2);
+    const distortion = new Tone.Distortion(0);
     const delay = new Tone.FeedbackDelay({
       delayTime: 0.25,
       feedback: 0.5,
       wet: 0
-    }).connect(distortion);
-    const gain = new Tone.Gain(0.7).connect(delay);
+    });
     const analyser = new Tone.Analyser("waveform", 128);
-    gain.connect(analyser);
+
+    // Chain the effects
+    gain.chain(filter, distortion, delay, reverb, analyser, Tone.Destination);
 
     // Set up synth
     const synth = new Tone.PolySynth(Tone.Synth, {
@@ -713,6 +713,14 @@
       },
       volume: -12
     }).connect(gain);
+
+    // Initialize with minimal effects
+    reverb.wet.value = 0.1;
+    delay.wet.value = 0;
+    delay.delayTime.value = 0.25;
+    delay.feedback.value = 0.3;
+    distortion.distortion = 0;
+    filter.frequency.value = 5000;
 
     // Initialize samplers
     async function initSamplers() {
@@ -737,10 +745,6 @@
             release: 1,
             baseUrl: ''
           }).connect(gain);
-          
-          // Wait for the sampler to load
-          await samplers[name].loaded();
-          console.log(`Loaded ${name} sampler`);
         }
       } catch (error) {
         console.error('Error loading samplers:', error);
@@ -928,39 +932,11 @@
 
     // Function to apply instrument settings
     function applyInstrument(instrumentName) {
-      const settings = instruments[instrumentName];
-      if (settings.type === 'synth') {
-        synth.set(settings.settings);
-        // Keep effects minimal initially
-        reverb.wet.value = 0.2;
-        filter.frequency.value = 1500;
-        distortion.distortion = 0;
-        delay.wet.value = 0;
-      } else {
-        // For sampled instruments, use minimal effects to preserve natural sound
-        switch(instrumentName) {
-          case 'clarinet':
-          case 'flute':
-          case 'harpsichord':
-          case 'guitar':
-          case 'trumpet':
-          case 'oboe':
-          case 'organ':
-          case 'strings':
-          case 'woof':
-            reverb.wet.value = 0.1;
-            filter.frequency.value = 5000;
-            distortion.distortion = 0;
-            delay.wet.value = 0;
-            break;
-        }
+      if (instrumentName === 'spaceOrgan') {
+        currentInstrument = synth;
+      } else if (samplers[instrumentName]) {
+        currentInstrument = samplers[instrumentName];
       }
-
-      // Update UI controls to match new settings
-      document.getElementById('reverb').value = reverb.wet.value;
-      document.getElementById('filter').value = filter.frequency.value;
-      document.getElementById('distortion').value = distortion.distortion;
-      document.getElementById('delay').value = delay.wet.value;
     }
 
     // Randomize function
