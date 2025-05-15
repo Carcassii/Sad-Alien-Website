@@ -313,14 +313,14 @@
     }
 
     /* Position black keys with proper spacing */
-    /* Each white key is 45px wide, black key should be positioned relative to that */
-    .key[data-note="C#4"] { left: calc(45px * 0.7); }  /* After C4 (A) */
-    .key[data-note="D#4"] { left: calc(45px * 1.7); }  /* After D4 (S) */
-    .key[data-note="F#4"] { left: calc(45px * 3.7); }  /* After F4 (F) */
-    .key[data-note="G#4"] { left: calc(45px * 4.7); }  /* After G4 (G) */
-    .key[data-note="A#4"] { left: calc(45px * 5.7); }  /* After A4 (H) */
-    .key[data-note="C#5"] { left: calc(45px * 7.7); }  /* After C5 (K) */
-    .key[data-note="D#5"] { left: calc(45px * 8.7); }  /* After D5 (L) */
+    /* Each white key is 45px wide plus 4px for margins (2px on each side) */
+    .key[data-note="C#4"] { left: calc((45px + 4px) * 1 - 15px); }  /* Between A and S */
+    .key[data-note="D#4"] { left: calc((45px + 4px) * 2 - 15px); }  /* Between S and D */
+    .key[data-note="F#4"] { left: calc((45px + 4px) * 4 - 15px); }  /* Between F and G */
+    .key[data-note="G#4"] { left: calc((45px + 4px) * 5 - 15px); }  /* Between G and H */
+    .key[data-note="A#4"] { left: calc((45px + 4px) * 6 - 15px); }  /* Between H and J */
+    .key[data-note="C#5"] { left: calc((45px + 4px) * 8 - 15px); }  /* Between K and L */
+    .key[data-note="D#5"] { left: calc((45px + 4px) * 9 - 15px); }  /* Between L and ; */
 
     .key:hover {
       background: #f0f0f0;
