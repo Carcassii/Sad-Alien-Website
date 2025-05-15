@@ -274,11 +274,10 @@
       justify-content: center;
       position: relative;
       margin-top: 30px;
-      padding: 0 20px;
+      padding: 20px;
       height: 160px;
       background: rgba(20, 20, 30, 0.6);
       border-radius: 10px;
-      padding: 20px;
       box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.3);
     }
 
@@ -307,12 +306,20 @@
       height: 90px;
       background: #222;
       position: absolute;
-      margin-left: -15px;
       z-index: 1;
       color: #fff;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
       border: 1px solid rgba(0, 0, 0, 0.4);
     }
+
+    /* Position black keys with proper spacing */
+    .key[data-note="C#4"] { left: 32px; }
+    .key[data-note="D#4"] { left: 82px; }
+    .key[data-note="F#4"] { left: 182px; }
+    .key[data-note="G#4"] { left: 232px; }
+    .key[data-note="A#4"] { left: 282px; }
+    .key[data-note="C#5"] { left: 382px; }
+    .key[data-note="D#5"] { left: 432px; }
 
     .key:hover {
       background: #f0f0f0;
@@ -475,6 +482,7 @@
     </div>
 
     <div class="keyboard" id="keyboard">
+      <!-- First octave -->
       <div class="key" data-note="C4"><span>A</span></div>
       <div class="key black" data-note="C#4"><span>W</span></div>
       <div class="key" data-note="D4"><span>S</span></div>
@@ -487,6 +495,7 @@
       <div class="key" data-note="A4"><span>H</span></div>
       <div class="key black" data-note="A#4"><span>U</span></div>
       <div class="key" data-note="B4"><span>J</span></div>
+      <!-- Start of second octave -->
       <div class="key" data-note="C5"><span>K</span></div>
       <div class="key black" data-note="C#5"><span>O</span></div>
       <div class="key" data-note="D5"><span>L</span></div>
