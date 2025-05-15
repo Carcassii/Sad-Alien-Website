@@ -6,67 +6,232 @@
   <script src="https://unpkg.com/tone"></script>
   <style>
     body {
-      background: linear-gradient(to bottom, #c2f0f7, #ffffff);
+      background: linear-gradient(45deg, #1a1a2e, #16213e, #1a1a2e);
       font-family: 'Comic Sans MS', cursive, sans-serif;
       text-align: center;
       padding: 40px;
+      color: #fff;
+      min-height: 100vh;
+      margin: 0;
     }
+
+    .synth-container {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      max-width: 800px;
+      margin: 20px auto;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
     h1 {
       font-size: 2.5em;
       margin-bottom: 0.2em;
+      text-shadow: 0 0 10px rgba(255, 94, 165, 0.5);
+      animation: glow 2s ease-in-out infinite alternate;
     }
+
+    @keyframes glow {
+      from {
+        text-shadow: 0 0 10px rgba(255, 94, 165, 0.5);
+      }
+      to {
+        text-shadow: 0 0 20px rgba(255, 94, 165, 0.8),
+                     0 0 30px rgba(255, 94, 165, 0.6);
+      }
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+
     .knob {
-      margin: 20px auto;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
+      transition: transform 0.2s, box-shadow 0.2s;
     }
-    input[type=range] {
-      width: 220px;
-      accent-color: #ff5ea5;
+
+    .knob:hover {
+      transform: translateY(-2px);
+      box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2),
+                  0 5px 15px rgba(255, 94, 165, 0.3);
     }
+
     label {
       font-size: 1.2em;
-      margin-bottom: 8px;
+      margin-bottom: 12px;
+      display: block;
+      color: #ff5ea5;
+      text-shadow: 0 0 5px rgba(255, 94, 165, 0.3);
     }
-    .container {
+
+    input[type=range] {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      outline: none;
+    }
+
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 20px;
+      height: 20px;
+      background: #ff5ea5;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    input[type=range]::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+      box-shadow: 0 0 10px rgba(255, 94, 165, 0.5);
+    }
+
+    .keyboard {
       display: flex;
       justify-content: center;
-      flex-wrap: wrap;
-      gap: 40px;
+      gap: 5px;
+      margin-top: 30px;
+    }
+
+    .key {
+      width: 40px;
+      height: 120px;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 0 0 5px 5px;
+      cursor: pointer;
+      transition: all 0.1s;
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 10px;
+      color: #333;
+      font-weight: bold;
+    }
+
+    .key:hover {
+      background: rgba(255, 255, 255, 1);
+      box-shadow: 0 0 15px rgba(255, 94, 165, 0.5);
+    }
+
+    .key.active {
+      background: #ff5ea5;
+      transform: translateY(2px);
+      color: white;
+    }
+
+    .visualizer {
+      height: 100px;
+      background: rgba(0, 0, 0, 0.3);
+      margin: 20px 0;
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .visualizer-bar {
+      position: absolute;
+      bottom: 0;
+      width: 3px;
+      background: #ff5ea5;
+      transition: height 0.1s;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
+
+      .key {
+        width: 30px;
+        height: 100px;
+      }
     }
   </style>
 </head>
 <body>
-  <h1>🎛️ Quirky Synthesizer!</h1>
-  <p>Press keys A–K to play silly notes 🎶</p>
-  <div class="container">
-    <div class="knob">
-      <label for="detune">Detune</label>
-      <input id="detune" type="range" min="-1200" max="1200" value="0">
+  <div class="synth-container">
+    <h1>🎛️ Quirky Synthesizer!</h1>
+    <p>Press keys A–K to play silly notes 🎶</p>
+    
+    <div class="visualizer" id="visualizer"></div>
+
+    <div class="container">
+      <div class="knob">
+        <label for="detune">Detune</label>
+        <input id="detune" type="range" min="-1200" max="1200" value="0">
+      </div>
+      <div class="knob">
+        <label for="filter">Filter Cutoff</label>
+        <input id="filter" type="range" min="100" max="5000" value="1500">
+      </div>
+      <div class="knob">
+        <label for="reverb">Reverb</label>
+        <input id="reverb" type="range" min="0" max="1" step="0.01" value="0.2">
+      </div>
+      <div class="knob">
+        <label for="distortion">Distortion</label>
+        <input id="distortion" type="range" min="0" max="1" step="0.01" value="0">
+      </div>
+      <div class="knob">
+        <label for="oscillator">Oscillator</label>
+        <input id="oscillator" type="range" min="0" max="3" step="1" value="0">
+      </div>
     </div>
-    <div class="knob">
-      <label for="filter">Filter Cutoff</label>
-      <input id="filter" type="range" min="100" max="5000" value="1500">
-    </div>
-    <div class="knob">
-      <label for="reverb">Reverb</label>
-      <input id="reverb" type="range" min="0" max="1" step="0.01" value="0.2">
+
+    <div class="keyboard" id="keyboard">
+      <div class="key" data-note="C4">A</div>
+      <div class="key" data-note="D4">S</div>
+      <div class="key" data-note="E4">D</div>
+      <div class="key" data-note="F4">F</div>
+      <div class="key" data-note="G4">G</div>
+      <div class="key" data-note="A4">H</div>
+      <div class="key" data-note="B4">J</div>
+      <div class="key" data-note="C5">K</div>
     </div>
   </div>
 
   <script>
+    // Create visualizer
+    const visualizer = document.getElementById('visualizer');
+    const barCount = 32;
+    const bars = [];
+    
+    for (let i = 0; i < barCount; i++) {
+      const bar = document.createElement('div');
+      bar.className = 'visualizer-bar';
+      bar.style.left = `${(i / barCount) * 100}%`;
+      visualizer.appendChild(bar);
+      bars.push(bar);
+    }
+
+    // Set up synth with more effects
     const synth = new Tone.MonoSynth({
       oscillator: { type: 'sawtooth' },
       filter: { Q: 2, type: 'lowpass', rolloff: -12 },
       envelope: { attack: 0.1, decay: 0.2, sustain: 0.5, release: 1 }
     });
 
-    const filter = new Tone.Filter(1500, "lowpass").toDestination();
-    const reverb = new Tone.Reverb(2).toDestination();
+    const filter = new Tone.Filter(1500, "lowpass");
+    const reverb = new Tone.Reverb(2);
+    const distortion = new Tone.Distortion(0);
+    const analyser = new Tone.Analyser("waveform", 128);
+
+    synth.chain(filter, distortion, reverb, analyser, Tone.Destination);
+
     reverb.wet.value = 0.2;
 
-    synth.chain(filter, reverb);
+    const oscillatorTypes = ['sawtooth', 'square', 'sine', 'triangle'];
 
     const keyMap = {
       'a': 'C4', 's': 'D4', 'd': 'E4',
@@ -74,14 +239,54 @@
       'j': 'B4', 'k': 'C5'
     };
 
-    document.addEventListener("keydown", (e) => {
-      const note = keyMap[e.key];
-      if (note) {
-        Tone.start();
-        synth.triggerAttackRelease(note, "8n");
+    // Update visualizer
+    function updateVisualizer() {
+      const waveform = analyser.getValue();
+      
+      for (let i = 0; i < bars.length; i++) {
+        const index = Math.floor(i * (waveform.length / bars.length));
+        const value = Math.abs(waveform[index]) * 200;
+        bars[i].style.height = `${value}%`;
       }
+
+      requestAnimationFrame(updateVisualizer);
+    }
+    updateVisualizer();
+
+    // Keyboard interaction
+    const keyboard = document.getElementById('keyboard');
+    const keys = keyboard.getElementsByClassName('key');
+
+    function playNote(note) {
+      Tone.start();
+      synth.triggerAttackRelease(note, "8n");
+      
+      // Find and activate the corresponding key
+      for (const key of keys) {
+        if (key.dataset.note === note) {
+          key.classList.add('active');
+          setTimeout(() => key.classList.remove('active'), 200);
+        }
+      }
+    }
+
+    // Mouse interaction
+    Array.from(keys).forEach(key => {
+      key.addEventListener('mousedown', () => playNote(key.dataset.note));
+      key.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        playNote(key.dataset.note);
+      });
     });
 
+    // Keyboard interaction
+    document.addEventListener("keydown", (e) => {
+      if (e.repeat) return;
+      const note = keyMap[e.key.toLowerCase()];
+      if (note) playNote(note);
+    });
+
+    // Control changes
     document.getElementById('detune').addEventListener('input', (e) => {
       synth.detune.value = e.target.value;
     });
@@ -92,6 +297,15 @@
 
     document.getElementById('reverb').addEventListener('input', (e) => {
       reverb.wet.value = e.target.value;
+    });
+
+    document.getElementById('distortion').addEventListener('input', (e) => {
+      distortion.distortion = e.target.value;
+    });
+
+    document.getElementById('oscillator').addEventListener('input', (e) => {
+      const type = oscillatorTypes[Math.floor(e.target.value)];
+      synth.oscillator.type = type;
     });
   </script>
 </body>
