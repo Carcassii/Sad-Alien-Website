@@ -37,7 +37,8 @@
       height: 320px;
       background: #0a1d37;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
+      justify-content: space-between;
       align-items: center;
       padding-bottom: 1rem;
       box-shadow: 0 4px 12px rgba(0,0,0,0.3);
@@ -47,9 +48,9 @@
 
     .site-title {
       position: absolute;
-      top: 50%;
+      top: 40%;
       left: 50%;
-      transform: translate(-50%, -80%);
+      transform: translate(-50%, -50%);
       font-family: 'Patrick Hand', cursive;
       font-size: 5em;
       color: #FFE66D;
@@ -57,7 +58,6 @@
                    0 0 20px #FFE66D,
                    0 0 30px #FFE66D,
                    0 0 40px #FFE66D;
-      animation: float 6s ease-in-out infinite;
       z-index: 2;
       text-align: center;
       width: 100%;
@@ -65,8 +65,9 @@
     }
 
     @keyframes float {
-      0%, 100% { transform: translateY(0px); }
+      0% { transform: translateY(0); }
       50% { transform: translateY(-10px); }
+      100% { transform: translateY(0); }
     }
 
     .nav-links {
@@ -76,7 +77,6 @@
       margin: 0;
       padding: 0;
       z-index: 2;
-      transform: translateY(80px);
       justify-content: center;
       flex-wrap: wrap;
       width: 100%;
@@ -673,6 +673,61 @@
   </div>
 
   <script>
+    // Initialize audio context and samplers
+    let currentInstrument;
+    const samplers = {};
+    
+    // Define instrument settings
+    const instruments = {
+      spaceOrgan: {
+        type: 'synth',
+        settings: {
+          oscillator: {
+            type: 'square8'
+          },
+          envelope: {
+            attack: 0.005,
+            decay: 0.2,
+            sustain: 0.4,
+            release: 0.4
+          }
+        }
+      }
+    };
+
+    // Initialize samplers
+    async function initSamplers() {
+      const instrumentSamples = {
+        clarinet: 'https://tonejs.github.io/audio/salamander/Clarinet.mp3',
+        flute: 'https://tonejs.github.io/audio/salamander/flute.mp3',
+        harpsichord: 'https://tonejs.github.io/audio/salamander/harpsichord.mp3',
+        guitar: 'https://tonejs.github.io/audio/salamander/guitar.mp3',
+        trumpet: 'https://tonejs.github.io/audio/salamander/trumpet.mp3',
+        oboe: 'https://tonejs.github.io/audio/salamander/oboe.mp3',
+        organ: 'https://tonejs.github.io/audio/salamander/organ.mp3',
+        strings: 'https://tonejs.github.io/audio/salamander/strings.mp3',
+        woof: 'https://tonejs.github.io/audio/berklee/dog1.mp3'
+      };
+
+      for (const [name, url] of Object.entries(instrumentSamples)) {
+        samplers[name] = new Tone.Sampler({
+          urls: {
+            'C4': url
+          },
+          release: 1,
+          baseUrl: ''
+        }).toDestination();
+      }
+    }
+
+    // Initialize everything when the page loads
+    window.addEventListener('load', async () => {
+      await Tone.start();
+      await initSamplers();
+      createStars();
+      currentInstrument = synth;
+    });
+
     // Create random stars
     function createStars() {
       const navbar = document.querySelector('.navbar');
@@ -700,9 +755,6 @@
         navbar.appendChild(star);
       }
     }
-
-    // Call the function when the page loads
-    window.addEventListener('load', createStars);
 
     // Create visualizer
     const visualizer = document.getElementById('visualizer');
