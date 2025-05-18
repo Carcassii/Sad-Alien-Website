@@ -39,9 +39,8 @@
       height: 320px;
       background: #0a1d37;
       display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      align-items: center;
+      justify-content: center;
+      align-items: flex-end;
       padding-bottom: 1rem;
       box-shadow: 0 4px 12px rgba(0,0,0,0.3);
       z-index: 1000;
@@ -83,11 +82,9 @@
       margin: 0;
       padding: 0;
       z-index: 2;
+      transform: translateY(80px);
       justify-content: center;
       flex-wrap: wrap;
-      width: 100%;
-      transform: translateY(80px);
-      position: relative;
     }
 
     .nav-links a {
@@ -529,10 +526,6 @@
       }
       
       .nav-links {
-        position: absolute;
-        bottom: 20px;
-        left: 0;
-        right: 0;
         gap: 0.6rem;
         flex-direction: row;
         justify-content: center;
