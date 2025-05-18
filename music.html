@@ -64,26 +64,26 @@
         transform: translate(-50%, -50%); 
       }
       50% { 
-        transform: translate(-50%, calc(-50% - 15px)); 
+        transform: translate(-50%, calc(-50% - 10px)); 
       }
     }
 
     @keyframes titleGlow {
       0%, 100% {
         text-shadow: 0 0 5px #FFE66D,
-                     0 0 10px #FFE66D,
-                     0 0 15px rgba(255, 230, 109, 0.3);
+                     0 0 10px #FFA500,
+                     0 0 15px rgba(255, 165, 0, 0.3);
       }
       50% {
         text-shadow: 0 0 10px #FFE66D,
-                     0 0 20px #FFE66D,
-                     0 0 30px rgba(255, 230, 109, 0.6);
+                     0 0 20px #FFA500,
+                     0 0 30px rgba(255, 165, 0, 0.6);
       }
     }
 
     .site-title {
       position: absolute;
-      top: 40%;
+      top: 45%;
       left: 50%;
       transform: translate(-50%, -50%);
       font-family: 'Patrick Hand', cursive;
@@ -95,7 +95,7 @@
       width: 100%;
       margin: 0;
       line-height: 1;
-      animation: float 3s ease-in-out infinite,
+      animation: float 3.5s ease-in-out infinite,
                  titleGlow 3s ease-in-out infinite;
     }
 
