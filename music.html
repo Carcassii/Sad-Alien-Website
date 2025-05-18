@@ -809,12 +809,14 @@
         await Tone.start();
         console.log('Tone.js started');
         await initSamplers();
-        createStars();
         console.log('Initialization complete');
       } catch (error) {
         console.error('Error during initialization:', error);
       }
     });
+
+    // Create stars when the page loads
+    window.addEventListener('load', createStars);
 
     // Create random stars
     function createStars() {
