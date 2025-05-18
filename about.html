@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>About - Sad Alien Studios</title>
+  <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Work+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      margin: 0;
+      font-family: 'Work Sans', sans-serif;
+      background: linear-gradient(to bottom, #0a1d37 0%, #0a1d37 320px, #3c75b4 460px, #a0d2ff 640px, #fffdf9 1000px, #fffdf9 100%);
+      color: #fff;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .star {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: #fff;
+      border-radius: 50%;
+      animation: twinkle var(--twinkle-duration) ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.2; transform: scale(0.8); }
+      50% { opacity: 1; transform: scale(1.2); }
+    }
+
+    .navbar {
+      position: relative;
+      height: 320px;
+      background: #0a1d37;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 1rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      z-index: 1000;
+      overflow: hidden;
+    }
+
+    .site-title {
+      position: absolute;
+      top: 40%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: 'Patrick Hand', cursive;
+      font-size: 5em;
+      color: #FFE66D;
+      text-shadow: 0 0 10px #FFE66D,
+                   0 0 20px #FFE66D,
+                   0 0 30px #FFE66D,
+                   0 0 40px #FFE66D;
+      z-index: 2;
+      text-align: center;
+      width: 100%;
+      margin: 0;
+    }
+
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 1.5rem;
+      margin: 0;
+      padding: 0;
+      z-index: 2;
+      justify-content: center;
+      flex-wrap: wrap;
+      width: 100%;
+      position: absolute;
+      bottom: 20px;
+    }
+
+    .nav-links a {
+      font-family: 'Patrick Hand', cursive;
+      text-decoration: none;
+      color: #fff;
+      padding: 0.8rem 1.4rem;
+      transition: all 0.3s ease;
+      border-radius: 16px;
+      position: relative;
+      font-size: 1.2rem;
+      min-width: 100px;
+      text-align: center;
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(255,255,255,0.2);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2), 0 2px 4px rgba(0,0,0,0.1);
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+    }
+
+    .nav-links li:nth-child(1) a {
+      background: rgba(255, 89, 94, 0.85);
+    }
+    .nav-links li:nth-child(2) a {
+      background: rgba(255, 202, 58, 0.85);
+    }
+    .nav-links li:nth-child(3) a {
+      background: rgba(138, 201, 38, 0.85);
+    }
+    .nav-links li:nth-child(4) a {
+      background: rgba(25, 130, 196, 0.85);
+    }
+    .nav-links li:nth-child(5) a {
+      background: rgba(255, 125, 255, 0.85);
+    }
+
+    .nav-links a:hover {
+      transform: translateY(-2px) scale(1.1);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.3), 0 3px 6px rgba(0,0,0,0.2);
+      filter: brightness(1.1);
+    }
+
+    .content-container {
+      position: relative;
+      background: #2D0320;
+      border: 8px solid #00F0FF;
+      border-radius: 30px;
+      padding: 40px;
+      box-shadow: 0 8px 32px rgba(0, 240, 255, 0.3),
+                  inset 0 0 30px rgba(255, 0, 255, 0.2);
+      max-width: 800px;
+      margin: 120px auto 20px;
+      color: #fff;
+      font-size: 1.1em;
+      line-height: 1.6;
+    }
+
+    .section {
+      background: #4B0082;
+      border: 4px solid #00F0FF;
+      border-radius: 20px;
+      padding: 25px;
+      margin: 30px 0;
+      box-shadow: 0 4px 15px rgba(0, 240, 255, 0.2),
+                  inset 0 0 15px rgba(255, 0, 255, 0.2);
+    }
+
+    .section:hover {
+      box-shadow: 0 0 20px #00F0FF;
+    }
+
+    h2 {
+      font-family: 'Patrick Hand', cursive;
+      color: #00F0FF;
+      font-size: 2em;
+      margin-bottom: 20px;
+      text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+    }
+
+    .feature-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .feature-list li {
+      margin: 15px 0;
+      padding-left: 25px;
+      position: relative;
+    }
+
+    .feature-list li::before {
+      content: '🚀';
+      position: absolute;
+      left: 0;
+      top: 2px;
+    }
+
+    .team-member {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin: 20px 0;
+    }
+
+    .avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: #00F0FF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2em;
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
+    }
+
+    @media (max-width: 768px) {
+      .content-container {
+        margin: 80px 20px 20px;
+        padding: 20px;
+      }
+
+      .section {
+        padding: 15px;
+      }
+
+      .team-member {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav class="navbar">
+      <h1 class="site-title">Sad Alien</h1>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="music.html">Music</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="content-container">
+    <h2>About Sad Alien Studios</h2>
+    <p>Welcome to Sad Alien Studios, where creativity meets technology in the most unexpected ways! We're a quirky digital studio passionate about creating unique interactive experiences that make people smile.</p>
+
+    <div class="section">
+      <h2>What We Do</h2>
+      <ul class="feature-list">
+        <li>Create fun and interactive web synthesizers</li>
+        <li>Design playful user interfaces with personality</li>
+        <li>Develop creative audio applications</li>
+        <li>Build unique digital experiences</li>
+        <li>Explore the intersection of music and technology</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>Our Story</h2>
+      <p>Once upon a time, in a galaxy not so far away, a lonely alien crash-landed on Earth. Instead of feeling sad about being stranded, they decided to channel their extraterrestrial creativity into making cool stuff for humans!</p>
+      <p>That's the spirit that drives Sad Alien Studios - turning something potentially sad into something fun and creative. We believe in the power of playful design and interactive experiences to bring joy to people's lives.</p>
+    </div>
+
+    <div class="section">
+      <h2>Our Mission</h2>
+      <p>To create digital experiences that are:</p>
+      <ul class="feature-list">
+        <li>Playful and engaging</li>
+        <li>Accessible to everyone</li>
+        <li>Technically innovative</li>
+        <li>Full of personality</li>
+        <li>Just a little bit weird (in a good way!)</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>Join Our Journey</h2>
+      <p>Whether you're a fellow alien or a curious human, we'd love to have you join us on our mission to make the digital world a more playful place. Check out our projects, try our synthesizer, or get in touch to collaborate!</p>
+    </div>
+  </div>
+
+  <script>
+    // Create random stars
+    function createStars() {
+      const navbar = document.querySelector('.navbar');
+      const numStars = 200;
+      
+      for (let i = 0; i < numStars; i++) {
+        const star = document.createElement('div');
+        star.className = 'star';
+        star.style.left = `${Math.random() * 100}%`;
+        star.style.top = `${Math.random() * 100}%`;
+        const size = 0.5 + Math.random() * 1.5;
+        star.style.width = `${size}px`;
+        star.style.height = `${size}px`;
+        star.style.setProperty('--twinkle-duration', `${2 + Math.random() * 4}s`);
+        star.style.animationDelay = `${Math.random() * 4}s`;
+        navbar.appendChild(star);
+      }
+    }
+
+    // Initialize stars when the page loads
+    window.addEventListener('load', createStars);
+  </script>
+</body>
+</html> 
