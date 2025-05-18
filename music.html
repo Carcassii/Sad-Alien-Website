@@ -44,6 +44,18 @@
       padding-bottom: 1rem;
       box-shadow: 0 4px 12px rgba(0,0,0,0.3);
       z-index: 1000;
+    }
+
+    .navbar::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: none;
+      pointer-events: none;
+      z-index: 0;
       overflow: hidden;
     }
 
@@ -105,19 +117,19 @@
     }
 
     .nav-links li:nth-child(1) a {
-      background: rgba(255, 89, 94, 0.85);  /* Crayon Red */
+      background: rgba(255, 89, 94, 0.85);
     }
     .nav-links li:nth-child(2) a {
-      background: rgba(255, 202, 58, 0.85);  /* Crayon Yellow */
+      background: rgba(255, 202, 58, 0.85);
     }
     .nav-links li:nth-child(3) a {
-      background: rgba(138, 201, 38, 0.85);  /* Crayon Green */
+      background: rgba(138, 201, 38, 0.85);
     }
     .nav-links li:nth-child(4) a {
-      background: rgba(25, 130, 196, 0.85);  /* Crayon Blue */
+      background: rgba(25, 130, 196, 0.85);
     }
     .nav-links li:nth-child(5) a {
-      background: rgba(255, 125, 255, 0.85);  /* Crayon Pink */
+      background: rgba(255, 125, 255, 0.85);
     }
 
     .nav-links a:hover {
