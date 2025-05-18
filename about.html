@@ -47,23 +47,32 @@
       overflow: hidden;
     }
 
+    @keyframes float {
+      0%, 100% { 
+        transform: translate(-50%, -50%); 
+      }
+      50% { 
+        transform: translate(-50%, calc(-50% - 15px)); 
+      }
+    }
+
     .site-title {
       position: absolute;
       top: 35%;
       left: 50%;
       transform: translate(-50%, -50%);
       font-family: 'Patrick Hand', cursive;
-      font-size: 8em;
+      font-size: 9.5em;
       color: #FFE66D;
-      text-shadow: 0 0 10px #FFE66D,
-                   0 0 20px #FFE66D,
-                   0 0 30px #FFE66D,
-                   0 0 40px #FFE66D;
+      text-shadow: 0 0 5px #FFE66D,
+                   0 0 10px #FFE66D,
+                   0 0 15px rgba(255, 230, 109, 0.5);
       z-index: 2;
       text-align: center;
       width: 100%;
       margin: 0;
       line-height: 1;
+      animation: float 3s ease-in-out infinite;
     }
 
     .nav-links {
@@ -255,7 +264,7 @@
       }
 
       .site-title {
-        font-size: 5em;
+        font-size: 5.5em;
       }
     }
   </style>
