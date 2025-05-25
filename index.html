@@ -649,6 +649,22 @@
       text-shadow: 0 2px 8px #fff2e0, 1px 1px 2px rgba(0,0,0,0.08);
       margin-bottom: 1.2rem;
     }
+    .section-bubble {
+      margin: 2rem auto 2.5rem;
+      max-width: 800px;
+      padding: 2.5rem 2rem;
+      background: rgba(255, 255, 255, 0.85);
+      border-radius: 28px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+      backdrop-filter: blur(8px);
+      text-align: center;
+    }
+    @media screen and (max-width: 768px) {
+      .section-bubble {
+        margin: 1.5rem 1rem 2rem;
+        padding: 1.5rem 0.7rem;
+      }
+    }
   </style>
 </head>
 <body>
@@ -744,12 +760,12 @@ Q 1629.25 233.55 1630.05 226.3 1630.8 219.3 1630.6 210.5 1630.4 201.5 1628.65 19
 
     <img src="Images/poster.png" alt="Mystery on the Mountain Poster" class="poster" />
 
-    <section class="trailer">
+    <section class="trailer section-bubble">
       <h2>Watch the Trailer</h2>
       <iframe src="https://www.youtube.com/embed/DM5OFICkrkc" allowfullscreen></iframe>
     </section>
 
-    <section class="screenshots">
+    <section class="screenshots section-bubble">
       <h2>Take a Peek!</h2>
       <div class="screenshot-gallery">
         <img src="Images/screenshot1.png" alt="Gameplay Screenshot 1" />
