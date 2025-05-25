@@ -142,7 +142,6 @@
       max-width: 700px;
       border-radius: 18px;
       box-shadow: 0 4px 18px rgba(0,0,0,0.10);
-      border: 2.5px solid rgba(255, 76, 60, 0.22);
       margin: 2.2rem auto 2.2rem;
       background: #fffdfa;
       display: block;
@@ -638,11 +637,27 @@
     }
     .trailer h2,
     .screenshots h2 {
-      color: #e74c3c;
       font-family: 'Patrick Hand', cursive;
-      font-size: 2.3rem;
-      text-shadow: 0 2px 8px #fff2e0, 1px 1px 2px rgba(0,0,0,0.08);
+      color: #e74c3c;
+      font-size: 3.2rem;
+      font-weight: 900;
+      letter-spacing: 0.06em;
+      text-shadow:
+        0 3px 0 #fff,
+        0 6px 8px #b02a1a,
+        2px 2px 0 #fff,
+        0 0 2px #fff;
       margin-bottom: 1.2rem;
+      margin-top: 0.5rem;
+    }
+    .screenshots h2 {
+      font-size: 2.1rem;
+    }
+    @media screen and (max-width: 768px) {
+      .trailer h2,
+      .screenshots h2 {
+        font-size: 1.5rem;
+      }
     }
     .section-bubble {
       margin: 2.5rem auto 2.5rem;
