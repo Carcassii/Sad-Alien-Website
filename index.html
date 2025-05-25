@@ -568,6 +568,53 @@
         right: 10px;
       }
     }
+
+    .intro-balloon {
+      margin: 2rem auto 2.5rem;
+      max-width: 800px;
+      padding: 2.5rem 2rem;
+      background: rgba(255, 255, 255, 0.85);
+      border-radius: 28px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+      backdrop-filter: blur(8px);
+      text-align: center;
+    }
+    .intro-balloon h1 {
+      font-family: 'Patrick Hand', cursive;
+      font-size: 3.5rem;
+      margin: 0 0 1rem;
+      color: #0a1d37;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .intro-balloon .subtitle {
+      font-size: 1.4rem;
+      line-height: 1.6;
+      margin: 0 0 1.5rem;
+      color: #3c75b4;
+      font-family: 'Work Sans', sans-serif;
+      font-weight: 600;
+    }
+    .intro-balloon .description-text {
+      font-size: 1.15rem;
+      line-height: 1.8;
+      color: #333;
+      margin: 0;
+    }
+    @media screen and (max-width: 768px) {
+      .intro-balloon {
+        margin: 1.5rem 1rem 2rem;
+        padding: 1.5rem 0.7rem;
+      }
+      .intro-balloon h1 {
+        font-size: 2.2rem;
+      }
+      .intro-balloon .subtitle {
+        font-size: 1.1rem;
+      }
+      .intro-balloon .description-text {
+        font-size: 1rem;
+      }
+    }
   </style>
 </head>
 <body>
