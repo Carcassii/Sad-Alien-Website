@@ -581,15 +581,46 @@
     }
     .intro-balloon h1 {
       font-family: 'Patrick Hand', cursive;
-      font-size: 4.2rem;
+      font-size: 4.7rem;
       margin: 0 0 1rem;
-      color: #e74c3c;
+      color: #ff3c3c;
+      font-weight: 700;
+      background: linear-gradient(90deg, #ffb347 10%, #ff3c3c 60%, #ffd6d6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-fill-color: transparent;
       text-shadow:
-        0 2px 12px #fff2e0,
-        0 4px 24px #e74c3c88,
-        2px 2px 4px rgba(0,0,0,0.12);
-      letter-spacing: 1px;
+        0 2px 16px #fff2e0,
+        0 4px 32px #ff3c3c88,
+        0 0 0 #fff,
+        2px 2px 8px #ffb34788,
+        0 0 32px #ff3c3c44;
+      letter-spacing: 2px;
+      animation: pop-glow 2.5s ease-in-out infinite alternate;
     }
+
+    @keyframes pop-glow {
+      0%, 100% {
+        text-shadow:
+          0 2px 16px #fff2e0,
+          0 4px 32px #ff3c3c88,
+          0 0 0 #fff,
+          2px 2px 8px #ffb34788,
+          0 0 32px #ff3c3c44;
+        transform: scale(1);
+      }
+      50% {
+        text-shadow:
+          0 4px 32px #fff2e0,
+          0 8px 48px #ff3c3c,
+          0 0 8px #fff,
+          2px 2px 16px #ffb347,
+          0 0 64px #ff3c3c;
+        transform: scale(1.04);
+      }
+    }
+
     .intro-balloon .subtitle {
       font-size: 1.4rem;
       line-height: 1.6;
