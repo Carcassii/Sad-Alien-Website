@@ -153,23 +153,22 @@
 
     .synth-container {
       position: relative;
-      background: #FFE5E5;
-      border: 8px solid #FF9AA2;
+      background: rgba(255, 89, 94, 0.85);
+      border: 8px solid rgba(255, 255, 255, 0.2);
       border-radius: 30px;
       padding: 30px;
-      box-shadow: 0 8px 32px rgba(255, 154, 162, 0.3),
-                  inset 0 0 30px rgba(255, 183, 197, 0.2);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2), 0 2px 4px rgba(0,0,0,0.1);
       max-width: 800px;
       margin: 120px auto 20px;
-      backdrop-filter: blur(10px);
+      backdrop-filter: blur(4px);
     }
 
     h1 {
       font-family: 'Patrick Hand', cursive;
       font-size: 2.5em;
       margin-bottom: 0.2em;
-      color: #FF6B6B;
-      text-shadow: 3px 3px 0 #FFD93D;
+      color: #fff;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
       animation: bounce 2s ease-in-out infinite;
     }
 
@@ -192,13 +191,13 @@
     }
 
     .instrument-select {
-      background: #FFD93D;
-      border: 6px solid #FF6B6B;
-      border-radius: 25px;
+      background: rgba(255, 202, 58, 0.85);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 16px;
       padding: 25px;
-      color: #4A4A4A;
+      color: #fff;
       flex: 1;
-      box-shadow: inset 0 0 20px rgba(255, 107, 107, 0.2);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2), 0 2px 4px rgba(0,0,0,0.1);
     }
 
     .instrument-list {
@@ -209,138 +208,82 @@
     }
 
     .instrument-btn {
-      background: #FF9AA2;
-      border: 3px solid #FF6B6B;
-      color: #4A4A4A;
+      background: rgba(138, 201, 38, 0.85);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #fff;
       padding: 12px 16px;
-      border-radius: 15px;
+      border-radius: 16px;
       cursor: pointer;
       transition: all 0.3s ease;
       font-family: 'Patrick Hand', cursive;
       font-size: 1.1em;
-      text-shadow: 1px 1px 0 #FFFFFF;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
       position: relative;
       overflow: hidden;
-      box-shadow: 3px 3px 0 #FF6B6B;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2), 0 2px 4px rgba(0,0,0,0.1);
     }
 
     .instrument-btn:hover {
-      transform: translate(-2px, -2px);
-      box-shadow: 5px 5px 0 #FF6B6B;
+      transform: translateY(-2px) scale(1.1);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.3), 0 3px 6px rgba(0,0,0,0.2);
+      filter: brightness(1.1);
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
     }
 
-    .instrument-btn:active {
-      transform: translate(1px, 1px);
-      box-shadow: 2px 2px 0 #FF6B6B;
-    }
-
-    .instrument-btn::before {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: linear-gradient(
-        45deg,
-        transparent,
-        rgba(255, 255, 255, 0.3),
-        transparent
-      );
-      transform: rotate(45deg);
-      transition: all 0.5s ease;
-      opacity: 0;
+    .instrument-btn.active {
+      background: rgba(25, 130, 196, 0.85);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.3);
     }
 
     .randomize-btn {
-      background: #800080;
-      border: 4px solid #00F0FF;
+      background: rgba(255, 125, 255, 0.85);
+      border: 1px solid rgba(255,255,255,0.2);
       color: #fff;
       padding: 15px 25px;
-      border-radius: 20px;
+      border-radius: 16px;
       cursor: pointer;
       font-family: 'Patrick Hand', cursive;
       font-size: 1.3em;
       transition: all 0.3s ease;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
       margin-top: 25px;
       width: 100%;
       position: relative;
       overflow: hidden;
-    }
-
-    .randomize-btn::before {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: linear-gradient(
-        45deg,
-        transparent,
-        rgba(255, 255, 255, 0.2),
-        transparent
-      );
-      transform: rotate(45deg);
-      transition: all 0.5s ease;
-      opacity: 0;
-    }
-
-    .randomize-btn:hover::before {
-      opacity: 1;
-      transform: rotate(45deg) translate(50%, 50%);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2), 0 2px 4px rgba(0,0,0,0.1);
     }
 
     .randomize-btn:hover {
-      transform: scale(1.05) rotate(-2deg);
-      box-shadow: 0 0 30px #00F0FF;
-      background: #4B0082;
+      transform: translateY(-2px) scale(1.05);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.3), 0 3px 6px rgba(0,0,0,0.2);
+      filter: brightness(1.1);
     }
 
     .knob {
-      background: #4B0082;
-      border: 4px solid #00F0FF;
+      background: rgba(255, 89, 94, 0.85);
+      border: 1px solid rgba(255,255,255,0.2);
       padding: 20px;
-      border-radius: 20px;
-      box-shadow: 0 4px 15px rgba(0, 240, 255, 0.2),
-                  inset 0 0 15px rgba(255, 0, 255, 0.2);
+      border-radius: 16px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2), 0 2px 4px rgba(0,0,0,0.1);
       transition: all 0.3s ease;
       position: relative;
       overflow: hidden;
     }
 
     .knob:nth-child(2n) {
-      background: #800080;
+      background: rgba(255, 202, 58, 0.85);
     }
 
     .knob:nth-child(3n) {
-      background: #4B0082;
-    }
-
-    .knob::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(45deg, 
-        rgba(255, 255, 255, 0.1) 0%,
-        rgba(255, 255, 255, 0) 100%
-      );
-      pointer-events: none;
-    }
-
-    .knob:hover {
-      box-shadow: 0 0 20px #00F0FF;
+      background: rgba(138, 201, 38, 0.85);
     }
 
     .knob label {
       font-family: 'Patrick Hand', cursive;
       font-size: 1.4em;
       color: #fff;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
       margin-bottom: 15px;
       display: block;
     }
@@ -380,16 +323,16 @@
       position: relative;
       margin-top: 30px;
       padding: 20px;
-      height: 160px;
-      background: #2D0320;
-      border-radius: 20px;
-      border: 4px solid #00F0FF;
-      box-shadow: inset 0 0 20px rgba(255, 0, 255, 0.2);
+      height: 200px;
+      background: rgba(25, 130, 196, 0.85);
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.2);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2), 0 2px 4px rgba(0,0,0,0.1);
     }
 
     .key {
-      width: 45px;
-      height: 140px;
+      width: 60px;
+      height: 180px;
       background: linear-gradient(to bottom, #ffffff, #e0e0e0);
       border-radius: 0 0 10px 10px;
       cursor: pointer;
@@ -399,66 +342,65 @@
       align-items: flex-end;
       justify-content: center;
       padding-bottom: 10px;
-      color: #4B0082;
+      color: #4A4A4A;
       font-weight: bold;
       margin: 0 2px;
       z-index: 0;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-      border: 1px solid rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      border: 1px solid rgba(0,0,0,0.1);
+      touch-action: manipulation;
     }
-
-    .key.black[data-note="C#4"] { left: 156px; }
-    .key.black[data-note="D#4"] { left: 201px; }
-    .key.black[data-note="F#4"] { left: 291px; }
-    .key.black[data-note="G#4"] { left: 336px; }
-    .key.black[data-note="A#4"] { left: 381px; }
-    .key.black[data-note="C#5"] { left: 471px; }
-    .key.black[data-note="D#5"] { left: 516px; }
 
     .key.black {
-      width: 30px;
-      height: 90px;
-      background: #2D0320;
+      width: 40px;
+      height: 120px;
+      background: #4A4A4A;
       position: absolute;
       z-index: 1;
-      color: #00F0FF;
-      box-shadow: 0 4px 15px rgba(0, 240, 255, 0.4);
-      border: 1px solid #00F0FF;
+      color: #fff;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      border: 1px solid rgba(0,0,0,0.2);
       border-radius: 0 0 8px 8px;
       transform: translateX(-50%);
+      touch-action: manipulation;
     }
 
-    .key:hover {
+    .key:hover, .key:active {
       background: linear-gradient(to bottom, #ffffff, #f0f0f0);
-      box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
+      transform: translateY(2px);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
     }
 
-    .key.black:hover {
-      background: #4B0082;
-      box-shadow: 0 0 20px #00F0FF;
+    .key.black:hover, .key.black:active {
+      background: #333333;
+      transform: translateY(2px) translateX(-50%);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
     }
 
     .key.active {
-      background: #00F0FF;
+      background: #FFD93D;
       transform: translateY(2px);
-      color: #2D0320;
-      box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
+      color: #4A4A4A;
+      box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);
     }
 
     .key.black.active {
-      background: #00F0FF;
-      color: #2D0320;
-      box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
+      background: #FFD93D;
+      color: #4A4A4A;
+      transform: translateY(2px) translateX(-50%);
+      box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);
     }
 
     .key span {
-      font-size: 0.9em;
+      font-size: 1.2em;
       opacity: 0.8;
+      pointer-events: none;
     }
 
     .key.black span {
       color: #fff;
       opacity: 0.9;
+      pointer-events: none;
     }
 
     .visualizer {
@@ -553,8 +495,13 @@
       }
 
       .key {
+        width: 45px;
+        height: 140px;
+      }
+
+      .key.black {
         width: 30px;
-        height: 100px;
+        height: 90px;
       }
 
       .site-title {
@@ -574,6 +521,20 @@
       .nav-links a {
         padding: 0.3rem 0.6rem;
         font-size: 0.85rem;
+      }
+
+      .key {
+        width: 35px;
+        height: 120px;
+      }
+
+      .key.black {
+        width: 25px;
+        height: 75px;
+      }
+
+      .key span {
+        font-size: 0.9em;
       }
     }
   </style>
