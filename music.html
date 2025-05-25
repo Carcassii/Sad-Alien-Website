@@ -153,34 +153,29 @@
 
     .synth-container {
       position: relative;
-      background: #2D0320;
-      border: 8px solid #00F0FF;
+      background: #FFE5E5;
+      border: 8px solid #FF9AA2;
       border-radius: 30px;
       padding: 30px;
-      box-shadow: 0 8px 32px rgba(0, 240, 255, 0.3),
-                  inset 0 0 30px rgba(255, 0, 255, 0.2);
+      box-shadow: 0 8px 32px rgba(255, 154, 162, 0.3),
+                  inset 0 0 30px rgba(255, 183, 197, 0.2);
       max-width: 800px;
       margin: 120px auto 20px;
       backdrop-filter: blur(10px);
     }
 
-    
     h1 {
       font-family: 'Patrick Hand', cursive;
       font-size: 2.5em;
       margin-bottom: 0.2em;
-      text-shadow: 0 0 10px rgba(255, 94, 165, 0.5);
-      animation: glow 2s ease-in-out infinite alternate;
+      color: #FF6B6B;
+      text-shadow: 3px 3px 0 #FFD93D;
+      animation: bounce 2s ease-in-out infinite;
     }
 
-    @keyframes glow {
-      from {
-        text-shadow: 0 0 10px rgba(255, 94, 165, 0.5);
-      }
-      to {
-        text-shadow: 0 0 20px rgba(255, 94, 165, 0.8),
-                     0 0 30px rgba(255, 94, 165, 0.6);
-      }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
     }
 
     .container {
@@ -197,13 +192,13 @@
     }
 
     .instrument-select {
-      background: #4B0082;
-      border: 6px solid #00F0FF;
+      background: #FFD93D;
+      border: 6px solid #FF6B6B;
       border-radius: 25px;
       padding: 25px;
-      color: #fff;
+      color: #4A4A4A;
       flex: 1;
-      box-shadow: inset 0 0 20px rgba(255, 0, 255, 0.2);
+      box-shadow: inset 0 0 20px rgba(255, 107, 107, 0.2);
     }
 
     .instrument-list {
@@ -214,18 +209,29 @@
     }
 
     .instrument-btn {
-      background: rgba(255, 255, 255, 0.1);
-      border: 3px solid #00F0FF;
-      color: #fff;
+      background: #FF9AA2;
+      border: 3px solid #FF6B6B;
+      color: #4A4A4A;
       padding: 12px 16px;
       border-radius: 15px;
       cursor: pointer;
       transition: all 0.3s ease;
       font-family: 'Patrick Hand', cursive;
       font-size: 1.1em;
-      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+      text-shadow: 1px 1px 0 #FFFFFF;
       position: relative;
       overflow: hidden;
+      box-shadow: 3px 3px 0 #FF6B6B;
+    }
+
+    .instrument-btn:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 5px 5px 0 #FF6B6B;
+    }
+
+    .instrument-btn:active {
+      transform: translate(1px, 1px);
+      box-shadow: 2px 2px 0 #FF6B6B;
     }
 
     .instrument-btn::before {
@@ -238,29 +244,12 @@
       background: linear-gradient(
         45deg,
         transparent,
-        rgba(255, 255, 255, 0.1),
+        rgba(255, 255, 255, 0.3),
         transparent
       );
       transform: rotate(45deg);
       transition: all 0.5s ease;
       opacity: 0;
-    }
-
-    .instrument-btn:hover::before {
-      opacity: 1;
-      transform: rotate(45deg) translate(50%, 50%);
-    }
-
-    .instrument-btn:hover {
-      background: rgba(255, 255, 255, 0.2);
-      box-shadow: 0 0 20px #00F0FF;
-    }
-
-    .instrument-btn.active {
-      background: #00F0FF;
-      color: #2D0320;
-      box-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
-      text-shadow: none;
     }
 
     .randomize-btn {
