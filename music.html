@@ -646,6 +646,60 @@
   </div>
 
   <script>
+    // === Crayon color palette ===
+    const crayonColors = [
+      '#FF595E', // Red
+      '#FFCA3A', // Yellow
+      '#8AC926', // Green
+      '#1982C4', // Blue
+      '#FF7DFF', // Pink
+      '#FFD6A5', // Peach
+      '#6A4C93', // Purple
+      '#FFF685', // Light Yellow
+      '#B5EAD7', // Mint
+      '#FFB5E8'  // Light Pink
+    ];
+
+    function pickRandomColor(excludeColors = []) {
+      const filtered = crayonColors.filter(c => !excludeColors.includes(c));
+      return filtered[Math.floor(Math.random() * filtered.length)];
+    }
+
+    function randomizeSynthColors() {
+      // Main container
+      const synthContainer = document.querySelector('.synth-container');
+      const containerColor = pickRandomColor();
+      synthContainer.style.background = containerColor;
+
+      // Instrument select
+      const instrumentSelect = document.querySelector('.instrument-select');
+      const selectColor = pickRandomColor([containerColor]);
+      instrumentSelect.style.background = selectColor;
+
+      // Knobs
+      const knobEls = document.querySelectorAll('.knob');
+      knobEls.forEach(knob => {
+        knob.style.background = pickRandomColor([containerColor, selectColor]);
+      });
+
+      // Keyboard background
+      const keyboard = document.querySelector('.keyboard');
+      const keyboardColor = pickRandomColor([containerColor, selectColor]);
+      keyboard.style.background = keyboardColor;
+
+      // Instrument buttons
+      const instrumentBtns = document.querySelectorAll('.instrument-btn');
+      instrumentBtns.forEach(btn => {
+        btn.style.background = pickRandomColor([containerColor, selectColor, keyboardColor]);
+      });
+
+      // Randomize randomize button too!
+      const randomizeBtn = document.querySelector('.randomize-btn');
+      randomizeBtn.style.background = pickRandomColor([containerColor, selectColor, keyboardColor]);
+    }
+
+    window.addEventListener('DOMContentLoaded', randomizeSynthColors);
+
     // Initialize audio context and samplers
     let currentInstrument;
     const samplers = {};
