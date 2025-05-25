@@ -1101,6 +1101,31 @@
       requestAnimationFrame(updateVisualizer);
     }
     updateVisualizer();
+
+    // === Add knob event listeners ===
+    document.getElementById('detune').addEventListener('input', (e) => {
+      if (currentInstrument === synth) {
+        synth.detune.value = parseFloat(e.target.value);
+      }
+    });
+    document.getElementById('filter').addEventListener('input', (e) => {
+      filter.frequency.value = parseFloat(e.target.value);
+    });
+    document.getElementById('reverb').addEventListener('input', (e) => {
+      reverb.wet.value = parseFloat(e.target.value);
+    });
+    document.getElementById('distortion').addEventListener('input', (e) => {
+      distortion.distortion = parseFloat(e.target.value);
+    });
+    document.getElementById('volume').addEventListener('input', (e) => {
+      gain.gain.value = parseFloat(e.target.value);
+    });
+    document.getElementById('delay').addEventListener('input', (e) => {
+      delay.wet.value = parseFloat(e.target.value);
+    });
+    document.getElementById('delayTime').addEventListener('input', (e) => {
+      delay.delayTime.value = parseFloat(e.target.value);
+    });
   </script>
 </body>
 </html>
