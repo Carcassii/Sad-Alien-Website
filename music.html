@@ -845,7 +845,7 @@
     function updateArpeggiator() {
       const pattern = document.getElementById('arpPattern').value;
       const speed = parseFloat(document.getElementById('arpSpeed').value);
-      
+
       // Clear existing interval
       if (arpInterval) {
         clearInterval(arpInterval);
@@ -863,6 +863,7 @@
       isArpeggiating = true;
       const interval = 1000 * (2.1 - speed);
 
+      // If no notes are held, do nothing until a note is pressed
       if (currentArpNotes.size > 0) {
         let lastNote = null;
         arpInterval = setInterval(() => {
@@ -872,24 +873,19 @@
             }
             return;
           }
-
           const arranged = patterns[pattern]([...currentArpNotes]);
           if (arranged.length === 0) return;
-
           currentArpStep = (currentArpStep + 1) % arranged.length;
           const note = arranged[currentArpStep];
-          
           // Release previous note
           if (lastNote && currentInstrument) {
             currentInstrument.triggerRelease(lastNote);
           }
-
           // Play the new note
           if (currentInstrument) {
             currentInstrument.triggerAttack(note);
           }
           lastNote = note;
-
           // Update key visuals
           document.querySelectorAll('.key').forEach(key => {
             key.classList.remove('active');
@@ -1011,7 +1007,8 @@
     const oscillatorTypes = ['sine', 'square', 'sawtooth', 'triangle'];
 
     // Control changes
-    document.getElementById('oscillator').addEventListener('input', (e) => {
+    const oscillatorInput = document.getElementById('oscillator');
+    oscillatorInput.addEventListener('input', (e) => {
       if (currentInstrument === synth) {
         const type = oscillatorTypes[Math.floor(e.target.value)];
         synth.set({
@@ -1105,7 +1102,7 @@
     // === Add knob event listeners ===
     document.getElementById('detune').addEventListener('input', (e) => {
       if (currentInstrument === synth) {
-        synth.detune.value = parseFloat(e.target.value);
+        synth.set({ detune: parseFloat(e.target.value) });
       }
     });
     document.getElementById('filter').addEventListener('input', (e) => {
