@@ -405,28 +405,13 @@
 
     .visualizer {
       height: 100px;
-      background: #4B0082;
+      background: rgba(255, 202, 58, 0.85);
       margin: 20px 0;
       border-radius: 15px;
       overflow: hidden;
       position: relative;
-      border: 4px solid #00F0FF;
-      box-shadow: inset 0 0 15px rgba(255, 0, 255, 0.2);
-    }
-
-    .visualizer::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(
-        to bottom,
-        rgba(255, 255, 255, 0.2) 0%,
-        rgba(255, 255, 255, 0) 100%
-      );
-      pointer-events: none;
+      border: 4px solid rgba(255, 89, 94, 0.85);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2), 0 2px 4px rgba(0,0,0,0.1);
     }
 
     .visualizer-bar {
@@ -434,13 +419,22 @@
       bottom: 0;
       width: 3px;
       background: linear-gradient(to top, 
-        rgba(255, 255, 255, 0.9),
-        rgba(255, 255, 255, 0.3)
+        #fff,
+        #ffd93d
       );
       transition: height 0.1s;
-      box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+      box-shadow: 0 0 10px #ffd93d;
       border-radius: 3px 3px 0 0;
     }
+
+    /* Restore black key positions for realistic keyboard */
+    .key.black[data-note="C#4"] { left: 45px; }
+    .key.black[data-note="D#4"] { left: 105px; }
+    .key.black[data-note="F#4"] { left: 225px; }
+    .key.black[data-note="G#4"] { left: 285px; }
+    .key.black[data-note="A#4"] { left: 345px; }
+    .key.black[data-note="C#5"] { left: 465px; }
+    .key.black[data-note="D#5"] { left: 525px; }
 
     .pattern-select {
       width: 100%;
