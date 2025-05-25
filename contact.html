@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Contact - Sad Alien Studios</title>
   <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Work+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <style>
     html {
       scroll-behavior: smooth;
@@ -267,11 +268,11 @@
     .social-btn {
       display: flex;
       align-items: center;
-      gap: 8px;
-      padding: 12px 24px;
-      border-radius: 12px;
-      font-family: 'Patrick Hand', cursive;
-      font-size: 1.2em;
+      justify-content: center;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      font-size: 1.5em;
       text-decoration: none;
       color: white;
       transition: all 0.3s ease;
@@ -280,7 +281,7 @@
     }
 
     .social-btn:hover {
-      transform: translateY(-3px);
+      transform: translateY(-3px) scale(1.1);
       box-shadow: 0 6px 16px rgba(0,0,0,0.2);
       filter: brightness(1.1);
     }
@@ -385,17 +386,17 @@
         </form>
 
         <div class="social-links">
-          <a href="https://www.linkedin.com/in/matteo-karkazis-a067a81a7/" class="social-btn linkedin">
-            <span>LinkedIn</span>
+          <a href="https://www.linkedin.com/in/matteo-karkazis-a067a81a7/" class="social-btn linkedin" target="_blank" title="LinkedIn">
+            <i class="fab fa-linkedin-in"></i>
           </a>
-          <a href="https://www.tiktok.com/@sadaliengames" class="social-btn tiktok">
-            <span>TikTok</span>
+          <a href="https://www.tiktok.com/@sadaliengames" class="social-btn tiktok" target="_blank" title="TikTok">
+            <i class="fab fa-tiktok"></i>
           </a>
-          <a href="https://bsky.app/profile/matteokarkazis.bsky.social" class="social-btn bluesky">
-            <span>Bluesky</span>
+          <a href="https://bsky.app/profile/matteokarkazis.bsky.social" class="social-btn bluesky" target="_blank" title="Bluesky">
+            <i class="fas fa-cloud"></i>
           </a>
-          <a href="https://www.instagram.com/sadalien.games/" class="social-btn instagram">
-            <span>Instagram</span>
+          <a href="https://www.instagram.com/sadalien.games/" class="social-btn instagram" target="_blank" title="Instagram">
+            <i class="fab fa-instagram"></i>
           </a>
         </div>
       </div>
