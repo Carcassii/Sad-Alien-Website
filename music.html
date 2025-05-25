@@ -549,7 +549,7 @@
   </header>
 
   <div class="synth-container">
-  <h1>🎛️ Quirky Synthesizer!</h1>
+  <h1>🎛️ Synthesizer!</h1>
     <p>Press the keys or use your keyboard to play! 🎶</p>
     
     <div class="visualizer" id="visualizer"></div>
@@ -747,6 +747,10 @@
               console.log(`Loaded ${name} sampler`);
             }
           }).connect(gain);
+          samplers[name].volume.value = 0;
+          if (name === 'woof') {
+            samplers[name].volume.value = 6;
+          }
         }
 
         // Wait a bit for samplers to load
@@ -936,13 +940,30 @@
     document.getElementById('arpPattern').addEventListener('change', updateArpeggiator);
     document.getElementById('arpSpeed').addEventListener('input', updateArpeggiator);
 
-    // Function to apply instrument settings
+    // Utility to enable/disable detune and oscillator knobs
+    function setSynthKnobsEnabled(enabled) {
+      const detune = document.getElementById('detune');
+      const oscillator = document.getElementById('oscillator');
+      detune.disabled = !enabled;
+      oscillator.disabled = !enabled;
+      detune.parentElement.style.opacity = enabled ? '1' : '0.5';
+      oscillator.parentElement.style.opacity = enabled ? '1' : '0.5';
+      detune.style.pointerEvents = enabled ? 'auto' : 'none';
+      oscillator.style.pointerEvents = enabled ? 'auto' : 'none';
+    }
+
+    // Update applyInstrument to release all notes and update knob state
     function applyInstrument(instrumentName) {
+      if (currentInstrument && currentInstrument.releaseAll) {
+        currentInstrument.releaseAll(); // Release all notes from previous instrument
+      }
       if (instrumentName === 'spaceOrgan') {
         currentInstrument = synth;
+        setSynthKnobsEnabled(true);
         console.log('Switched to space organ');
       } else if (samplers[instrumentName]) {
         currentInstrument = samplers[instrumentName];
+        setSynthKnobsEnabled(false);
         console.log('Switched to', instrumentName);
       }
     }
@@ -1123,6 +1144,9 @@
     document.getElementById('delayTime').addEventListener('input', (e) => {
       delay.delayTime.value = parseFloat(e.target.value);
     });
+
+    // On page load, set initial knob state
+    setSynthKnobsEnabled(true);
   </script>
 </body>
 </html>
