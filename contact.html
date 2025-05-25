@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Contact - Sad Alien Studios</title>
+  <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Work+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      margin: 0;
+      font-family: 'Work Sans', sans-serif;
+      background: linear-gradient(to bottom, #0a1d37 0%, #0a1d37 320px, #3c75b4 460px, #a0d2ff 640px, #fffdf9 1000px, #fffdf9 100%);
+      color: #222;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .star {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: #fff;
+      border-radius: 50%;
+      animation: twinkle var(--twinkle-duration) ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.2; transform: scale(0.8); }
+      50% { opacity: 1; transform: scale(1.2); }
+    }
+
+    .navbar {
+      position: relative;
+      height: 320px;
+      background: #0a1d37;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      padding-bottom: 1rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      z-index: 1000;
+    }
+
+    .navbar::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: none;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    @keyframes float {
+      0%, 100% { 
+        transform: translate(-50%, -50%); 
+      }
+      50% { 
+        transform: translate(-50%, calc(-50% - 10px)); 
+      }
+    }
+
+    @keyframes titleGlow {
+      0%, 100% {
+        text-shadow: 0 0 5px #FFE66D,
+                     0 0 10px #FFA500,
+                     0 0 15px rgba(255, 165, 0, 0.3);
+      }
+      50% {
+        text-shadow: 0 0 10px #FFE66D,
+                     0 0 20px #FFA500,
+                     0 0 30px rgba(255, 165, 0, 0.6);
+      }
+    }
+
+    .site-title {
+      position: absolute;
+      top: 45%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: 'Patrick Hand', cursive;
+      font-size: 9.5em;
+      color: #FFE66D;
+      font-weight: 400;
+      z-index: 2;
+      text-align: center;
+      width: 100%;
+      margin: 0;
+      line-height: 1;
+      animation: float 3.5s ease-in-out infinite,
+                 titleGlow 3s ease-in-out infinite;
+    }
+
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 1.5rem;
+      margin: 0;
+      padding: 0;
+      z-index: 2;
+      transform: translateY(80px);
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a {
+      font-family: 'Patrick Hand', cursive;
+      text-decoration: none;
+      color: #fff;
+      padding: 0.8rem 1.4rem;
+      transition: all 0.3s ease;
+      border-radius: 16px;
+      position: relative;
+      font-size: 1.2rem;
+      min-width: 100px;
+      text-align: center;
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(255,255,255,0.2);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2), 0 2px 4px rgba(0,0,0,0.1);
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+    }
+
+    .nav-links li:nth-child(1) a {
+      background: rgba(255, 89, 94, 0.85);
+    }
+    .nav-links li:nth-child(2) a {
+      background: rgba(255, 202, 58, 0.85);
+    }
+    .nav-links li:nth-child(3) a {
+      background: rgba(138, 201, 38, 0.85);
+    }
+    .nav-links li:nth-child(4) a {
+      background: rgba(25, 130, 196, 0.85);
+    }
+    .nav-links li:nth-child(5) a {
+      background: rgba(255, 125, 255, 0.85);
+    }
+
+    .nav-links a:hover {
+      transform: translateY(-2px) scale(1.1);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.3), 0 3px 6px rgba(0,0,0,0.2);
+      filter: brightness(1.1);
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .content-container {
+      position: relative;
+      background: #fff;
+      border-radius: 16px;
+      padding: 40px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+      max-width: 800px;
+      margin: 120px auto 20px;
+      color: #222;
+      font-size: 1.1em;
+      line-height: 1.6;
+    }
+
+    .contact-section {
+      display: flex;
+      gap: 40px;
+      align-items: flex-start;
+      margin-bottom: 40px;
+    }
+
+    .alien-image {
+      flex-shrink: 0;
+      width: 280px;
+      height: 280px;
+      border-radius: 40px;
+      object-fit: cover;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      clip-path: polygon(
+        15% 0%,
+        85% 0%,
+        100% 15%,
+        100% 85%,
+        85% 100%,
+        15% 100%,
+        0% 85%,
+        0% 15%
+      );
+    }
+
+    .alien-image:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.2);
+    }
+
+    .contact-form {
+      flex: 1;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-family: 'Patrick Hand', cursive;
+      font-size: 1.2em;
+      color: #0a1d37;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #3c75b4;
+      border-radius: 12px;
+      font-family: 'Work Sans', sans-serif;
+      font-size: 1em;
+      transition: all 0.3s ease;
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: #FFE66D;
+      box-shadow: 0 0 10px rgba(255, 230, 109, 0.3);
+    }
+
+    textarea {
+      min-height: 150px;
+      resize: vertical;
+    }
+
+    .submit-btn {
+      background: #3c75b4;
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      border-radius: 12px;
+      font-family: 'Patrick Hand', cursive;
+      font-size: 1.3em;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .submit-btn:hover {
+      background: #2D0320;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+    }
+
+    .submit-btn:active {
+      transform: translateY(0);
+    }
+
+    @media (max-width: 768px) {
+      .navbar {
+        height: 280px;
+      }
+      
+      .nav-links {
+        gap: 0.6rem;
+        flex-direction: row;
+        justify-content: center;
+        flex-wrap: nowrap;
+        padding: 0 0.5rem;
+        transform: translateY(120px);
+      }
+
+      .nav-links a {
+        padding: 0.5rem 0.6rem;
+        font-size: 0.9rem;
+        min-width: auto;
+      }
+
+      .content-container {
+        margin: 80px 20px 20px;
+        padding: 20px;
+      }
+
+      .contact-section {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 20px;
+      }
+
+      .alien-image {
+        width: 200px;
+        height: 200px;
+      }
+
+      .site-title {
+        font-size: 5.5em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav class="navbar">
+      <h1 class="site-title">Sad Alien</h1>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="music.html">Music</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="content-container">
+    <div class="contact-section">
+      <img src="Images/Matteo.png" alt="Sad Alien" class="alien-image">
+      <div class="contact-form">
+        <h2>Get in Touch!</h2>
+        <p>Have a question or want to collaborate? The Sad Alien would love to hear from you! Fill out the form below and we'll get back to you as soon as possible.</p>
+        
+        <form action="https://formsubmit.co/YOUR_EMAIL_HERE" method="POST">
+          <div class="form-group">
+            <label for="name">Your Name</label>
+            <input type="text" id="name" name="name" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="email">Your Email</label>
+            <input type="email" id="email" name="email" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="message">Your Message</label>
+            <textarea id="message" name="message" required></textarea>
+          </div>
+          
+          <button type="submit" class="submit-btn">Send Message 🚀</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Create random stars
+    function createStars() {
+      const navbar = document.querySelector('.navbar');
+      const numStars = 200;
+      
+      for (let i = 0; i < numStars; i++) {
+        const star = document.createElement('div');
+        star.className = 'star';
+        star.style.left = `${Math.random() * 100}%`;
+        star.style.top = `${Math.random() * 100}%`;
+        const size = 0.5 + Math.random() * 1.5;
+        star.style.width = `${size}px`;
+        star.style.height = `${size}px`;
+        star.style.setProperty('--twinkle-duration', `${2 + Math.random() * 4}s`);
+        star.style.animationDelay = `${Math.random() * 4}s`;
+        navbar.appendChild(star);
+      }
+    }
+
+    // Initialize stars when the page loads
+    window.addEventListener('load', createStars);
+  </script>
+</body>
+</html> 
