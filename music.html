@@ -428,13 +428,14 @@
     }
 
     /* Restore black key positions for realistic keyboard */
-    .key.black[data-note="C#4"] { left: 75px; }
-    .key.black[data-note="D#4"] { left: 135px; }
-    .key.black[data-note="F#4"] { left: 255px; }
-    .key.black[data-note="G#4"] { left: 315px; }
-    .key.black[data-note="A#4"] { left: 375px; }
-    .key.black[data-note="C#5"] { left: 495px; }
-    .key.black[data-note="D#5"] { left: 555px; }
+    /* These values are tuned for 60px white keys and 40px black keys */
+    .key.black[data-note="C#4"] { left: 95px; }
+    .key.black[data-note="D#4"] { left: 155px; }
+    .key.black[data-note="F#4"] { left: 275px; }
+    .key.black[data-note="G#4"] { left: 335px; }
+    .key.black[data-note="A#4"] { left: 395px; }
+    .key.black[data-note="C#5"] { left: 515px; }
+    .key.black[data-note="D#5"] { left: 575px; }
 
     .pattern-select {
       width: 100%;
