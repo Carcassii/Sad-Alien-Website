@@ -163,7 +163,7 @@
       min-width: 170px;
       left: 50%;
       transform: translateX(-50%);
-      top: 110%;
+      top: calc(100% + 0.5rem);
       background: rgba(138, 201, 38, 0.95);
       box-shadow: 0 4px 18px rgba(60, 117, 180, 0.13);
       border-radius: 12px;
@@ -212,6 +212,23 @@
       user-select: none;
       position: relative;
       z-index: 2;
+      padding-right: 2.2rem;
+    }
+    .tool-link::after {
+      content: '';
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0;
+      height: 0;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-top: 5px solid #fff;
+      transition: transform 0.3s ease;
+    }
+    .tool-dropdown:hover .tool-link::after {
+      transform: translateY(-50%) rotate(180deg);
     }
     .tool-link:hover, .tool-dropdown:focus-within .tool-link {
       transform: translateY(-2px) scale(1.1);
