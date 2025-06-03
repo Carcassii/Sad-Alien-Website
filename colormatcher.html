@@ -227,30 +227,141 @@
       'lowkey': 7,
       'polychromatic': 7
     };
-    // Curated palettes for extendable schemes
-    const CURATED_PALETTES = {
-      pastel: [
-        '#FFD1DC', '#B5EAD7', '#C7CEEA', '#FFDAC1', '#E2F0CB', '#FFB7B2', '#B5B9FF', '#FF9CEE', '#B28DFF', '#BFFCC6', '#FFFFD1', '#FFABAB', '#FFC3A0', '#FF677D', '#D4A5A5', '#392F5A', '#31A2AC', '#61C0BF', '#6B4226', '#D9BF77', '#ACD8AA', '#FFE156', '#6A0572', '#AB83A1', '#F6DFEB', '#C2F784', '#F3E9DD', '#A0CED9', '#FFB6B9', '#FAE3D9', '#BBDED6', '#8AC6D1', '#BFFCC6', '#B5EAD7', '#C7CEEA', '#FFDAC1', '#E2F0CB', '#FFB7B2', '#B5B9FF', '#FF9CEE', '#B28DFF', '#BFFCC6', '#FFFFD1', '#FFABAB', '#FFC3A0', '#FF677D', '#D4A5A5', '#392F5A', '#31A2AC', '#61C0BF', '#6B4226', '#D9BF77', '#ACD8AA', '#FFE156', '#6A0572', '#AB83A1', '#F6DFEB', '#C2F784', '#F3E9DD', '#A0CED9', '#FFB6B9', '#FAE3D9', '#BBDED6', '#8AC6D1'
-      ],
-      analogous: [
-        '#FFB347', '#FFD700', '#ADFF2F', '#7FFF00', '#00FF7F', '#00FA9A', '#00CED1', '#1E90FF', '#6495ED', '#7B68EE', '#BA55D3', '#FF69B4', '#FF1493', '#FF6347', '#FFA07A'
-      ],
-      monochromatic: [
-        '#3C75B4', '#5A8FD6', '#7AA9F8', '#A3C6F9', '#CFE2FF', '#B4C5E4', '#8DA9C4', '#6B7B8C', '#4A5A6A', '#2C3E50'
-      ],
-      gradient: [
-        '#3C75B4', '#4F8EDC', '#62A7E4', '#75C0EC', '#88D9F4', '#9BF2FC', '#AEFBFF', '#C1FFFF', '#D4FFFF', '#E7FFFF', '#FAFFFF'
-      ],
-      highkey: [
-        '#FFF9C4', '#FFE082', '#FFD54F', '#FFB300', '#FF8A65', '#FFAB91', '#FFCCBC', '#F8BBD0', '#E1BEE7', '#B3E5FC', '#B2EBF2', '#B2DFDB', '#C8E6C9', '#DCEDC8', '#F0F4C3', '#FFECB3', '#FFE0B2', '#FFCCBC', '#D7CCC8', '#F5F5F5'
-      ],
-      lowkey: [
-        '#263238', '#37474F', '#455A64', '#546E7A', '#607D8B', '#78909C', '#90A4AE', '#B0BEC5', '#CFD8DC', '#212121', '#424242', '#616161', '#757575', '#9E9E9E', '#BDBDBD', '#E0E0E0', '#EEEEEE', '#F5F5F5', '#FAFAFA', '#FFFFFF'
-      ],
-      polychromatic: [
-        '#FF595E', '#FFCA3A', '#8AC926', '#1982C4', '#FF7DFF', '#FFD6A5', '#6A4C93', '#FFF685', '#B5EAD7', '#FFB5E8', '#F7B801', '#EA3546', '#662E9B', '#43BCCD', '#F86624', '#3A86FF', '#8338EC', '#FF006E', '#FB5607', '#FFBE0B', '#00B4D8', '#90BE6D', '#F9C74F', '#F9844A', '#43AA8B', '#577590', '#F94144', '#F3722C', '#F8961E', '#F9844A', '#F9C74F', '#90BE6D', '#43AA8B', '#577590', '#277DA1'
-      ]
-    };
+    // Generator functions for each scheme
+    function generateComplementary(hex) {
+      let hsl = hexToHsl(hex);
+      return [hslToHex(hsl[0], hsl[1], hsl[2]), hslToHex((hsl[0] + 180) % 360, hsl[1], hsl[2])];
+    }
+    function generateAnalogous(hex, count = 7) {
+      let hsl = hexToHsl(hex);
+      let colors = [];
+      let step = 30;
+      let half = Math.floor(count / 2);
+      for (let i = -half; i <= half; i++) {
+        colors.push(hslToHex((hsl[0] + i * step + 360) % 360, hsl[1], hsl[2]));
+      }
+      return colors;
+    }
+    function generateTriadic(hex) {
+      let hsl = hexToHsl(hex);
+      return [hslToHex(hsl[0], hsl[1], hsl[2]), hslToHex((hsl[0] + 120) % 360, hsl[1], hsl[2]), hslToHex((hsl[0] + 240) % 360, hsl[1], hsl[2])];
+    }
+    function generateSplitComplementary(hex) {
+      let hsl = hexToHsl(hex);
+      return [hslToHex(hsl[0], hsl[1], hsl[2]), hslToHex((hsl[0] + 150) % 360, hsl[1], hsl[2]), hslToHex((hsl[0] + 210) % 360, hsl[1], hsl[2])];
+    }
+    function generateTetradic(hex) {
+      let hsl = hexToHsl(hex);
+      return [hslToHex(hsl[0], hsl[1], hsl[2]), hslToHex((hsl[0] + 90) % 360, hsl[1], hsl[2]), hslToHex((hsl[0] + 180) % 360, hsl[1], hsl[2]), hslToHex((hsl[0] + 270) % 360, hsl[1], hsl[2])];
+    }
+    function generateSquare(hex) {
+      let hsl = hexToHsl(hex);
+      return [hslToHex(hsl[0], hsl[1], hsl[2]), hslToHex((hsl[0] + 90) % 360, hsl[1], hsl[2]), hslToHex((hsl[0] + 180) % 360, hsl[1], hsl[2]), hslToHex((hsl[0] + 270) % 360, hsl[1], hsl[2])];
+    }
+    function generateMonochromatic(hex, count = 7) {
+      let hsl = hexToHsl(hex);
+      let colors = [];
+      let step = 70 / (count - 1);
+      for (let i = 0; i < count; i++) {
+        let l = 20 + i * step;
+        colors.push(hslToHex(hsl[0], hsl[1], l));
+      }
+      return colors;
+    }
+    function generateDiadic(hex) {
+      let hsl = hexToHsl(hex);
+      return [hslToHex(hsl[0], hsl[1], hsl[2]), hslToHex((hsl[0] + 72) % 360, hsl[1], hsl[2])];
+    }
+    function generatePentadic(hex) {
+      let hsl = hexToHsl(hex);
+      let colors = [];
+      for (let i = 0; i < 5; i++) {
+        colors.push(hslToHex((hsl[0] + i * 72) % 360, hsl[1], hsl[2]));
+      }
+      return colors;
+    }
+    function generatePastel(hex, count = 7) {
+      let hsl = hexToHsl(hex);
+      let colors = [];
+      for (let i = 0; i < count; i++) {
+        colors.push(hslToHex((hsl[0] + i * 30) % 360, 40, 85 - i * 5));
+      }
+      return colors;
+    }
+    function generateEarth(hex) {
+      let hsl = hexToHsl(hex);
+      return [
+        hslToHex((hsl[0] + 30) % 360, 40, 35),
+        hslToHex((hsl[0] + 60) % 360, 30, 40),
+        hslToHex((hsl[0] + 90) % 360, 30, 30),
+        hslToHex((hsl[0] + 120) % 360, 30, 35),
+        hslToHex((hsl[0] + 150) % 360, 30, 30),
+        hslToHex((hsl[0] + 180) % 360, 25, 32),
+        hslToHex((hsl[0] + 210) % 360, 25, 28),
+        hslToHex((hsl[0] + 240) % 360, 20, 25)
+      ];
+    }
+    function generateWarm(hex) {
+      return ['#FF5733', '#FF8D1A', '#FFC300', '#FFD700', '#FFB347', '#FF6347', '#FF4500'];
+    }
+    function generateCool(hex) {
+      return ['#00BFFF', '#1E90FF', '#6495ED', '#00CED1', '#20B2AA', '#3CB371', '#2E8B57'];
+    }
+    function generateHighkey(hex, count = 7) {
+      let hsl = hexToHsl(hex);
+      let colors = [];
+      for (let i = 0; i < count; i++) {
+        let l = 70 + i * 3;
+        colors.push(hslToHex(hsl[0], hsl[1], l));
+      }
+      return colors;
+    }
+    function generateLowkey(hex, count = 7) {
+      let hsl = hexToHsl(hex);
+      let colors = [];
+      for (let i = 0; i < count; i++) {
+        let l = 10 + i * 3;
+        colors.push(hslToHex(hsl[0], hsl[1], l));
+      }
+      return colors;
+    }
+    function generateGradient(hex, count = 7) {
+      let hsl = hexToHsl(hex);
+      let colors = [];
+      let endHue = (hsl[0] + 120) % 360;
+      for (let i = 0; i < count; i++) {
+        let t = i / (count - 1);
+        let h = hsl[0] * (1 - t) + endHue * t;
+        let s = hsl[1];
+        let l = hsl[2] * (1 - t) + 90 * t;
+        colors.push(hslToHex(h, s, l));
+      }
+      return colors;
+    }
+    function generateAchromatic(hex, count = 7) {
+      let colors = [];
+      for (let i = 0; i < count; i++) {
+        let l = 10 + i * 15;
+        colors.push(hslToHex(0, 0, l));
+      }
+      return colors;
+    }
+    function generateAccentedNeutral(hex) {
+      let hsl = hexToHsl(hex);
+      return [hslToHex(0, 0, 20), hslToHex(0, 0, 40), hslToHex(0, 0, 60), hslToHex(0, 0, 80), hslToHex(hsl[0], hsl[1], hsl[2])];
+    }
+    function generateCompound(hex) {
+      let hsl = hexToHsl(hex);
+      return [hslToHex((hsl[0] - 30 + 360) % 360, hsl[1], hsl[2]), hslToHex((hsl[0] + 30) % 360, hsl[1], hsl[2]), hslToHex((hsl[0] + 180) % 360, hsl[1], hsl[2]), hslToHex((hsl[0] + 150) % 360, hsl[1], hsl[2]), hslToHex((hsl[0] + 210) % 360, hsl[1], hsl[2])];
+    }
+    function generatePolychromatic(hex, count = 7) {
+      let hsl = hexToHsl(hex);
+      let colors = [];
+      for (let i = 0; i < count; i++) {
+        colors.push(hslToHex((hsl[0] + i * 360 / count) % 360, hsl[1], hsl[2]));
+      }
+      return colors;
+    }
     function showReferenceSwatch(hex) {
       const referenceRow = document.getElementById('referenceRow');
       referenceRow.innerHTML = '';
@@ -268,219 +379,81 @@
     function showSwatches(hex, scheme) {
       const swatchRow = document.getElementById('swatchRow');
       swatchRow.innerHTML = '';
-      let hsl = hexToHsl(hex);
-      let colors = [];
       let n = colorCount[scheme] || 5;
-      // Use curated palette if available
-      if (CURATED_PALETTES[scheme]) {
-        colors = CURATED_PALETTES[scheme].slice(0, n);
-        // If more colors needed, fill with algorithmic
-        if (n > CURATED_PALETTES[scheme].length) {
-          let extra = n - CURATED_PALETTES[scheme].length;
-          let generated = [];
-          switch(scheme) {
-            case 'analogous': {
-              let step = 180/(extra+1);
-              for (let i = 0; i < extra; i++) {
-                let angle = hsl[0] - 90 + i*step;
-                generated.push(hslToHex(angle, hsl[1], hsl[2]));
-              }
-              break;
-            }
-            case 'monochromatic': {
-              let step = 70/(extra+1);
-              for (let i = 0; i < extra; i++) {
-                let l = 20 + i*step;
-                generated.push(hslToHex(hsl[0], hsl[1], l));
-              }
-              break;
-            }
-            case 'pastel': {
-              for (let i = 0; i < extra; i++) {
-                generated.push(hslToHex((hsl[0]+i*30)%360, 40, 85-i*5));
-              }
-              break;
-            }
-            case 'gradient': {
-              let nsteps = extra;
-              let endHue = (hsl[0]+120)%360;
-              for (let i = 0; i < nsteps; i++) {
-                let t = i/(nsteps-1);
-                let h = hsl[0]*(1-t) + endHue*t;
-                let s = hsl[1];
-                let l = hsl[2]*(1-t) + 90*t;
-                generated.push(hslToHex(h, s, l));
-              }
-              break;
-            }
-            case 'highkey': {
-              for (let i = 0; i < extra; i++) {
-                let l = 70 + i*3;
-                generated.push(hslToHex(hsl[0], hsl[1], l));
-              }
-              break;
-            }
-            case 'lowkey': {
-              for (let i = 0; i < extra; i++) {
-                let l = 10 + i*3;
-                generated.push(hslToHex(hsl[0], hsl[1], l));
-              }
-              break;
-            }
-            case 'polychromatic': {
-              for (let i = 0; i < extra; i++) {
-                generated.push(hslToHex((hsl[0]+i*360/extra)%360, hsl[1], hsl[2]));
-              }
-              break;
-            }
-          }
-          colors = colors.concat(generated);
-        }
-      } else {
-        // Fallback to algorithmic if no curated palette
-        switch(scheme) {
-          case 'complementary':
-            colors = [hslToHex(hsl[0]+180, hsl[1], hsl[2])];
-            break;
-          case 'analogous': {
-            let step = 180/(n-1);
-            for (let i = 0; i < n; i++) {
-              let angle = hsl[0] - 90 + i*step;
-              if (Math.round(angle)%360 === Math.round(hsl[0])%360) continue;
-              colors.push(hslToHex(angle, hsl[1], hsl[2]));
-            }
-            break;
-          }
-          case 'triadic':
-            for (let i = 1; i < 3; i++) {
-              colors.push(hslToHex(hsl[0]+i*120, hsl[1], hsl[2]));
-            }
-            break;
-          case 'split-complementary':
-            colors = [hslToHex(hsl[0]+150, hsl[1], hsl[2]), hslToHex(hsl[0]+210, hsl[1], hsl[2])];
-            break;
-          case 'tetradic':
-            for (let i = 1; i < 4; i++) {
-              colors.push(hslToHex(hsl[0]+i*90, hsl[1], hsl[2]));
-            }
-            break;
-          case 'square':
-            for (let i = 1; i < 4; i++) {
-              colors.push(hslToHex(hsl[0]+i*90, hsl[1], hsl[2]));
-            }
-            break;
-          case 'monochromatic': {
-            let step = 70/(n-1);
-            for (let i = 0; i < n; i++) {
-              let l = 20 + i*step;
-              if (Math.round(l) === hsl[2]) continue;
-              colors.push(hslToHex(hsl[0], hsl[1], l));
-            }
-            break;
-          }
-          case 'diadic':
-            for (let i = 1; i < 5; i++) {
-              colors.push(hslToHex(hsl[0]+i*72, hsl[1], hsl[2]));
-            }
-            break;
-          case 'pentadic':
-            for (let i = 1; i < 5; i++) {
-              colors.push(hslToHex(hsl[0]+i*72, hsl[1], hsl[2]));
-            }
-            break;
-          case 'pastel':
-            for (let i = 0; i < n; i++) {
-              colors.push(hslToHex((hsl[0]+i*30)%360, 40, 85-i*5));
-            }
-            break;
-          case 'earth':
-            colors = [
-              hslToHex((hsl[0]+30)%360, 40, 35),
-              hslToHex((hsl[0]+60)%360, 30, 40),
-              hslToHex((hsl[0]+90)%360, 30, 30),
-              hslToHex((hsl[0]+120)%360, 30, 35),
-              hslToHex((hsl[0]+150)%360, 30, 30),
-              hslToHex((hsl[0]+180)%360, 25, 32),
-              hslToHex((hsl[0]+210)%360, 25, 28),
-              hslToHex((hsl[0]+240)%360, 20, 25)
-            ];
-            break;
-          case 'warm':
-            colors = [
-              hslToHex(10, 80, 60),
-              hslToHex(25, 80, 65),
-              hslToHex(35, 80, 60),
-              hslToHex(50, 80, 60),
-              hslToHex(25, 60, 70),
-              hslToHex(0, 60, 40),
-              hslToHex(15, 70, 50)
-            ];
-            break;
-          case 'cool':
-            colors = [
-              hslToHex(200, 60, 60),
-              hslToHex(160, 60, 60),
-              hslToHex(120, 60, 60),
-              hslToHex(240, 40, 60),
-              hslToHex(180, 40, 70),
-              hslToHex(220, 50, 65),
-              hslToHex(260, 40, 60)
-            ];
-            break;
-          case 'highkey':
-            for (let i = 0; i < n; i++) {
-              let l = 70 + i*3;
-              if (Math.round(l) === hsl[2]) continue;
-              colors.push(hslToHex(hsl[0], hsl[1], l));
-            }
-            break;
-          case 'lowkey':
-            for (let i = 0; i < n; i++) {
-              let l = 10 + i*3;
-              if (Math.round(l) === hsl[2]) continue;
-              colors.push(hslToHex(hsl[0], hsl[1], l));
-            }
-            break;
-          case 'gradient': {
-            let nsteps = colorCount[scheme] || 7;
-            let endHue = (hsl[0]+120)%360;
-            for (let i = 0; i < nsteps; i++) {
-              let t = i/(nsteps-1);
-              let h = hsl[0]*(1-t) + endHue*t;
-              let s = hsl[1];
-              let l = hsl[2]*(1-t) + 90*t;
-              colors.push(hslToHex(h, s, l));
-            }
-            break;
-          }
-          case 'achromatic':
-            for (let i = 0; i < 7; i++) {
-              let l = 10 + i*15;
-              colors.push(hslToHex(0, 0, l));
-            }
-            break;
-          case 'accented-neutral':
-            colors = [hslToHex(0,0,20), hslToHex(0,0,40), hslToHex(0,0,60), hslToHex(0,0,80), hslToHex(hsl[0], hsl[1], hsl[2])];
-            break;
-          case 'compound':
-            colors = [hslToHex(hsl[0]-30, hsl[1], hsl[2]), hslToHex(hsl[0]+30, hsl[1], hsl[2]), hslToHex(hsl[0]+180, hsl[1], hsl[2]), hslToHex(hsl[0]+150, hsl[1], hsl[2]), hslToHex(hsl[0]+210, hsl[1], hsl[2])];
-            break;
-          case 'polychromatic':
-            for (let i = 0; i < colorCount[scheme]; i++) {
-              colors.push(hslToHex((hsl[0]+i*360/colorCount[scheme])%360, hsl[1], hsl[2]));
-            }
-            break;
-        }
+      let colors = [];
+      switch(scheme) {
+        case 'complementary':
+          colors = generateComplementary(hex);
+          break;
+        case 'analogous':
+          colors = generateAnalogous(hex, n);
+          break;
+        case 'triadic':
+          colors = generateTriadic(hex);
+          break;
+        case 'split-complementary':
+          colors = generateSplitComplementary(hex);
+          break;
+        case 'tetradic':
+          colors = generateTetradic(hex);
+          break;
+        case 'square':
+          colors = generateSquare(hex);
+          break;
+        case 'monochromatic':
+          colors = generateMonochromatic(hex, n);
+          break;
+        case 'diadic':
+          colors = generateDiadic(hex);
+          break;
+        case 'pentadic':
+          colors = generatePentadic(hex);
+          break;
+        case 'pastel':
+          colors = generatePastel(hex, n);
+          break;
+        case 'earth':
+          colors = generateEarth(hex);
+          break;
+        case 'warm':
+          colors = generateWarm(hex);
+          break;
+        case 'cool':
+          colors = generateCool(hex);
+          break;
+        case 'highkey':
+          colors = generateHighkey(hex, n);
+          break;
+        case 'lowkey':
+          colors = generateLowkey(hex, n);
+          break;
+        case 'gradient':
+          colors = generateGradient(hex, n);
+          break;
+        case 'achromatic':
+          colors = generateAchromatic(hex, n);
+          break;
+        case 'accented-neutral':
+          colors = generateAccentedNeutral(hex);
+          break;
+        case 'compound':
+          colors = generateCompound(hex);
+          break;
+        case 'polychromatic':
+          colors = generatePolychromatic(hex, n);
+          break;
+        default:
+          colors = [hex];
       }
-      colors.forEach(c => {
+      colors.forEach(color => {
         const swatch = document.createElement('div');
         swatch.className = 'swatch';
-        swatch.innerHTML = `<div class="swatch-color" style="background:${c}"></div><span class="swatch-hex">${c}</span>`;
+        swatch.innerHTML = `<div class="swatch-color" style="background:${color}"></div><span class="swatch-hex">${color}</span>`;
         swatch.onclick = function() {
-          navigator.clipboard.writeText(c);
+          navigator.clipboard.writeText(color);
           const hexSpan = swatch.querySelector('.swatch-hex');
-          hexSpan.textContent = c + ' ✓';
-          setTimeout(() => { hexSpan.textContent = c; }, 1000);
+          hexSpan.textContent = color + ' ✓';
+          setTimeout(() => { hexSpan.textContent = color; }, 1000);
         };
         swatchRow.appendChild(swatch);
       });
