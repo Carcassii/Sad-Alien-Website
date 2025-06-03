@@ -333,12 +333,17 @@
           <option value="compound">Compound (Complementary Analogous)</option>
           <option value="fauvist">Fauvist (Vivid)</option>
           <option value="autumn">Autumn (Seasonal)</option>
+          <option value="spring">Spring (Seasonal)</option>
+          <option value="summer">Summer (Seasonal)</option>
+          <option value="winter">Winter (Seasonal)</option>
           <option value="retro50s">Retro 50s</option>
           <option value="discordant">Discordant (Clash)</option>
           <option value="metallic">Metallic</option>
           <option value="optical-mix">Optical Mix</option>
           <option value="accessible">High-Contrast Accessible</option>
           <option value="psychology-calm">Psychology: Calm</option>
+          <option value="relaxing">Relaxing (Mood)</option>
+          <option value="energetic">Energetic (Mood)</option>
           <option value="polychromatic">Polychromatic</option>
         </optgroup>
       </select>
@@ -685,6 +690,52 @@
         hslToHex((h + 30) % 360, 35, 65)
       ];
     }
+    function generateWinterColors(hex, variations = 5) {
+      const [h, , ] = hexToHsl(hex);
+      const colors = [];
+      for (let i = 0; i < variations; i++) {
+        const hue = (h + i * 72) % 360;
+        colors.push(hslToHex(hue, 85, 45)); // bold saturation, darker tones
+      }
+      return colors;
+    }
+    function generateSpringColors(hex, variations = 5) {
+      const [h, , ] = hexToHsl(hex);
+      const colors = [];
+      for (let i = 0; i < variations; i++) {
+        const hue = (h + i * 30) % 360;
+        colors.push(hslToHex(hue, 60, 80)); // medium saturation, high light
+      }
+      return colors;
+    }
+    function generateSummerColors(hex, variations = 5) {
+      const [h, , ] = hexToHsl(hex);
+      const colors = [];
+      for (let i = 0; i < variations; i++) {
+        const hue = (h + i * 25) % 360;
+        colors.push(hslToHex(hue, 40, 70)); // lower saturation, soft light
+      }
+      return colors;
+    }
+    function generateRelaxingColors(hex, variations = 5) {
+      const [h, , ] = hexToHsl(hex);
+      const baseHue = (h + 180) % 360; // shift toward cool hues
+      const colors = [];
+      for (let i = 0; i < variations; i++) {
+        const hue = (baseHue + i * 15) % 360;
+        colors.push(hslToHex(hue, 30, 75)); // soft light and saturation
+      }
+      return colors;
+    }
+    function generateEnergeticColors(hex, variations = 5) {
+      const [h, , ] = hexToHsl(hex);
+      const colors = [];
+      for (let i = 0; i < variations; i++) {
+        const hue = (h + i * 60) % 360;
+        colors.push(hslToHex(hue, 100, 60)); // high sat, balanced light
+      }
+      return colors;
+    }
     function showReferenceSwatch(hex) {
       const referenceRow = document.getElementById('referenceRow');
       referenceRow.innerHTML = '';
@@ -777,6 +828,21 @@
           break;
         case 'psychology-calm':
           colors = generatePsychologyCalm(hex);
+          break;
+        case 'spring':
+          colors = generateSpringColors(hex, n);
+          break;
+        case 'summer':
+          colors = generateSummerColors(hex, n);
+          break;
+        case 'winter':
+          colors = generateWinterColors(hex, n);
+          break;
+        case 'relaxing':
+          colors = generateRelaxingColors(hex, n);
+          break;
+        case 'energetic':
+          colors = generateEnergeticColors(hex, n);
           break;
         default:
           colors = [hex];
