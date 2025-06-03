@@ -128,7 +128,7 @@
     const MAGNIFIER_ZOOM = 4;
     let mouseDown = false;
     let lastHex = '#000000';
-    let ignoreNextHexClick = false;
+    let blockNextHexClick = false;
 
     // Draw magnifier
     function drawMagnifier(x, y) {
@@ -191,8 +191,7 @@
       colorPreview.style.background = lastHex;
       hexCode.textContent = lastHex;
       colorInfo.style.display = 'flex';
-      // Set flag to ignore the next hex code click
-      ignoreNextHexClick = true;
+      blockNextHexClick = true;
     });
 
     imageCanvas.addEventListener('mouseleave', function(e) {
@@ -204,6 +203,7 @@
       colorPreview.style.background = lastHex;
       hexCode.textContent = lastHex;
       colorInfo.style.display = 'flex';
+      blockNextHexClick = false;
     });
 
     function updateMagnifierPosition(e) {
@@ -265,9 +265,9 @@
     });
 
     hexCode.onclick = function() {
-      if (ignoreNextHexClick) {
-        ignoreNextHexClick = false;
-        return; // Ignore this click, it was from mouseup after drag
+      if (blockNextHexClick) {
+        blockNextHexClick = false;
+        return;
       }
       navigator.clipboard.writeText(hexCode.textContent.replace(' ✓', ''));
       hexCode.textContent = hexCode.textContent.replace(' ✓', '') + ' ✓';
@@ -275,6 +275,10 @@
         hexCode.textContent = hexCode.textContent.replace(' ✓', '');
       }, 1000);
     };
+
+    hexCode.addEventListener('mousemove', function() {
+      blockNextHexClick = false;
+    });
 
     function rgbToHex(r, g, b) {
       return (
