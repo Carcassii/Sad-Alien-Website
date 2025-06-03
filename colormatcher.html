@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Color Theme Matcher</title>
+  <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Work+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(to bottom, #e0eafc, #cfdef3 100%);
+      font-family: 'Work Sans', sans-serif;
+      margin: 0;
+      min-height: 100vh;
+      color: #222;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+    }
+    .container {
+      background: #fff;
+      margin-top: 3rem;
+      padding: 2rem 2.5rem;
+      border-radius: 18px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+      max-width: 520px;
+      width: 100%;
+      text-align: center;
+    }
+    h1 {
+      font-family: 'Patrick Hand', cursive;
+      font-size: 2.2rem;
+      margin-bottom: 1.5rem;
+      color: #3c75b4;
+    }
+    .input-row {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .input-row label {
+      font-size: 1.1rem;
+      color: #3c75b4;
+    }
+    .input-row input[type="color"] {
+      width: 40px;
+      height: 40px;
+      border: none;
+      border-radius: 8px;
+      background: none;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    }
+    .input-row input[type="text"] {
+      font-size: 1.1rem;
+      padding: 0.4rem 0.8rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      width: 110px;
+      text-align: center;
+    }
+    .input-row select {
+      font-size: 1.1rem;
+      padding: 0.4rem 0.8rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      background: #f4f4f4;
+    }
+    .swatch-row {
+      display: flex;
+      gap: 1.2rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+    }
+    .swatch {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      user-select: all;
+    }
+    .swatch-color {
+      width: 54px;
+      height: 54px;
+      border-radius: 12px;
+      border: 2px solid #eee;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      margin-bottom: 0.3rem;
+      transition: border 0.2s;
+    }
+    .swatch:hover .swatch-color {
+      border: 2px solid #3c75b4;
+    }
+    .swatch-hex {
+      font-family: 'Work Sans', monospace;
+      font-size: 1.1rem;
+      background: #f4f4f4;
+      padding: 0.2rem 0.7rem;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      transition: background 0.2s;
+    }
+    .swatch-hex:active {
+      background: #e0eafc;
+    }
+    .instructions {
+      color: #666;
+      font-size: 1rem;
+      margin-top: 1.2rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎨 Color Theme Matcher</h1>
+    <div class="input-row">
+      <label for="colorPicker">Pick a color:</label>
+      <input type="color" id="colorPicker" value="#3c75b4">
+      <input type="text" id="hexInput" value="#3c75b4" maxlength="7">
+      <select id="schemeSelect">
+        <option value="complementary">Complementary</option>
+        <option value="analogous">Analogous</option>
+        <option value="triadic">Triadic</option>
+        <option value="split-complementary">Split Complementary</option>
+        <option value="tetradic">Tetradic</option>
+        <option value="square">Square</option>
+        <option value="monochromatic">Monochromatic</option>
+      </select>
+    </div>
+    <div class="instructions">Select a color and a harmony to see matching colors. Click a swatch to copy its hex code!</div>
+    <div class="swatch-row" id="swatchRow"></div>
+  </div>
+  <script>
+    function hexToHsl(hex) {
+      hex = hex.replace('#', '');
+      if (hex.length === 3) hex = hex.split('').map(x => x + x).join('');
+      const r = parseInt(hex.substring(0,2), 16) / 255;
+      const g = parseInt(hex.substring(2,4), 16) / 255;
+      const b = parseInt(hex.substring(4,6), 16) / 255;
+      const max = Math.max(r, g, b), min = Math.min(r, g, b);
+      let h, s, l = (max + min) / 2;
+      if (max === min) {
+        h = s = 0;
+      } else {
+        const d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+        switch(max) {
+          case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+          case g: h = (b - r) / d + 2; break;
+          case b: h = (r - g) / d + 4; break;
+        }
+        h /= 6;
+      }
+      return [Math.round(h*360), Math.round(s*100), Math.round(l*100)];
+    }
+    function hslToHex(h, s, l) {
+      h = h % 360; if (h < 0) h += 360;
+      s /= 100; l /= 100;
+      let c = (1 - Math.abs(2 * l - 1)) * s;
+      let x = c * (1 - Math.abs((h / 60) % 2 - 1));
+      let m = l - c/2;
+      let r=0, g=0, b=0;
+      if (h < 60) { r = c; g = x; b = 0; }
+      else if (h < 120) { r = x; g = c; b = 0; }
+      else if (h < 180) { r = 0; g = c; b = x; }
+      else if (h < 240) { r = 0; g = x; b = c; }
+      else if (h < 300) { r = x; g = 0; b = c; }
+      else { r = c; g = 0; b = x; }
+      r = Math.round((r + m) * 255);
+      g = Math.round((g + m) * 255);
+      b = Math.round((b + m) * 255);
+      return '#' + [r,g,b].map(x => x.toString(16).padStart(2,'0')).join('').toUpperCase();
+    }
+    function clampHex(hex) {
+      hex = hex.trim().replace('#','');
+      if (hex.length === 3) hex = hex.split('').map(x=>x+x).join('');
+      return '#' + hex.substring(0,6).toUpperCase();
+    }
+    function showSwatches(hex, scheme) {
+      const swatchRow = document.getElementById('swatchRow');
+      swatchRow.innerHTML = '';
+      let hsl = hexToHsl(hex);
+      let colors = [];
+      switch(scheme) {
+        case 'complementary':
+          colors = [hex, hslToHex(hsl[0]+180, hsl[1], hsl[2])];
+          break;
+        case 'analogous':
+          colors = [hslToHex(hsl[0]-30, hsl[1], hsl[2]), hex, hslToHex(hsl[0]+30, hsl[1], hsl[2])];
+          break;
+        case 'triadic':
+          colors = [hex, hslToHex(hsl[0]+120, hsl[1], hsl[2]), hslToHex(hsl[0]+240, hsl[1], hsl[2])];
+          break;
+        case 'split-complementary':
+          colors = [hex, hslToHex(hsl[0]+150, hsl[1], hsl[2]), hslToHex(hsl[0]+210, hsl[1], hsl[2])];
+          break;
+        case 'tetradic':
+          colors = [hex, hslToHex(hsl[0]+180, hsl[1], hsl[2]), hslToHex(hsl[0]+60, hsl[1], hsl[2]), hslToHex(hsl[0]+240, hsl[1], hsl[2])];
+          break;
+        case 'square':
+          colors = [hex, hslToHex(hsl[0]+90, hsl[1], hsl[2]), hslToHex(hsl[0]+180, hsl[1], hsl[2]), hslToHex(hsl[0]+270, hsl[1], hsl[2])];
+          break;
+        case 'monochromatic':
+          colors = [hslToHex(hsl[0], hsl[1], 20), hslToHex(hsl[0], hsl[1], 40), hex, hslToHex(hsl[0], hsl[1], 70), hslToHex(hsl[0], hsl[1], 90)];
+          break;
+      }
+      colors.forEach(c => {
+        const swatch = document.createElement('div');
+        swatch.className = 'swatch';
+        swatch.innerHTML = `<div class="swatch-color" style="background:${c}"></div><span class="swatch-hex">${c}</span>`;
+        swatch.onclick = function() {
+          navigator.clipboard.writeText(c);
+          const hexSpan = swatch.querySelector('.swatch-hex');
+          hexSpan.textContent = c + ' ✓';
+          setTimeout(() => { hexSpan.textContent = c; }, 1000);
+        };
+        swatchRow.appendChild(swatch);
+      });
+    }
+    const colorPicker = document.getElementById('colorPicker');
+    const hexInput = document.getElementById('hexInput');
+    const schemeSelect = document.getElementById('schemeSelect');
+    function updateAll() {
+      let hex = clampHex(hexInput.value);
+      hexInput.value = hex;
+      colorPicker.value = hex;
+      showSwatches(hex, schemeSelect.value);
+    }
+    colorPicker.addEventListener('input', function() {
+      hexInput.value = colorPicker.value.toUpperCase();
+      updateAll();
+    });
+    hexInput.addEventListener('input', function() {
+      let val = hexInput.value.trim();
+      if (!val.startsWith('#')) val = '#' + val;
+      if (/^#[0-9A-Fa-f]{3,6}$/.test(val)) {
+        colorPicker.value = clampHex(val);
+        updateAll();
+      }
+    });
+    schemeSelect.addEventListener('change', updateAll);
+    // Initial render
+    updateAll();
+  </script>
+</body>
+</html> 
