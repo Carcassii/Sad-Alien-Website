@@ -121,6 +121,7 @@
     const MAGNIFIER_RADIUS = 50;
     const MAGNIFIER_ZOOM = 4;
     let mouseDown = false;
+    let colorLocked = false;
 
     // Draw magnifier
     function drawMagnifier(x, y) {
@@ -166,6 +167,7 @@
 
     imageCanvas.addEventListener('mousemove', function(e) {
       if (!imgLoaded) return;
+      if (colorLocked) return;
       const rect = imageCanvas.getBoundingClientRect();
       const x = Math.floor((e.clientX - rect.left) * (imageCanvas.width / rect.width));
       const y = Math.floor((e.clientY - rect.top) * (imageCanvas.height / rect.height));
@@ -174,11 +176,6 @@
       colorPreview.style.background = hex;
       hexCode.textContent = hex;
       colorInfo.style.display = 'flex';
-      if (mouseDown) {
-        isMagnifying = true;
-        updateMagnifierPosition(e);
-        redrawImageWithMagnifier();
-      }
     });
 
     imageCanvas.addEventListener('mouseup', function(e) {
@@ -239,6 +236,13 @@
       setTimeout(() => {
         hexCode.textContent = hex;
       }, 1000);
+      colorLocked = true;
+    });
+
+    imageCanvas.addEventListener('mousemove', function(e) {
+      if (colorLocked) {
+        colorLocked = false;
+      }
     });
 
     hexCode.onclick = function() {
