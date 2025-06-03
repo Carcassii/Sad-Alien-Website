@@ -115,6 +115,78 @@
     let imgLoaded = false;
     let imgNaturalWidth = 0;
     let imgNaturalHeight = 0;
+    let isMagnifying = false;
+    let magnifierX = 0;
+    let magnifierY = 0;
+    const MAGNIFIER_RADIUS = 50;
+    const MAGNIFIER_ZOOM = 4;
+
+    // Draw magnifier
+    function drawMagnifier(x, y) {
+      // Save current canvas
+      ctx.save();
+      // Draw magnifier circle
+      ctx.beginPath();
+      ctx.arc(x, y, MAGNIFIER_RADIUS, 0, Math.PI * 2);
+      ctx.closePath();
+      ctx.strokeStyle = '#3c75b4';
+      ctx.lineWidth = 3;
+      ctx.stroke();
+      ctx.clip();
+      // Calculate source area
+      const sx = x - MAGNIFIER_RADIUS / MAGNIFIER_ZOOM;
+      const sy = y - MAGNIFIER_RADIUS / MAGNIFIER_ZOOM;
+      const sWidth = (MAGNIFIER_RADIUS * 2) / MAGNIFIER_ZOOM;
+      const sHeight = (MAGNIFIER_RADIUS * 2) / MAGNIFIER_ZOOM;
+      // Draw zoomed image
+      ctx.drawImage(
+        imageCanvas,
+        sx, sy, sWidth, sHeight,
+        x - MAGNIFIER_RADIUS, y - MAGNIFIER_RADIUS, MAGNIFIER_RADIUS * 2, MAGNIFIER_RADIUS * 2
+      );
+      ctx.restore();
+    }
+
+    function redrawImageWithMagnifier() {
+      ctx.clearRect(0, 0, imageCanvas.width, imageCanvas.height);
+      ctx.drawImage(img, 0, 0, imageCanvas.width, imageCanvas.height);
+      if (isMagnifying) {
+        drawMagnifier(magnifierX, magnifierY);
+      }
+    }
+
+    imageCanvas.addEventListener('mousedown', function(e) {
+      if (!imgLoaded) return;
+      isMagnifying = true;
+      updateMagnifierPosition(e);
+      redrawImageWithMagnifier();
+    });
+
+    imageCanvas.addEventListener('mousemove', function(e) {
+      if (!imgLoaded || !isMagnifying) return;
+      updateMagnifierPosition(e);
+      redrawImageWithMagnifier();
+    });
+
+    imageCanvas.addEventListener('mouseup', function(e) {
+      if (!imgLoaded) return;
+      isMagnifying = false;
+      ctx.clearRect(0, 0, imageCanvas.width, imageCanvas.height);
+      ctx.drawImage(img, 0, 0, imageCanvas.width, imageCanvas.height);
+    });
+
+    imageCanvas.addEventListener('mouseleave', function(e) {
+      if (!imgLoaded) return;
+      isMagnifying = false;
+      ctx.clearRect(0, 0, imageCanvas.width, imageCanvas.height);
+      ctx.drawImage(img, 0, 0, imageCanvas.width, imageCanvas.height);
+    });
+
+    function updateMagnifierPosition(e) {
+      const rect = imageCanvas.getBoundingClientRect();
+      magnifierX = Math.floor((e.clientX - rect.left) * (imageCanvas.width / rect.width));
+      magnifierY = Math.floor((e.clientY - rect.top) * (imageCanvas.height / rect.height));
+    }
 
     imageInput.addEventListener('change', (e) => {
       const file = e.target.files[0];
@@ -129,8 +201,7 @@
           let scale = Math.min(400 / img.naturalWidth, 400 / img.naturalHeight, 1);
           imageCanvas.width = img.naturalWidth * scale;
           imageCanvas.height = img.naturalHeight * scale;
-          ctx.clearRect(0, 0, imageCanvas.width, imageCanvas.height);
-          ctx.drawImage(img, 0, 0, imageCanvas.width, imageCanvas.height);
+          redrawImageWithMagnifier();
         };
         img.src = ev.target.result;
       };
