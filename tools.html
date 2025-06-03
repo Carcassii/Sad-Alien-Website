@@ -186,8 +186,11 @@
       if (!imgLoaded) return;
       mouseDown = false;
       isMagnifying = false;
+
       ctx.clearRect(0, 0, imageCanvas.width, imageCanvas.height);
       ctx.drawImage(img, 0, 0, imageCanvas.width, imageCanvas.height);
+      
+      // Use lastHex directly, no new color detection
       colorPreview.style.background = lastHex;
       hexCode.textContent = lastHex;
       colorInfo.style.display = 'flex';
