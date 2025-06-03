@@ -152,12 +152,57 @@
     .modal-content button:hover {
       background: #255080;
     }
+    .tool-dropdown {
+      position: relative;
+    }
+    .tool-dropdown-content {
+      display: none;
+      position: absolute;
+      background: #fff;
+      min-width: 160px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+      z-index: 10;
+      border-radius: 10px;
+      top: 100%;
+      left: 0;
+      padding: 0.5rem 0;
+    }
+    .tool-dropdown-content a {
+      color: #3c75b4;
+      padding: 0.7rem 1.2rem;
+      text-decoration: none;
+      display: block;
+      font-family: 'Work Sans', sans-serif;
+      font-size: 1.05rem;
+      border-radius: 6px;
+      transition: background 0.2s;
+    }
+    .tool-dropdown-content a:hover {
+      background: #e0eafc;
+    }
+    .tool-dropdown:hover .tool-dropdown-content,
+    .tool-dropdown:focus-within .tool-dropdown-content {
+      display: block;
+    }
+    .tool-link::after {
+      content: '';
+    }
   </style>
 </head>
 <body>
   <nav class="navbar">
     <ul class="nav-links">
-      <!-- Navigation links will be added later -->
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li class="tool-dropdown">
+        <a href="#" class="tool-link">Tool ▾</a>
+        <div class="tool-dropdown-content">
+          <a href="colormatcher.html">Color Matcher</a>
+          <a href="tools.html">Image to Hex</a>
+        </div>
+      </li>
+      <li><a href="music.html">Music</a></li>
+      <li><a href="contact.html">Contact</a></li>
     </ul>
   </nav>
 
