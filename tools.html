@@ -169,14 +169,9 @@
     imageCanvas.addEventListener('mousemove', function(e) {
       if (!imgLoaded) return;
       if (mouseDown) {
-        const rect = imageCanvas.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        if (x >= 0 && y >= 0 && x < rect.width && y < rect.height) {
-          updateMagnifierPosition(e);
-          updateColorAtEvent(e);
-          redrawImageWithMagnifier();
-        }
+        updateMagnifierPosition(e);
+        updateColorAtEvent(e);
+        redrawImageWithMagnifier();
       }
     });
 
@@ -186,7 +181,7 @@
       isMagnifying = false;
       ctx.clearRect(0, 0, imageCanvas.width, imageCanvas.height);
       ctx.drawImage(img, 0, 0, imageCanvas.width, imageCanvas.height);
-      // Lock in the last color (do not update anymore)
+      // Lock in the last color
       colorPreview.style.background = lastHex;
       hexCode.textContent = lastHex;
       colorInfo.style.display = 'flex';
@@ -198,7 +193,7 @@
       isMagnifying = false;
       ctx.clearRect(0, 0, imageCanvas.width, imageCanvas.height);
       ctx.drawImage(img, 0, 0, imageCanvas.width, imageCanvas.height);
-      // Lock in the last color (do not update anymore)
+      // Lock in the last color
       colorPreview.style.background = lastHex;
       hexCode.textContent = lastHex;
       colorInfo.style.display = 'flex';
