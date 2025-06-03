@@ -101,7 +101,6 @@
       align-items: center;
       height: 100%;
       position: relative;
-      margin-bottom: 6px;
     }
     .tool-dropdown-content {
       display: none;
@@ -119,6 +118,7 @@
       transition: opacity 0.18s;
     }
     .tool-dropdown-content a {
+      background: none !important;
       color: #3c75b4;
       padding: 0.7rem 1.2rem;
       text-decoration: none;
@@ -129,6 +129,7 @@
       transition: background 0.18s, color 0.18s;
       margin: 0 0.3rem;
       text-align: left;
+      box-shadow: none;
     }
     .tool-dropdown-content a:hover {
       background: #e0eafc;
@@ -164,6 +165,9 @@
       box-shadow: 0 6px 12px rgba(0,0,0,0.3), 0 3px 6px rgba(0,0,0,0.2);
       filter: brightness(1.1);
       text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+    .nav-links {
+      align-items: flex-end;
     }
   </style>
 </head>
