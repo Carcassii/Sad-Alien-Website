@@ -120,6 +120,7 @@
     let magnifierY = 0;
     const MAGNIFIER_RADIUS = 50;
     const MAGNIFIER_ZOOM = 4;
+    let mouseDown = false;
 
     // Draw magnifier
     function drawMagnifier(x, y) {
@@ -157,6 +158,7 @@
 
     imageCanvas.addEventListener('mousedown', function(e) {
       if (!imgLoaded) return;
+      mouseDown = true;
       isMagnifying = true;
       updateMagnifierPosition(e);
       redrawImageWithMagnifier();
@@ -172,10 +174,16 @@
       colorPreview.style.background = hex;
       hexCode.textContent = hex;
       colorInfo.style.display = 'flex';
+      if (mouseDown) {
+        isMagnifying = true;
+        updateMagnifierPosition(e);
+        redrawImageWithMagnifier();
+      }
     });
 
     imageCanvas.addEventListener('mouseup', function(e) {
       if (!imgLoaded) return;
+      mouseDown = false;
       isMagnifying = false;
       ctx.clearRect(0, 0, imageCanvas.width, imageCanvas.height);
       ctx.drawImage(img, 0, 0, imageCanvas.width, imageCanvas.height);
@@ -183,6 +191,7 @@
 
     imageCanvas.addEventListener('mouseleave', function(e) {
       if (!imgLoaded) return;
+      mouseDown = false;
       isMagnifying = false;
       ctx.clearRect(0, 0, imageCanvas.width, imageCanvas.height);
       ctx.drawImage(img, 0, 0, imageCanvas.width, imageCanvas.height);
