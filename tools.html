@@ -122,7 +122,6 @@
     const MAGNIFIER_ZOOM = 4;
     let mouseDown = false;
     let lastHex = '#000000';
-    let allowColorUpdate = false;
 
     // Draw magnifier
     function drawMagnifier(x, y) {
@@ -161,7 +160,6 @@
     imageCanvas.addEventListener('mousedown', function(e) {
       if (!imgLoaded) return;
       mouseDown = true;
-      allowColorUpdate = true;
       isMagnifying = true;
       updateMagnifierPosition(e);
       updateColorAtEvent(e);
@@ -170,7 +168,7 @@
 
     imageCanvas.addEventListener('mousemove', function(e) {
       if (!imgLoaded) return;
-      if (mouseDown && allowColorUpdate) {
+      if (mouseDown) {
         // Only update color if inside canvas bounds
         const rect = imageCanvas.getBoundingClientRect();
         const x = e.clientX - rect.left;
@@ -186,11 +184,10 @@
     imageCanvas.addEventListener('mouseup', function(e) {
       if (!imgLoaded) return;
       mouseDown = false;
-      allowColorUpdate = false;
       isMagnifying = false;
       ctx.clearRect(0, 0, imageCanvas.width, imageCanvas.height);
       ctx.drawImage(img, 0, 0, imageCanvas.width, imageCanvas.height);
-      // Lock in the last color
+      // Lock in the last color (do not update anymore)
       colorPreview.style.background = lastHex;
       hexCode.textContent = lastHex;
       colorInfo.style.display = 'flex';
@@ -199,11 +196,10 @@
     imageCanvas.addEventListener('mouseleave', function(e) {
       if (!imgLoaded) return;
       mouseDown = false;
-      allowColorUpdate = false;
       isMagnifying = false;
       ctx.clearRect(0, 0, imageCanvas.width, imageCanvas.height);
       ctx.drawImage(img, 0, 0, imageCanvas.width, imageCanvas.height);
-      // Lock in the last color
+      // Lock in the last color (do not update anymore)
       colorPreview.style.background = lastHex;
       hexCode.textContent = lastHex;
       colorInfo.style.display = 'flex';
@@ -216,7 +212,6 @@
     }
 
     function updateColorAtEvent(e) {
-      if (!allowColorUpdate) return;
       const rect = imageCanvas.getBoundingClientRect();
       const x = Math.floor((e.clientX - rect.left) * (imageCanvas.width / rect.width));
       const y = Math.floor((e.clientY - rect.top) * (imageCanvas.height / rect.height));
