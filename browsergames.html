@@ -115,6 +115,43 @@
     .player-score {
       color: #3c75b4;
     }
+    .modal {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+    .modal-content {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.2);
+      text-align: center;
+    }
+    .modal-content input {
+      font-size: 1.2rem;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      margin-bottom: 1rem;
+      width: 80%;
+    }
+    .modal-content button {
+      font-size: 1.1rem;
+      padding: 0.5rem 1.5rem;
+      border-radius: 8px;
+      border: none;
+      background: #3c75b4;
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .modal-content button:hover {
+      background: #255080;
+    }
   </style>
 </head>
 <body>
@@ -144,6 +181,16 @@
     </div>
   </div>
 
+  <!-- Player Name Modal -->
+  <div class="modal" id="nameModal">
+    <div class="modal-content">
+      <h2>Enter Your Name</h2>
+      <input type="text" id="playerNameInput" maxlength="16" placeholder="Your name..." autofocus />
+      <br />
+      <button id="startGameBtn">Start Game</button>
+    </div>
+  </div>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.1/socket.io.js"></script>
   <script>
     // Game constants
@@ -153,6 +200,11 @@
     const FLIPPER_WIDTH = 20;
     const BALL_RADIUS = 15;
     const LAUNCH_POWER = 15;
+    const BUMPERS = [
+      { x: 400, y: 200, r: 30 },
+      { x: 300, y: 300, r: 25 },
+      { x: 500, y: 300, r: 25 }
+    ];
 
     // Game state
     let canvas, ctx;
@@ -165,45 +217,53 @@
     };
     let launchPower = 0;
     let isCharging = false;
+    let playerName = '';
+
+    // Modal logic
+    const nameModal = document.getElementById('nameModal');
+    const playerNameInput = document.getElementById('playerNameInput');
+    const startGameBtn = document.getElementById('startGameBtn');
+    startGameBtn.onclick = () => {
+      const name = playerNameInput.value.trim();
+      if (name.length > 0) {
+        playerName = name;
+        nameModal.style.display = 'none';
+        init();
+      }
+    };
+    playerNameInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') startGameBtn.click();
+    });
 
     // Initialize game
     function init() {
       canvas = document.getElementById('pinballCanvas');
       ctx = canvas.getContext('2d');
-      
-      // Set canvas size
       canvas.width = CANVAS_WIDTH;
       canvas.height = CANVAS_HEIGHT;
 
       // Connect to WebSocket server
       socket = io('http://localhost:3000');
+      socket.emit('setName', playerName);
 
       // Handle player join
       socket.on('playerJoined', (playerData) => {
         players.set(playerData.id, playerData);
         updateScoreList();
       });
-
-      // Handle player leave
       socket.on('playerLeft', (playerId) => {
         players.delete(playerId);
         updateScoreList();
       });
-
-      // Handle game state updates
       socket.on('gameState', (gameState) => {
         players = new Map(Object.entries(gameState.players));
         updateScoreList();
       });
 
-      // Set up input handlers
       setupInputHandlers();
-
-      // Start game loop
       requestAnimationFrame(gameLoop);
     }
 
-    // Input handlers
     function setupInputHandlers() {
       document.addEventListener('keydown', (e) => {
         switch(e.key) {
@@ -221,7 +281,6 @@
             break;
         }
       });
-
       document.addEventListener('keyup', (e) => {
         switch(e.key) {
           case 'ArrowLeft':
@@ -240,134 +299,116 @@
       });
     }
 
-    // Game loop
     function gameLoop() {
       update();
       render();
       requestAnimationFrame(gameLoop);
     }
 
-    // Update game state
     function update() {
-      // Update flippers
       if (flippers.left.pressed) {
         flippers.left.angle = Math.max(flippers.left.angle - 0.1, -Math.PI / 2);
       } else {
         flippers.left.angle = Math.min(flippers.left.angle + 0.1, -Math.PI / 4);
       }
-
       if (flippers.right.pressed) {
         flippers.right.angle = Math.min(flippers.right.angle + 0.1, Math.PI / 2);
       } else {
         flippers.right.angle = Math.max(flippers.right.angle - 0.1, Math.PI / 4);
       }
-
-      // Update launch power
       if (isCharging) {
         launchPower = Math.min(launchPower + 0.5, LAUNCH_POWER);
       }
-
-      // Send player state to server
       socket.emit('playerState', {
         flippers,
         launchPower: isCharging ? launchPower : 0
       });
     }
 
-    // Render game
     function render() {
-      // Clear canvas
       ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-
-      // Draw background
-      ctx.fillStyle = '#1a1a1a';
-      ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-
-      // Draw flippers
+      drawTable();
       drawFlippers();
-
-      // Draw balls
       players.forEach((player, id) => {
         if (player.ball) {
           drawBall(player.ball, player.name);
         }
       });
-
-      // Draw launch power meter
       if (isCharging) {
         drawLaunchMeter();
       }
     }
 
-    // Draw flippers
+    function drawTable() {
+      // Draw table background
+      ctx.fillStyle = '#222a44';
+      ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+      // Draw walls (simple outline)
+      ctx.strokeStyle = '#fff';
+      ctx.lineWidth = 8;
+      ctx.strokeRect(10, 10, CANVAS_WIDTH-20, CANVAS_HEIGHT-20);
+      // Draw bumpers
+      BUMPERS.forEach(b => {
+        ctx.beginPath();
+        ctx.arc(b.x, b.y, b.r, 0, Math.PI*2);
+        ctx.fillStyle = '#ffea6b';
+        ctx.fill();
+        ctx.strokeStyle = '#bba400';
+        ctx.lineWidth = 4;
+        ctx.stroke();
+      });
+    }
+
     function drawFlippers() {
       ctx.save();
-      
       // Left flipper
       ctx.translate(CANVAS_WIDTH * 0.3, CANVAS_HEIGHT - 50);
       ctx.rotate(flippers.left.angle);
       ctx.fillStyle = '#ff4444';
       ctx.fillRect(0, -FLIPPER_WIDTH/2, FLIPPER_LENGTH, FLIPPER_WIDTH);
-      
       ctx.restore();
-      
       // Right flipper
       ctx.save();
       ctx.translate(CANVAS_WIDTH * 0.7, CANVAS_HEIGHT - 50);
       ctx.rotate(flippers.right.angle);
       ctx.fillStyle = '#4444ff';
       ctx.fillRect(0, -FLIPPER_WIDTH/2, FLIPPER_LENGTH, FLIPPER_WIDTH);
-      
       ctx.restore();
     }
 
-    // Draw ball
     function drawBall(ball, playerName) {
       ctx.beginPath();
       ctx.arc(ball.x, ball.y, BALL_RADIUS, 0, Math.PI * 2);
       ctx.fillStyle = ball.color;
       ctx.fill();
       ctx.closePath();
-
-      // Draw player name
       ctx.fillStyle = '#ffffff';
       ctx.font = '14px Work Sans';
       ctx.textAlign = 'center';
       ctx.fillText(playerName, ball.x, ball.y - BALL_RADIUS - 5);
     }
 
-    // Draw launch meter
     function drawLaunchMeter() {
       const meterWidth = 200;
       const meterHeight = 20;
       const x = CANVAS_WIDTH/2 - meterWidth/2;
       const y = CANVAS_HEIGHT - 100;
-
-      // Background
       ctx.fillStyle = '#333333';
       ctx.fillRect(x, y, meterWidth, meterHeight);
-
-      // Power level
       const powerWidth = (launchPower / LAUNCH_POWER) * meterWidth;
       ctx.fillStyle = '#44ff44';
       ctx.fillRect(x, y, powerWidth, meterHeight);
     }
 
-    // Launch ball
     function launchBall(power) {
       socket.emit('launchBall', { power });
     }
 
-    // Update score list
     function updateScoreList() {
       const scoreList = document.getElementById('scoreList');
       scoreList.innerHTML = '';
-
-      // Sort players by score
       const sortedPlayers = Array.from(players.values())
         .sort((a, b) => b.score - a.score);
-
-      // Add top 10 scores
       sortedPlayers.slice(0, 10).forEach(player => {
         const li = document.createElement('li');
         li.innerHTML = `
@@ -377,9 +418,6 @@
         scoreList.appendChild(li);
       });
     }
-
-    // Start game when page loads
-    window.onload = init;
   </script>
 </body>
 </html> 
