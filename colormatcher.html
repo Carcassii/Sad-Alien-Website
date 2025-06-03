@@ -130,6 +130,14 @@
         <option value="tetradic">Tetradic</option>
         <option value="square">Square</option>
         <option value="monochromatic">Monochromatic</option>
+        <option value="diadic">Diadic</option>
+        <option value="pentadic">Pentadic</option>
+        <option value="pastel">Pastel</option>
+        <option value="earth">Earth Tone</option>
+        <option value="warm">Warm</option>
+        <option value="cool">Cool</option>
+        <option value="highkey">High-Key</option>
+        <option value="lowkey">Low-Key</option>
       </select>
     </div>
     <div class="instructions">Select a color and a harmony to see matching colors. Click a swatch to copy its hex code!</div>
@@ -207,6 +215,69 @@
           break;
         case 'monochromatic':
           colors = [hslToHex(hsl[0], hsl[1], 20), hslToHex(hsl[0], hsl[1], 40), hex, hslToHex(hsl[0], hsl[1], 70), hslToHex(hsl[0], hsl[1], 90)];
+          break;
+        case 'diadic':
+          colors = [hex, hslToHex(hsl[0]+72, hsl[1], hsl[2])];
+          break;
+        case 'pentadic':
+          colors = [hex];
+          for (let i = 1; i < 5; i++) {
+            colors.push(hslToHex(hsl[0]+(i*72), hsl[1], hsl[2]));
+          }
+          break;
+        case 'pastel':
+          colors = [
+            hslToHex(hsl[0], 40, 90),
+            hslToHex((hsl[0]+30)%360, 40, 85),
+            hslToHex((hsl[0]+60)%360, 40, 80),
+            hslToHex((hsl[0]+90)%360, 40, 75),
+            hslToHex((hsl[0]+120)%360, 40, 70)
+          ];
+          break;
+        case 'earth':
+          colors = [
+            hslToHex((hsl[0]+30)%360, 40, 35), // muted brown
+            hslToHex((hsl[0]+60)%360, 30, 40), // olive/green
+            hslToHex((hsl[0]+90)%360, 30, 30), // muted green
+            hslToHex((hsl[0]+120)%360, 30, 35), // muted blue
+            hslToHex((hsl[0]+150)%360, 30, 30) // muted rust
+          ];
+          break;
+        case 'warm':
+          colors = [
+            hslToHex(10, 80, 60), // red
+            hslToHex(35, 80, 60), // orange
+            hslToHex(50, 80, 60), // yellow
+            hslToHex(25, 60, 70), // peach
+            hslToHex(0, 60, 40)   // burgundy
+          ];
+          break;
+        case 'cool':
+          colors = [
+            hslToHex(200, 60, 60), // blue
+            hslToHex(160, 60, 60), // teal
+            hslToHex(120, 60, 60), // green
+            hslToHex(240, 40, 60), // purple
+            hslToHex(180, 40, 70)  // aqua
+          ];
+          break;
+        case 'highkey':
+          colors = [
+            hslToHex(hsl[0], hsl[1], 90),
+            hslToHex((hsl[0]+30)%360, hsl[1], 85),
+            hslToHex((hsl[0]+60)%360, hsl[1], 80),
+            hslToHex((hsl[0]+90)%360, hsl[1], 75),
+            hslToHex((hsl[0]+120)%360, hsl[1], 70)
+          ];
+          break;
+        case 'lowkey':
+          colors = [
+            hslToHex(hsl[0], hsl[1], 20),
+            hslToHex((hsl[0]+30)%360, hsl[1], 25),
+            hslToHex((hsl[0]+60)%360, hsl[1], 30),
+            hslToHex((hsl[0]+90)%360, hsl[1], 35),
+            hslToHex((hsl[0]+120)%360, hsl[1], 40)
+          ];
           break;
       }
       colors.forEach(c => {
