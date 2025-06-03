@@ -227,64 +227,109 @@
       'lowkey': 7,
       'polychromatic': 7
     };
-    // Generator functions for each scheme
+    // New modular generator functions
     function generateComplementary(hex) {
-      let hsl = hexToHsl(hex);
-      return [hslToHex(hsl[0], hsl[1], hsl[2]), hslToHex((hsl[0] + 180) % 360, hsl[1], hsl[2])];
+      const [h, s, l] = hexToHsl(hex);
+      return [hslToHex((h + 180) % 360, s, l)];
     }
-    function generateAnalogous(hex, count = 7) {
-      let hsl = hexToHsl(hex);
-      let colors = [];
-      let step = 30;
-      let half = Math.floor(count / 2);
-      for (let i = -half; i <= half; i++) {
-        colors.push(hslToHex((hsl[0] + i * step + 360) % 360, hsl[1], hsl[2]));
+    function generateAnalogous(hex, numberOfColors = 5, angleStep = 30) {
+      const [h, s, l] = hexToHsl(hex);
+      const colors = [];
+      const half = Math.floor(numberOfColors / 2);
+      for(let i = -half; i <= half; i++) {
+        if(i === 0) continue;
+        const hue = (h + i * angleStep + 360) % 360;
+        colors.push(hslToHex(hue, s, l));
       }
       return colors;
     }
     function generateTriadic(hex) {
-      let hsl = hexToHsl(hex);
-      return [hslToHex(hsl[0], hsl[1], hsl[2]), hslToHex((hsl[0] + 120) % 360, hsl[1], hsl[2]), hslToHex((hsl[0] + 240) % 360, hsl[1], hsl[2])];
+      const [h, s, l] = hexToHsl(hex);
+      return [
+        hslToHex((h + 120) % 360, s, l),
+        hslToHex((h + 240) % 360, s, l)
+      ];
     }
     function generateSplitComplementary(hex) {
-      let hsl = hexToHsl(hex);
-      return [hslToHex(hsl[0], hsl[1], hsl[2]), hslToHex((hsl[0] + 150) % 360, hsl[1], hsl[2]), hslToHex((hsl[0] + 210) % 360, hsl[1], hsl[2])];
+      const [h, s, l] = hexToHsl(hex);
+      return [
+        hslToHex((h + 150) % 360, s, l),
+        hslToHex((h + 210) % 360, s, l)
+      ];
     }
     function generateTetradic(hex) {
-      let hsl = hexToHsl(hex);
-      return [hslToHex(hsl[0], hsl[1], hsl[2]), hslToHex((hsl[0] + 90) % 360, hsl[1], hsl[2]), hslToHex((hsl[0] + 180) % 360, hsl[1], hsl[2]), hslToHex((hsl[0] + 270) % 360, hsl[1], hsl[2])];
+      const [h, s, l] = hexToHsl(hex);
+      return [
+        hslToHex((h + 90) % 360, s, l),
+        hslToHex((h + 180) % 360, s, l),
+        hslToHex((h + 270) % 360, s, l)
+      ];
     }
     function generateSquare(hex) {
-      let hsl = hexToHsl(hex);
-      return [hslToHex(hsl[0], hsl[1], hsl[2]), hslToHex((hsl[0] + 90) % 360, hsl[1], hsl[2]), hslToHex((hsl[0] + 180) % 360, hsl[1], hsl[2]), hslToHex((hsl[0] + 270) % 360, hsl[1], hsl[2])];
+      const [h, s, l] = hexToHsl(hex);
+      return [
+        hslToHex((h + 90) % 360, s, l),
+        hslToHex((h + 180) % 360, s, l),
+        hslToHex((h + 270) % 360, s, l)
+      ];
     }
-    function generateMonochromatic(hex, count = 7) {
-      let hsl = hexToHsl(hex);
-      let colors = [];
-      let step = 70 / (count - 1);
-      for (let i = 0; i < count; i++) {
-        let l = 20 + i * step;
-        colors.push(hslToHex(hsl[0], hsl[1], l));
+    function generateMonochromatic(hex, variations = 5) {
+      const [h, s, l] = hexToHsl(hex);
+      const colors = [];
+      const step = 100 / (variations + 1);
+      for(let i = 1; i <= variations; i++) {
+        let newL = (l + step * i) % 100;
+        colors.push(hslToHex(h, s, newL));
       }
       return colors;
     }
-    function generateDiadic(hex) {
-      let hsl = hexToHsl(hex);
-      return [hslToHex(hsl[0], hsl[1], hsl[2]), hslToHex((hsl[0] + 72) % 360, hsl[1], hsl[2])];
-    }
-    function generatePentadic(hex) {
-      let hsl = hexToHsl(hex);
-      let colors = [];
-      for (let i = 0; i < 5; i++) {
-        colors.push(hslToHex((hsl[0] + i * 72) % 360, hsl[1], hsl[2]));
+    function generatePastel(hex, variations = 5) {
+      const [h, , ] = hexToHsl(hex);
+      const colors = [];
+      for(let i = 0; i < variations; i++) {
+        colors.push(hslToHex((h + i * (360 / variations)) % 360, 40, 85));
       }
       return colors;
     }
-    function generatePastel(hex, count = 7) {
-      let hsl = hexToHsl(hex);
-      let colors = [];
-      for (let i = 0; i < count; i++) {
-        colors.push(hslToHex((hsl[0] + i * 30) % 360, 40, 85 - i * 5));
+    function generateGradient(hex, endOffset = 120, steps = 5) {
+      const [h, s, l] = hexToHsl(hex);
+      const colors = [];
+      const endHue = (h + endOffset) % 360;
+      for(let i = 0; i < steps; i++) {
+        const t = i / (steps - 1);
+        const interpHue = (h * (1 - t) + endHue * t) % 360;
+        const interpL = l * (1 - t) + (90 * t);
+        colors.push(hslToHex(interpHue, s, interpL));
+      }
+      return colors;
+    }
+    function generateHighKey(hex, variations = 5) {
+      const [h, s, ] = hexToHsl(hex);
+      const colors = [];
+      const startL = 75;
+      const endL = 95;
+      for(let i = 0; i < variations; i++) {
+        const l = startL + (i * (endL - startL)) / (variations - 1);
+        colors.push(hslToHex(h, s, l));
+      }
+      return colors;
+    }
+    function generateLowKey(hex, variations = 5) {
+      const [h, s, ] = hexToHsl(hex);
+      const colors = [];
+      const startL = 5;
+      const endL = 25;
+      for(let i = 0; i < variations; i++) {
+        const l = startL + (i * (endL - startL)) / (variations - 1);
+        colors.push(hslToHex(h, s, l));
+      }
+      return colors;
+    }
+    function generatePolychromatic(hex, variations = 6) {
+      const [, s, l] = hexToHsl(hex);
+      const colors = [];
+      for(let i = 1; i <= variations; i++) {
+        colors.push(hslToHex((i * 360 / variations) % 360, s, l));
       }
       return colors;
     }
@@ -307,37 +352,6 @@
     function generateCool(hex) {
       return ['#00BFFF', '#1E90FF', '#6495ED', '#00CED1', '#20B2AA', '#3CB371', '#2E8B57'];
     }
-    function generateHighkey(hex, count = 7) {
-      let hsl = hexToHsl(hex);
-      let colors = [];
-      for (let i = 0; i < count; i++) {
-        let l = 70 + i * 3;
-        colors.push(hslToHex(hsl[0], hsl[1], l));
-      }
-      return colors;
-    }
-    function generateLowkey(hex, count = 7) {
-      let hsl = hexToHsl(hex);
-      let colors = [];
-      for (let i = 0; i < count; i++) {
-        let l = 10 + i * 3;
-        colors.push(hslToHex(hsl[0], hsl[1], l));
-      }
-      return colors;
-    }
-    function generateGradient(hex, count = 7) {
-      let hsl = hexToHsl(hex);
-      let colors = [];
-      let endHue = (hsl[0] + 120) % 360;
-      for (let i = 0; i < count; i++) {
-        let t = i / (count - 1);
-        let h = hsl[0] * (1 - t) + endHue * t;
-        let s = hsl[1];
-        let l = hsl[2] * (1 - t) + 90 * t;
-        colors.push(hslToHex(h, s, l));
-      }
-      return colors;
-    }
     function generateAchromatic(hex, count = 7) {
       let colors = [];
       for (let i = 0; i < count; i++) {
@@ -353,14 +367,6 @@
     function generateCompound(hex) {
       let hsl = hexToHsl(hex);
       return [hslToHex((hsl[0] - 30 + 360) % 360, hsl[1], hsl[2]), hslToHex((hsl[0] + 30) % 360, hsl[1], hsl[2]), hslToHex((hsl[0] + 180) % 360, hsl[1], hsl[2]), hslToHex((hsl[0] + 150) % 360, hsl[1], hsl[2]), hslToHex((hsl[0] + 210) % 360, hsl[1], hsl[2])];
-    }
-    function generatePolychromatic(hex, count = 7) {
-      let hsl = hexToHsl(hex);
-      let colors = [];
-      for (let i = 0; i < count; i++) {
-        colors.push(hslToHex((hsl[0] + i * 360 / count) % 360, hsl[1], hsl[2]));
-      }
-      return colors;
     }
     function showReferenceSwatch(hex) {
       const referenceRow = document.getElementById('referenceRow');
@@ -381,7 +387,7 @@
       swatchRow.innerHTML = '';
       let n = colorCount[scheme] || 5;
       let colors = [];
-      switch(scheme) {
+      switch (scheme) {
         case 'complementary':
           colors = generateComplementary(hex);
           break;
@@ -403,15 +409,22 @@
         case 'monochromatic':
           colors = generateMonochromatic(hex, n);
           break;
-        case 'diadic':
-          colors = generateDiadic(hex);
-          break;
-        case 'pentadic':
-          colors = generatePentadic(hex);
-          break;
         case 'pastel':
           colors = generatePastel(hex, n);
           break;
+        case 'gradient':
+          colors = generateGradient(hex, 120, n);
+          break;
+        case 'highkey':
+          colors = generateHighKey(hex, n);
+          break;
+        case 'lowkey':
+          colors = generateLowKey(hex, n);
+          break;
+        case 'polychromatic':
+          colors = generatePolychromatic(hex, n);
+          break;
+        // For schemes not covered, fallback to previous logic
         case 'earth':
           colors = generateEarth(hex);
           break;
@@ -421,15 +434,6 @@
         case 'cool':
           colors = generateCool(hex);
           break;
-        case 'highkey':
-          colors = generateHighkey(hex, n);
-          break;
-        case 'lowkey':
-          colors = generateLowkey(hex, n);
-          break;
-        case 'gradient':
-          colors = generateGradient(hex, n);
-          break;
         case 'achromatic':
           colors = generateAchromatic(hex, n);
           break;
@@ -438,9 +442,6 @@
           break;
         case 'compound':
           colors = generateCompound(hex);
-          break;
-        case 'polychromatic':
-          colors = generatePolychromatic(hex, n);
           break;
         default:
           colors = [hex];
