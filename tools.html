@@ -169,9 +169,15 @@
     imageCanvas.addEventListener('mousemove', function(e) {
       if (!imgLoaded) return;
       if (mouseDown) {
-        updateMagnifierPosition(e);
-        updateColorAtEvent(e);
-        redrawImageWithMagnifier();
+        // Only update color if inside canvas bounds
+        const rect = imageCanvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        if (x >= 0 && y >= 0 && x < rect.width && y < rect.height) {
+          updateMagnifierPosition(e);
+          updateColorAtEvent(e);
+          redrawImageWithMagnifier();
+        }
       }
     });
 
@@ -209,12 +215,15 @@
       const rect = imageCanvas.getBoundingClientRect();
       const x = Math.floor((e.clientX - rect.left) * (imageCanvas.width / rect.width));
       const y = Math.floor((e.clientY - rect.top) * (imageCanvas.height / rect.height));
-      const pixel = ctx.getImageData(x, y, 1, 1).data;
-      const hex = rgbToHex(pixel[0], pixel[1], pixel[2]);
-      colorPreview.style.background = hex;
-      hexCode.textContent = hex;
-      colorInfo.style.display = 'flex';
-      lastHex = hex;
+      // Only update if inside canvas
+      if (x >= 0 && y >= 0 && x < imageCanvas.width && y < imageCanvas.height) {
+        const pixel = ctx.getImageData(x, y, 1, 1).data;
+        const hex = rgbToHex(pixel[0], pixel[1], pixel[2]);
+        colorPreview.style.background = hex;
+        hexCode.textContent = hex;
+        colorInfo.style.display = 'flex';
+        lastHex = hex;
+      }
     }
 
     imageInput.addEventListener('change', (e) => {
