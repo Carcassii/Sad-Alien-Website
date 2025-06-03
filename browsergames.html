@@ -243,7 +243,7 @@
       canvas.height = CANVAS_HEIGHT;
 
       // Connect to WebSocket server
-      socket = io('http://localhost:3000');
+      socket = io('https://sad-alien-website.onrender.com');
       socket.emit('setName', playerName);
 
       // Handle player join
