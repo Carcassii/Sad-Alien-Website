@@ -128,6 +128,7 @@
     const MAGNIFIER_ZOOM = 4;
     let mouseDown = false;
     let lastHex = '#000000';
+    let ignoreNextHexClick = false;
 
     // Draw magnifier
     function drawMagnifier(x, y) {
@@ -187,10 +188,11 @@
       isMagnifying = false;
       ctx.clearRect(0, 0, imageCanvas.width, imageCanvas.height);
       ctx.drawImage(img, 0, 0, imageCanvas.width, imageCanvas.height);
-      // Lock in the last color
       colorPreview.style.background = lastHex;
       hexCode.textContent = lastHex;
       colorInfo.style.display = 'flex';
+      // Set flag to ignore the next hex code click
+      ignoreNextHexClick = true;
     });
 
     imageCanvas.addEventListener('mouseleave', function(e) {
@@ -199,7 +201,6 @@
       isMagnifying = false;
       ctx.clearRect(0, 0, imageCanvas.width, imageCanvas.height);
       ctx.drawImage(img, 0, 0, imageCanvas.width, imageCanvas.height);
-      // Lock in the last color
       colorPreview.style.background = lastHex;
       hexCode.textContent = lastHex;
       colorInfo.style.display = 'flex';
@@ -264,6 +265,10 @@
     });
 
     hexCode.onclick = function() {
+      if (ignoreNextHexClick) {
+        ignoreNextHexClick = false;
+        return; // Ignore this click, it was from mouseup after drag
+      }
       navigator.clipboard.writeText(hexCode.textContent.replace(' ✓', ''));
       hexCode.textContent = hexCode.textContent.replace(' ✓', '') + ' ✓';
       setTimeout(() => {
