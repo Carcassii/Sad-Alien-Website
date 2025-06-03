@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Artist Tools - Color Picker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Work+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(to bottom, #e0eafc, #cfdef3 100%);
+      font-family: 'Work Sans', sans-serif;
+      margin: 0;
+      min-height: 100vh;
+      color: #222;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+    }
+    .container {
+      background: #fff;
+      margin-top: 3rem;
+      padding: 2rem 2.5rem;
+      border-radius: 18px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+      max-width: 480px;
+      width: 100%;
+      text-align: center;
+    }
+    h1 {
+      font-family: 'Patrick Hand', cursive;
+      font-size: 2.2rem;
+      margin-bottom: 1.5rem;
+      color: #3c75b4;
+    }
+    .upload-label {
+      display: inline-block;
+      background: #3c75b4;
+      color: #fff;
+      padding: 0.7rem 1.5rem;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      margin-bottom: 1.5rem;
+      transition: background 0.2s;
+    }
+    .upload-label:hover {
+      background: #255080;
+    }
+    #imageCanvas {
+      display: block;
+      margin: 1.5rem auto 1rem auto;
+      border-radius: 12px;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+      max-width: 100%;
+      background: #f4f4f4;
+      cursor: crosshair;
+    }
+    .color-info {
+      margin-top: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+    }
+    .color-preview {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      border: 2px solid #ccc;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      background: #fff;
+    }
+    .hex-code {
+      font-family: 'Work Sans', monospace;
+      font-size: 1.2rem;
+      background: #f4f4f4;
+      padding: 0.4rem 0.8rem;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      cursor: pointer;
+      user-select: all;
+      transition: background 0.2s;
+    }
+    .hex-code:active {
+      background: #e0eafc;
+    }
+    .instructions {
+      color: #666;
+      font-size: 1rem;
+      margin-top: 1.2rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎨 Color Picker Tool</h1>
+    <label class="upload-label" for="imageInput">Upload Image</label>
+    <input type="file" id="imageInput" accept="image/*" style="display:none;">
+    <canvas id="imageCanvas" width="400" height="300"></canvas>
+    <div class="color-info" id="colorInfo" style="display:none;">
+      <div class="color-preview" id="colorPreview"></div>
+      <span class="hex-code" id="hexCode">#000000</span>
+    </div>
+    <div class="instructions">Click anywhere on your image to get the hex color code!</div>
+  </div>
+  <script>
+    const imageInput = document.getElementById('imageInput');
+    const imageCanvas = document.getElementById('imageCanvas');
+    const ctx = imageCanvas.getContext('2d');
+    const colorInfo = document.getElementById('colorInfo');
+    const colorPreview = document.getElementById('colorPreview');
+    const hexCode = document.getElementById('hexCode');
+    let img = new window.Image();
+    let imgLoaded = false;
+    let imgNaturalWidth = 0;
+    let imgNaturalHeight = 0;
+
+    document.querySelector('.upload-label').onclick = () => imageInput.click();
+
+    imageInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(ev) {
+        img.onload = function() {
+          imgLoaded = true;
+          imgNaturalWidth = img.naturalWidth;
+          imgNaturalHeight = img.naturalHeight;
+          // Resize canvas to fit image (max 400x400)
+          let scale = Math.min(400 / img.naturalWidth, 400 / img.naturalHeight, 1);
+          imageCanvas.width = img.naturalWidth * scale;
+          imageCanvas.height = img.naturalHeight * scale;
+          ctx.clearRect(0, 0, imageCanvas.width, imageCanvas.height);
+          ctx.drawImage(img, 0, 0, imageCanvas.width, imageCanvas.height);
+        };
+        img.src = ev.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+
+    imageCanvas.addEventListener('click', function(e) {
+      if (!imgLoaded) return;
+      const rect = imageCanvas.getBoundingClientRect();
+      const x = Math.floor((e.clientX - rect.left) * (imageCanvas.width / rect.width));
+      const y = Math.floor((e.clientY - rect.top) * (imageCanvas.height / rect.height));
+      const pixel = ctx.getImageData(x, y, 1, 1).data;
+      const hex = rgbToHex(pixel[0], pixel[1], pixel[2]);
+      colorPreview.style.background = hex;
+      hexCode.textContent = hex;
+      colorInfo.style.display = 'flex';
+    });
+
+    hexCode.onclick = function() {
+      navigator.clipboard.writeText(hexCode.textContent);
+      hexCode.textContent = hexCode.textContent + ' ✓';
+      setTimeout(() => {
+        hexCode.textContent = hexCode.textContent.replace(' ✓', '');
+      }, 1000);
+    };
+
+    function rgbToHex(r, g, b) {
+      return (
+        '#' +
+        [r, g, b]
+          .map(x => {
+            const hex = x.toString(16);
+            return hex.length === 1 ? '0' + hex : hex;
+          })
+          .join('')
+      ).toUpperCase();
+    }
+  </script>
+</body>
+</html> 
