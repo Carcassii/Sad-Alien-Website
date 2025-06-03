@@ -121,7 +121,7 @@
     const MAGNIFIER_RADIUS = 50;
     const MAGNIFIER_ZOOM = 4;
     let mouseDown = false;
-    let colorLocked = false;
+    let lastHex = '#000000';
 
     // Draw magnifier
     function drawMagnifier(x, y) {
@@ -162,20 +162,17 @@
       mouseDown = true;
       isMagnifying = true;
       updateMagnifierPosition(e);
+      updateColorAtEvent(e);
       redrawImageWithMagnifier();
     });
 
     imageCanvas.addEventListener('mousemove', function(e) {
       if (!imgLoaded) return;
-      if (colorLocked) return;
-      const rect = imageCanvas.getBoundingClientRect();
-      const x = Math.floor((e.clientX - rect.left) * (imageCanvas.width / rect.width));
-      const y = Math.floor((e.clientY - rect.top) * (imageCanvas.height / rect.height));
-      const pixel = ctx.getImageData(x, y, 1, 1).data;
-      const hex = rgbToHex(pixel[0], pixel[1], pixel[2]);
-      colorPreview.style.background = hex;
-      hexCode.textContent = hex;
-      colorInfo.style.display = 'flex';
+      if (mouseDown) {
+        updateMagnifierPosition(e);
+        updateColorAtEvent(e);
+        redrawImageWithMagnifier();
+      }
     });
 
     imageCanvas.addEventListener('mouseup', function(e) {
@@ -184,6 +181,10 @@
       isMagnifying = false;
       ctx.clearRect(0, 0, imageCanvas.width, imageCanvas.height);
       ctx.drawImage(img, 0, 0, imageCanvas.width, imageCanvas.height);
+      // Lock in the last color
+      colorPreview.style.background = lastHex;
+      hexCode.textContent = lastHex;
+      colorInfo.style.display = 'flex';
     });
 
     imageCanvas.addEventListener('mouseleave', function(e) {
@@ -192,12 +193,28 @@
       isMagnifying = false;
       ctx.clearRect(0, 0, imageCanvas.width, imageCanvas.height);
       ctx.drawImage(img, 0, 0, imageCanvas.width, imageCanvas.height);
+      // Lock in the last color
+      colorPreview.style.background = lastHex;
+      hexCode.textContent = lastHex;
+      colorInfo.style.display = 'flex';
     });
 
     function updateMagnifierPosition(e) {
       const rect = imageCanvas.getBoundingClientRect();
       magnifierX = Math.floor((e.clientX - rect.left) * (imageCanvas.width / rect.width));
       magnifierY = Math.floor((e.clientY - rect.top) * (imageCanvas.height / rect.height));
+    }
+
+    function updateColorAtEvent(e) {
+      const rect = imageCanvas.getBoundingClientRect();
+      const x = Math.floor((e.clientX - rect.left) * (imageCanvas.width / rect.width));
+      const y = Math.floor((e.clientY - rect.top) * (imageCanvas.height / rect.height));
+      const pixel = ctx.getImageData(x, y, 1, 1).data;
+      const hex = rgbToHex(pixel[0], pixel[1], pixel[2]);
+      colorPreview.style.background = hex;
+      hexCode.textContent = hex;
+      colorInfo.style.display = 'flex';
+      lastHex = hex;
     }
 
     imageInput.addEventListener('change', (e) => {
@@ -236,18 +253,11 @@
       setTimeout(() => {
         hexCode.textContent = hex;
       }, 1000);
-      colorLocked = true;
-    });
-
-    imageCanvas.addEventListener('mousemove', function(e) {
-      if (colorLocked) {
-        colorLocked = false;
-      }
     });
 
     hexCode.onclick = function() {
-      navigator.clipboard.writeText(hexCode.textContent);
-      hexCode.textContent = hexCode.textContent + ' ✓';
+      navigator.clipboard.writeText(hexCode.textContent.replace(' ✓', ''));
+      hexCode.textContent = hexCode.textContent.replace(' ✓', '') + ' ✓';
       setTimeout(() => {
         hexCode.textContent = hexCode.textContent.replace(' ✓', '');
       }, 1000);
