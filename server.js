@@ -21,6 +21,8 @@ const FRICTION = 0.99;
 const BALL_RADIUS = 15;
 const CANVAS_WIDTH = 800;
 const CANVAS_HEIGHT = 600;
+const FLIPPER_LENGTH = 50;
+const FLIPPER_WIDTH = 10;
 
 // Handle socket connections
 io.on('connection', (socket) => {
@@ -167,6 +169,41 @@ setInterval(() => {
           otherBall.y += overlap * sin / 2;
         }
       }
+    });
+
+    // Flipper collision (simple)
+    players.forEach((player) => {
+      if (!player.flippers) return;
+      // Left flipper
+      const leftFlipper = {
+        x: CANVAS_WIDTH * 0.3,
+        y: CANVAS_HEIGHT - 50,
+        angle: player.flippers.left.angle,
+        pressed: player.flippers.left.pressed
+      };
+      // Right flipper
+      const rightFlipper = {
+        x: CANVAS_WIDTH * 0.7,
+        y: CANVAS_HEIGHT - 50,
+        angle: player.flippers.right.angle,
+        pressed: player.flippers.right.pressed
+      };
+      [leftFlipper, rightFlipper].forEach(flipper => {
+        // Flipper tip position
+        const tipX = flipper.x + Math.cos(flipper.angle) * FLIPPER_LENGTH;
+        const tipY = flipper.y + Math.sin(flipper.angle) * FLIPPER_LENGTH;
+        // If ball is near the flipper tip and flipper is pressed, reflect ball
+        const dx = ball.x - tipX;
+        const dy = ball.y - tipY;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < BALL_RADIUS + FLIPPER_WIDTH && flipper.pressed) {
+          // Reflect ball away from flipper tip
+          const angle = Math.atan2(dy, dx);
+          const speed = Math.sqrt(ball.vx * ball.vx + ball.vy * ball.vy) + 8;
+          ball.vx = Math.cos(angle) * speed;
+          ball.vy = Math.sin(angle) * speed;
+        }
+      });
     });
 
     // Bumper collision and scoring
