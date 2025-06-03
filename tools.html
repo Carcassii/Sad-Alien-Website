@@ -169,7 +169,6 @@
     imageCanvas.addEventListener('mousemove', function(e) {
       if (!imgLoaded) return;
       if (mouseDown) {
-        // Only update color if inside canvas bounds
         const rect = imageCanvas.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
@@ -215,7 +214,6 @@
       const rect = imageCanvas.getBoundingClientRect();
       const x = Math.floor((e.clientX - rect.left) * (imageCanvas.width / rect.width));
       const y = Math.floor((e.clientY - rect.top) * (imageCanvas.height / rect.height));
-      // Only update if inside canvas
       if (x >= 0 && y >= 0 && x < imageCanvas.width && y < imageCanvas.height) {
         const pixel = ctx.getImageData(x, y, 1, 1).data;
         const hex = rgbToHex(pixel[0], pixel[1], pixel[2]);
