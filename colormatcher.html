@@ -138,11 +138,20 @@
         <option value="cool">Cool</option>
         <option value="highkey">High-Key</option>
         <option value="lowkey">Low-Key</option>
+        <optgroup label="More...">
+          <option value="gradient">Gradient (Color Ramp)</option>
+          <option value="achromatic">Achromatic</option>
+          <option value="accented-neutral">Accented Neutral</option>
+          <option value="compound">Compound (Complementary Analogous)</option>
+          <option value="polychromatic">Polychromatic</option>
+        </optgroup>
       </select>
     </div>
     <div class="instructions">Select a color and a harmony to see matching colors. Click a swatch to copy its hex code!</div>
     <div id="schemeDesc" style="margin: 0.7rem 0 0.5rem 0; color: #3c75b4; font-size: 1.05rem; min-height: 1.5em;"></div>
+    <div class="swatch-row" id="referenceRow"></div>
     <div class="swatch-row" id="swatchRow"></div>
+    <button id="addColorBtn" style="display:none;margin:1.2rem auto 0 auto;padding:0.5rem 1.2rem;font-size:1.1rem;border-radius:8px;border:none;background:#3c75b4;color:#fff;cursor:pointer;transition:background 0.2s;">+</button>
   </div>
   <script>
     const SCHEME_DESCS = {
@@ -208,59 +217,88 @@
       if (hex.length === 3) hex = hex.split('').map(x=>x+x).join('');
       return '#' + hex.substring(0,6).toUpperCase();
     }
+    let extendableSchemes = ['analogous','monochromatic','pastel','gradient','highkey','lowkey','polychromatic'];
+    let colorCount = {
+      'analogous': 7,
+      'monochromatic': 7,
+      'pastel': 7,
+      'gradient': 7,
+      'highkey': 7,
+      'lowkey': 7,
+      'polychromatic': 7
+    };
+    function showReferenceSwatch(hex) {
+      const referenceRow = document.getElementById('referenceRow');
+      referenceRow.innerHTML = '';
+      const swatch = document.createElement('div');
+      swatch.className = 'swatch';
+      swatch.innerHTML = `<div class="swatch-color" style="background:${hex};border:2.5px solid #3c75b4;"></div><span class="swatch-hex">${hex}</span>`;
+      swatch.onclick = function() {
+        navigator.clipboard.writeText(hex);
+        const hexSpan = swatch.querySelector('.swatch-hex');
+        hexSpan.textContent = hex + ' ✓';
+        setTimeout(() => { hexSpan.textContent = hex; }, 1000);
+      };
+      referenceRow.appendChild(swatch);
+    }
     function showSwatches(hex, scheme) {
       const swatchRow = document.getElementById('swatchRow');
       swatchRow.innerHTML = '';
       let hsl = hexToHsl(hex);
       let colors = [];
+      let n = colorCount[scheme] || 5;
       switch(scheme) {
         case 'complementary':
-          colors = [hex, hslToHex(hsl[0]+180, hsl[1], hsl[2])];
+          colors = [hslToHex(hsl[0]+180, hsl[1], hsl[2])];
           break;
         case 'analogous': {
-          colors = [];
-          for (let i = -90; i <= 90; i += 30) {
-            colors.push(hslToHex(hsl[0]+i, hsl[1], hsl[2]));
+          let step = 180/(n-1);
+          for (let i = 0; i < n; i++) {
+            let angle = hsl[0] - 90 + i*step;
+            if (Math.round(angle)%360 === Math.round(hsl[0])%360) continue;
+            colors.push(hslToHex(angle, hsl[1], hsl[2]));
           }
           break;
         }
         case 'triadic':
-          for (let i = 0; i < 3; i++) {
+          for (let i = 1; i < 3; i++) {
             colors.push(hslToHex(hsl[0]+i*120, hsl[1], hsl[2]));
           }
           break;
         case 'split-complementary':
-          for (let i = 0; i < 3; i++) {
-            colors.push(hslToHex(hsl[0]+(i===0?0:150+60*(i-1)), hsl[1], hsl[2]));
-          }
+          colors = [hslToHex(hsl[0]+150, hsl[1], hsl[2]), hslToHex(hsl[0]+210, hsl[1], hsl[2])];
           break;
         case 'tetradic':
-          for (let i = 0; i < 4; i++) {
+          for (let i = 1; i < 4; i++) {
             colors.push(hslToHex(hsl[0]+i*90, hsl[1], hsl[2]));
           }
           break;
         case 'square':
-          for (let i = 0; i < 4; i++) {
+          for (let i = 1; i < 4; i++) {
             colors.push(hslToHex(hsl[0]+i*90, hsl[1], hsl[2]));
           }
           break;
         case 'monochromatic': {
-          colors = [];
-          for (let l = 20; l <= 90; l += 10) {
+          let step = 70/(n-1);
+          for (let i = 0; i < n; i++) {
+            let l = 20 + i*step;
+            if (Math.round(l) === hsl[2]) continue;
             colors.push(hslToHex(hsl[0], hsl[1], l));
           }
           break;
         }
         case 'diadic':
-          colors = [hex, hslToHex(hsl[0]+72, hsl[1], hsl[2]), hslToHex(hsl[0]+144, hsl[1], hsl[2]), hslToHex(hsl[0]+216, hsl[1], hsl[2]), hslToHex(hsl[0]+288, hsl[1], hsl[2])];
+          for (let i = 1; i < 5; i++) {
+            colors.push(hslToHex(hsl[0]+i*72, hsl[1], hsl[2]));
+          }
           break;
         case 'pentadic':
-          for (let i = 0; i < 5; i++) {
+          for (let i = 1; i < 5; i++) {
             colors.push(hslToHex(hsl[0]+i*72, hsl[1], hsl[2]));
           }
           break;
         case 'pastel':
-          for (let i = 0; i < 8; i++) {
+          for (let i = 0; i < n; i++) {
             colors.push(hslToHex((hsl[0]+i*30)%360, 40, 85-i*5));
           }
           break;
@@ -299,13 +337,46 @@
           ];
           break;
         case 'highkey':
-          for (let l = 70; l <= 95; l += 5) {
+          for (let i = 0; i < n; i++) {
+            let l = 70 + i*3;
+            if (Math.round(l) === hsl[2]) continue;
             colors.push(hslToHex(hsl[0], hsl[1], l));
           }
           break;
         case 'lowkey':
-          for (let l = 10; l <= 40; l += 6) {
+          for (let i = 0; i < n; i++) {
+            let l = 10 + i*3;
+            if (Math.round(l) === hsl[2]) continue;
             colors.push(hslToHex(hsl[0], hsl[1], l));
+          }
+          break;
+        case 'gradient': {
+          let nsteps = colorCount[scheme] || 7;
+          let endHue = (hsl[0]+120)%360;
+          for (let i = 0; i < nsteps; i++) {
+            let t = i/(nsteps-1);
+            let h = hsl[0]*(1-t) + endHue*t;
+            let s = hsl[1];
+            let l = hsl[2]*(1-t) + 90*t;
+            colors.push(hslToHex(h, s, l));
+          }
+          break;
+        }
+        case 'achromatic':
+          for (let i = 0; i < 7; i++) {
+            let l = 10 + i*15;
+            colors.push(hslToHex(0, 0, l));
+          }
+          break;
+        case 'accented-neutral':
+          colors = [hslToHex(0,0,20), hslToHex(0,0,40), hslToHex(0,0,60), hslToHex(0,0,80), hslToHex(hsl[0], hsl[1], hsl[2])];
+          break;
+        case 'compound':
+          colors = [hslToHex(hsl[0]-30, hsl[1], hsl[2]), hslToHex(hsl[0]+30, hsl[1], hsl[2]), hslToHex(hsl[0]+180, hsl[1], hsl[2]), hslToHex(hsl[0]+150, hsl[1], hsl[2]), hslToHex(hsl[0]+210, hsl[1], hsl[2])];
+          break;
+        case 'polychromatic':
+          for (let i = 0; i < colorCount[scheme]; i++) {
+            colors.push(hslToHex((hsl[0]+i*360/colorCount[scheme])%360, hsl[1], hsl[2]));
           }
           break;
       }
@@ -321,6 +392,13 @@
         };
         swatchRow.appendChild(swatch);
       });
+      // Show or hide the + button
+      const addBtn = document.getElementById('addColorBtn');
+      if (extendableSchemes.includes(scheme)) {
+        addBtn.style.display = '';
+      } else {
+        addBtn.style.display = 'none';
+      }
     }
     const colorPicker = document.getElementById('colorPicker');
     const hexInput = document.getElementById('hexInput');
@@ -329,8 +407,8 @@
       let hex = clampHex(hexInput.value);
       hexInput.value = hex;
       colorPicker.value = hex;
+      showReferenceSwatch(hex);
       showSwatches(hex, schemeSelect.value);
-      // Update description
       document.getElementById('schemeDesc').textContent = SCHEME_DESCS[schemeSelect.value] || '';
     }
     colorPicker.addEventListener('input', function() {
@@ -346,6 +424,13 @@
       }
     });
     schemeSelect.addEventListener('change', updateAll);
+    document.getElementById('addColorBtn').onclick = function() {
+      let scheme = schemeSelect.value;
+      if (extendableSchemes.includes(scheme)) {
+        colorCount[scheme] = (colorCount[scheme] || 7) + 2;
+        updateAll();
+      }
+    };
     // Initial render
     updateAll();
   </script>
