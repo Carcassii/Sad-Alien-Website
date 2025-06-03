@@ -686,6 +686,9 @@
       }
     }
     .tool-dropdown {
+      display: flex;
+      align-items: center;
+      height: 100%;
       position: relative;
     }
     .tool-dropdown-content {
@@ -730,22 +733,29 @@
     .tool-link {
       display: flex;
       align-items: center;
-      gap: 0.3em;
+      justify-content: center;
+      font-family: 'Patrick Hand', cursive;
+      text-decoration: none;
+      color: #fff;
+      padding: 0.8rem 1.4rem;
+      border-radius: 16px;
+      min-width: 100px;
+      text-align: center;
+      background: rgba(138, 201, 38, 0.85);
+      border: 1px solid rgba(255,255,255,0.2);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2), 0 2px 4px rgba(0,0,0,0.1);
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+      transition: all 0.3s ease;
       cursor: pointer;
       user-select: none;
+      position: relative;
+      z-index: 2;
     }
-
-    .tool-link::after {
-      content: '▾';
-      font-size: 1em;
-      margin-left: 0.2em;
-      color: #fff;
-      transition: transform 0.2s;
-    }
-
-    .tool-dropdown:hover .tool-link::after,
-    .tool-dropdown:focus-within .tool-link::after {
-      transform: rotate(180deg);
+    .tool-link:hover, .tool-dropdown:focus-within .tool-link {
+      transform: translateY(-2px) scale(1.1);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.3), 0 3px 6px rgba(0,0,0,0.2);
+      filter: brightness(1.1);
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
     }
   </style>
 </head>
