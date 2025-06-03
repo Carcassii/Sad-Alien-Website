@@ -35,6 +35,16 @@ io.on('connection', (socket) => {
   };
   players.set(socket.id, player);
 
+  // Handle player name set
+  socket.on('setName', (name) => {
+    const player = players.get(socket.id);
+    if (player && typeof name === 'string' && name.trim().length > 0) {
+      player.name = name.trim().slice(0, 16);
+      // Broadcast updated player info
+      io.emit('playerJoined', player);
+    }
+  });
+
   // Send initial game state
   socket.emit('gameState', {
     players: Object.fromEntries(players),
@@ -83,6 +93,13 @@ io.on('connection', (socket) => {
     io.emit('playerLeft', socket.id);
   });
 });
+
+// Bumper definitions (should match client)
+const BUMPERS = [
+  { x: 400, y: 200, r: 30, score: 100 },
+  { x: 300, y: 300, r: 25, score: 150 },
+  { x: 500, y: 300, r: 25, score: 150 }
+];
 
 // Game loop
 setInterval(() => {
@@ -148,6 +165,26 @@ setInterval(() => {
           ball.y -= overlap * sin / 2;
           otherBall.x += overlap * cos / 2;
           otherBall.y += overlap * sin / 2;
+        }
+      }
+    });
+
+    // Bumper collision and scoring
+    BUMPERS.forEach(bumper => {
+      const dx = ball.x - bumper.x;
+      const dy = ball.y - bumper.y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < BALL_RADIUS + bumper.r) {
+        // Simple bounce
+        const angle = Math.atan2(dy, dx);
+        const speed = Math.sqrt(ball.vx * ball.vx + ball.vy * ball.vy) || 5;
+        ball.vx = Math.cos(angle) * speed * 1.1;
+        ball.vy = Math.sin(angle) * speed * 1.1;
+        // Award points
+        for (const [pid, player] of players) {
+          if (player.ball && player.ball.id === ball.id) {
+            player.score += bumper.score;
+          }
         }
       }
     });
