@@ -542,11 +542,23 @@
         hslToHex((hsl[0] + 240) % 360, 20, 25)
       ];
     }
-    function generateWarm(hex) {
-      return ['#FF5733', '#FF8D1A', '#FFC300', '#FFD700', '#FFB347', '#FF6347', '#FF4500'];
+    function generateWarm(hex, variations = 5) {
+      const [h, , l] = hexToHsl(hex);
+      const colors = [];
+      for (let i = 0; i < variations; i++) {
+        const hue = (h + i * 10 + 10) % 60; // Keep hues in red-orange-yellow
+        colors.push(hslToHex(hue, 80, l));
+      }
+      return colors;
     }
-    function generateCool(hex) {
-      return ['#00BFFF', '#1E90FF', '#6495ED', '#00CED1', '#20B2AA', '#3CB371', '#2E8B57'];
+    function generateCool(hex, variations = 5) {
+      const [h, , l] = hexToHsl(hex);
+      const colors = [];
+      for (let i = 0; i < variations; i++) {
+        const hue = (h + 180 + i * 10) % 360; // Rotate toward blue/green/purple range
+        colors.push(hslToHex(hue, 70, l));
+      }
+      return colors;
     }
     function generateAchromatic(variations = 5) {
       const colors = [];
@@ -600,22 +612,27 @@
       const [h, , ] = hexToHsl(hex);
       const colors = [];
       for(let i = 0; i < variations; i++) {
-        colors.push(hslToHex((h + i * 72) % 360, 90, 55));
+        const hue = (h + i * 72) % 360;
+        colors.push(hslToHex(hue, 100, 60));
       }
       return colors;
     }
-    function generateAutumnColors(variations = 5) {
-      const autumnHues = [20, 30, 40, 15, 5];
-      const colors = autumnHues.slice(0, variations).map(hue => hslToHex(hue, 70, 45));
-      return colors;
+    function generateAutumnColors(hex, variations = 5) {
+      const [h, , ] = hexToHsl(hex);
+      const sat = 60;
+      const light = 45;
+      const hues = [h, h + 10, h + 20, h - 10, h - 20].map(v => (v + 360) % 360);
+      return hues.slice(0, variations).map(hue => hslToHex(hue, sat, light));
     }
-    function generateRetro50s(variations = 5) {
-      const retroHues = [170, 330, 50, 200, 10];
+    function generateRetro50s(hex, variations = 5) {
+      const [h, , ] = hexToHsl(hex);
       const retroSaturation = [60, 65, 70, 55, 60];
       const retroLightness = [70, 65, 80, 75, 70];
+      const retroOffsets = [0, 30, -45, 60, -30];
       const colors = [];
       for(let i = 0; i < variations; i++) {
-        colors.push(hslToHex(retroHues[i % retroHues.length], retroSaturation[i], retroLightness[i]));
+        const hue = (h + retroOffsets[i % retroOffsets.length] + 360) % 360;
+        colors.push(hslToHex(hue, retroSaturation[i % retroSaturation.length], retroLightness[i % retroLightness.length]));
       }
       return colors;
     }
@@ -627,8 +644,13 @@
       ];
     }
     function generateMetallic(hex) {
-      const metallicColors = ['#D4AF37', '#C0C0C0', '#CD7F32'];
-      return [hex, ...metallicColors];
+      const [h, s, l] = hexToHsl(hex);
+      return [
+        hex, // user input
+        hslToHex((h + 45) % 360, 30, 50), // gold-ish
+        hslToHex((h + 90) % 360, 5, 70),  // silver-ish
+        hslToHex((h + 25) % 360, 40, 35)  // bronze-ish
+      ];
     }
     function generateGradientExtended(hex, steps = 7) {
       const [h, s, l] = hexToHsl(hex);
@@ -724,13 +746,13 @@
           colors = generateEarth(hex);
           break;
         case 'warm':
-          colors = generateWarm(hex);
+          colors = generateWarm(hex, n);
           break;
         case 'cool':
-          colors = generateCool(hex);
+          colors = generateCool(hex, n);
           break;
         case 'achromatic':
-          colors = generateAchromatic(hex, n);
+          colors = generateAchromatic(n);
           break;
         case 'accented-neutral':
           colors = generateAccentedNeutral(hex);
