@@ -314,6 +314,7 @@
       align-items: center;
       height: 100%;
       position: relative;
+      margin-bottom: 6px;
     }
     .tool-dropdown-content {
       display: none;
@@ -322,17 +323,16 @@
       left: 50%;
       transform: translateX(-50%);
       top: 110%;
-      background: rgba(10, 29, 55, 0.97);
-      backdrop-filter: blur(6px);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.18);
-      border-radius: 14px;
-      padding: 0.5rem 0;
-      border: 1.5px solid rgba(255,255,255,0.13);
+      background: #fff;
+      box-shadow: 0 4px 18px rgba(60, 117, 180, 0.13);
+      border-radius: 12px;
+      padding: 0.4rem 0;
+      border: none;
       z-index: 100;
       transition: opacity 0.18s;
     }
     .tool-dropdown-content a {
-      color: #fff;
+      color: #3c75b4;
       padding: 0.7rem 1.2rem;
       text-decoration: none;
       display: block;
@@ -341,10 +341,11 @@
       border-radius: 8px;
       transition: background 0.18s, color 0.18s;
       margin: 0 0.3rem;
+      text-align: left;
     }
     .tool-dropdown-content a:hover {
-      background: #3c75b4;
-      color: #fff;
+      background: #e0eafc;
+      color: #255080;
     }
     .tool-dropdown:hover .tool-dropdown-content,
     .tool-dropdown:focus-within .tool-dropdown-content {
@@ -387,7 +388,7 @@
         <li><a href="index.html">Home</a></li>
         <li><a href="about.html">About</a></li>
         <li class="tool-dropdown">
-          <a href="#" class="tool-link">Tool ▾</a>
+          <a href="#" class="tool-link">Tools ▾</a>
           <div class="tool-dropdown-content">
             <a href="colormatcher.html">Color Matcher</a>
             <a href="tools.html">Image to Hex</a>
