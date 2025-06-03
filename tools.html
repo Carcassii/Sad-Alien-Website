@@ -246,24 +246,6 @@
       reader.readAsDataURL(file);
     });
 
-    imageCanvas.addEventListener('click', function(e) {
-      if (!imgLoaded) return;
-      const rect = imageCanvas.getBoundingClientRect();
-      const x = Math.floor((e.clientX - rect.left) * (imageCanvas.width / rect.width));
-      const y = Math.floor((e.clientY - rect.top) * (imageCanvas.height / rect.height));
-      const pixel = ctx.getImageData(x, y, 1, 1).data;
-      const hex = rgbToHex(pixel[0], pixel[1], pixel[2]);
-      colorPreview.style.background = hex;
-      hexCode.textContent = hex;
-      colorInfo.style.display = 'flex';
-      // Copy to clipboard on click
-      navigator.clipboard.writeText(hex);
-      hexCode.textContent = hex + ' ✓';
-      setTimeout(() => {
-        hexCode.textContent = hex;
-      }, 1000);
-    });
-
     hexCode.onclick = function() {
       if (blockNextHexClick) {
         blockNextHexClick = false;
