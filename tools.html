@@ -116,8 +116,6 @@
     let imgNaturalWidth = 0;
     let imgNaturalHeight = 0;
 
-    document.querySelector('.upload-label').onclick = () => imageInput.click();
-
     imageInput.addEventListener('change', (e) => {
       const file = e.target.files[0];
       if (!file) return;
