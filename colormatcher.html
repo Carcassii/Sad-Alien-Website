@@ -352,21 +352,120 @@
     function generateCool(hex) {
       return ['#00BFFF', '#1E90FF', '#6495ED', '#00CED1', '#20B2AA', '#3CB371', '#2E8B57'];
     }
-    function generateAchromatic(hex, count = 7) {
-      let colors = [];
-      for (let i = 0; i < count; i++) {
-        let l = 10 + i * 15;
-        colors.push(hslToHex(0, 0, l));
+    function generateAchromatic(variations = 5) {
+      const colors = [];
+      const step = 100 / (variations + 1);
+      for(let i = 1; i <= variations; i++) {
+        colors.push(hslToHex(0, 0, step * i));
       }
       return colors;
     }
-    function generateAccentedNeutral(hex) {
-      let hsl = hexToHsl(hex);
-      return [hslToHex(0, 0, 20), hslToHex(0, 0, 40), hslToHex(0, 0, 60), hslToHex(0, 0, 80), hslToHex(hsl[0], hsl[1], hsl[2])];
+    function generateAccentedNeutral(hex, neutrals = 4) {
+      const [h, s, l] = hexToHsl(hex);
+      const colors = [];
+      const step = 70 / (neutrals + 1);
+      for(let i = 1; i <= neutrals; i++) {
+        colors.push(hslToHex(h, 5, step * i + 15));
+      }
+      colors.push(hex);
+      return colors;
     }
     function generateCompound(hex) {
-      let hsl = hexToHsl(hex);
-      return [hslToHex((hsl[0] - 30 + 360) % 360, hsl[1], hsl[2]), hslToHex((hsl[0] + 30) % 360, hsl[1], hsl[2]), hslToHex((hsl[0] + 180) % 360, hsl[1], hsl[2]), hslToHex((hsl[0] + 150) % 360, hsl[1], hsl[2]), hslToHex((hsl[0] + 210) % 360, hsl[1], hsl[2])];
+      const [h, s, l] = hexToHsl(hex);
+      return [
+        hslToHex((h - 30 + 360) % 360, s, l),
+        hslToHex((h + 30) % 360, s, l),
+        hslToHex((h + 180) % 360, s, l),
+        hslToHex((h + 150) % 360, s, l),
+        hslToHex((h + 210) % 360, s, l)
+      ];
+    }
+    function generateEarthTones(hex, variations = 5) {
+      const [h, , ] = hexToHsl(hex);
+      const earthSaturation = [30, 35, 40, 25, 20];
+      const earthLightness = [25, 30, 35, 40, 45];
+      const colors = [];
+      for(let i = 0; i < variations; i++) {
+        colors.push(hslToHex((h + i * 30) % 360, earthSaturation[i % earthSaturation.length], earthLightness[i % earthLightness.length]));
+      }
+      return colors;
+    }
+    function generateWarmColors(variations = 5) {
+      const warmHues = [10, 25, 40, 55, 70];
+      const colors = warmHues.slice(0, variations).map(hue => hslToHex(hue, 75, 60));
+      return colors;
+    }
+    function generateCoolColors(variations = 5) {
+      const coolHues = [190, 200, 210, 220, 230];
+      const colors = coolHues.slice(0, variations).map(hue => hslToHex(hue, 60, 60));
+      return colors;
+    }
+    function generateFauvist(hex, variations = 5) {
+      const [h, , ] = hexToHsl(hex);
+      const colors = [];
+      for(let i = 0; i < variations; i++) {
+        colors.push(hslToHex((h + i * 72) % 360, 90, 55));
+      }
+      return colors;
+    }
+    function generateAutumnColors(variations = 5) {
+      const autumnHues = [20, 30, 40, 15, 5];
+      const colors = autumnHues.slice(0, variations).map(hue => hslToHex(hue, 70, 45));
+      return colors;
+    }
+    function generateRetro50s(variations = 5) {
+      const retroHues = [170, 330, 50, 200, 10];
+      const retroSaturation = [60, 65, 70, 55, 60];
+      const retroLightness = [70, 65, 80, 75, 70];
+      const colors = [];
+      for(let i = 0; i < variations; i++) {
+        colors.push(hslToHex(retroHues[i % retroHues.length], retroSaturation[i], retroLightness[i]));
+      }
+      return colors;
+    }
+    function generateDiscordant(hex) {
+      const [h, s, l] = hexToHsl(hex);
+      return [
+        hslToHex((h + 165) % 360, s, l),
+        hslToHex((h + 195) % 360, s, l)
+      ];
+    }
+    function generateMetallic(hex) {
+      const metallicColors = ['#D4AF37', '#C0C0C0', '#CD7F32'];
+      return [hex, ...metallicColors];
+    }
+    function generateGradientExtended(hex, steps = 7) {
+      const [h, s, l] = hexToHsl(hex);
+      const colors = [];
+      const endHue = (h + 180) % 360;
+      for(let i = 0; i < steps; i++) {
+        const t = i / (steps - 1);
+        colors.push(hslToHex((h * (1 - t) + endHue * t) % 360, s, l));
+      }
+      return colors;
+    }
+    function generateOpticalMix(hex) {
+      const [h, s, l] = hexToHsl(hex);
+      return [
+        hex,
+        hslToHex((h + 180) % 360, s, l)
+      ];
+    }
+    function generateAccessible(hex) {
+      const [h, , l] = hexToHsl(hex);
+      const highContrastL = l < 50 ? 95 : 5;
+      return [
+        hex,
+        hslToHex(h, 10, highContrastL)
+      ];
+    }
+    function generatePsychologyCalm(hex) {
+      const [h, , ] = hexToHsl(hex);
+      return [
+        hslToHex(h, 40, 80),
+        hslToHex(h, 30, 70),
+        hslToHex((h + 30) % 360, 35, 65)
+      ];
     }
     function showReferenceSwatch(hex) {
       const referenceRow = document.getElementById('referenceRow');
@@ -443,6 +542,24 @@
         case 'compound':
           colors = generateCompound(hex);
           break;
+        case 'discordant':
+          colors = generateDiscordant(hex);
+          break;
+        case 'metallic':
+          colors = generateMetallic(hex);
+          break;
+        case 'gradient-extended':
+          colors = generateGradientExtended(hex);
+          break;
+        case 'optical-mix':
+          colors = generateOpticalMix(hex);
+          break;
+        case 'accessible':
+          colors = generateAccessible(hex);
+          break;
+        case 'psychology-calm':
+          colors = generatePsychologyCalm(hex);
+          break;
         default:
           colors = [hex];
       }
@@ -501,4 +618,5 @@
     updateAll();
   </script>
 </body>
+</html> 
 </html> 
