@@ -29,6 +29,10 @@
       color: #222;
       font-size: 1.1em;
       line-height: 1.6;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
     .container {
       background: #fff;
@@ -314,57 +318,55 @@
 </head>
 <body>
   <div class="content-container">
-    <div class="container">
-      <h1>🎨 Color Theme Matcher</h1>
-      <div class="input-row">
-        <label for="colorPicker">Pick a color:</label>
-        <input type="color" id="colorPicker" value="#3c75b4">
-        <input type="text" id="hexInput" value="#3c75b4" maxlength="7">
-        <select id="schemeSelect">
-          <option value="complementary">Complementary</option>
-          <option value="analogous">Analogous</option>
-          <option value="triadic">Triadic</option>
-          <option value="split-complementary">Split Complementary</option>
-          <option value="tetradic">Tetradic</option>
-          <option value="square">Square</option>
-          <option value="monochromatic">Monochromatic</option>
-          <option value="diadic">Diadic</option>
-          <option value="pentadic">Pentadic</option>
-          <option value="pastel">Pastel</option>
-          <option value="earth">Earth Tones</option>
-          <option value="warm">Warm Colors</option>
-          <option value="cool">Cool Colors</option>
-          <option value="highkey">High-Key</option>
-          <option value="lowkey">Low-Key</option>
-          <optgroup label="More...">
-            <option value="gradient">Gradient (Color Ramp)</option>
-            <option value="gradient-extended">Gradient Extended</option>
-            <option value="achromatic">Achromatic (Greyscale)</option>
-            <option value="accented-neutral">Accented Neutral</option>
-            <option value="compound">Compound (Complementary Analogous)</option>
-            <option value="fauvist">Fauvist (Vivid)</option>
-            <option value="autumn">Autumn (Seasonal)</option>
-            <option value="spring">Spring (Seasonal)</option>
-            <option value="summer">Summer (Seasonal)</option>
-            <option value="winter">Winter (Seasonal)</option>
-            <option value="retro50s">Retro 50s</option>
-            <option value="discordant">Discordant (Clash)</option>
-            <option value="metallic">Metallic</option>
-            <option value="optical-mix">Optical Mix</option>
-            <option value="accessible">High-Contrast Accessible</option>
-            <option value="psychology-calm">Psychology: Calm</option>
-            <option value="relaxing">Relaxing (Mood)</option>
-            <option value="energetic">Energetic (Mood)</option>
-            <option value="polychromatic">Polychromatic</option>
-          </optgroup>
-        </select>
-      </div>
-      <div class="instructions">Select a color and a harmony to see matching colors. Click a swatch to copy its hex code!</div>
-      <div id="schemeDesc" style="margin: 0.7rem 0 0.5rem 0; color: #3c75b4; font-size: 1.05rem; min-height: 1.5em;"></div>
-      <div class="swatch-row" id="referenceRow"></div>
-      <div class="swatch-row" id="swatchRow"></div>
-      <button id="addColorBtn" style="display:none;margin:1.2rem auto 0 auto;padding:0.5rem 1.2rem;font-size:1.1rem;border-radius:8px;border:none;background:#3c75b4;color:#fff;cursor:pointer;transition:background 0.2s;">+</button>
+    <h1>🎨 Color Theme Matcher</h1>
+    <div class="input-row">
+      <label for="colorPicker">Pick a color:</label>
+      <input type="color" id="colorPicker" value="#3c75b4">
+      <input type="text" id="hexInput" value="#3c75b4" maxlength="7">
+      <select id="schemeSelect">
+        <option value="complementary">Complementary</option>
+        <option value="analogous">Analogous</option>
+        <option value="triadic">Triadic</option>
+        <option value="split-complementary">Split Complementary</option>
+        <option value="tetradic">Tetradic</option>
+        <option value="square">Square</option>
+        <option value="monochromatic">Monochromatic</option>
+        <option value="diadic">Diadic</option>
+        <option value="pentadic">Pentadic</option>
+        <option value="pastel">Pastel</option>
+        <option value="earth">Earth Tones</option>
+        <option value="warm">Warm Colors</option>
+        <option value="cool">Cool Colors</option>
+        <option value="highkey">High-Key</option>
+        <option value="lowkey">Low-Key</option>
+        <optgroup label="More...">
+          <option value="gradient">Gradient (Color Ramp)</option>
+          <option value="gradient-extended">Gradient Extended</option>
+          <option value="achromatic">Achromatic (Greyscale)</option>
+          <option value="accented-neutral">Accented Neutral</option>
+          <option value="compound">Compound (Complementary Analogous)</option>
+          <option value="fauvist">Fauvist (Vivid)</option>
+          <option value="autumn">Autumn (Seasonal)</option>
+          <option value="spring">Spring (Seasonal)</option>
+          <option value="summer">Summer (Seasonal)</option>
+          <option value="winter">Winter (Seasonal)</option>
+          <option value="retro50s">Retro 50s</option>
+          <option value="discordant">Discordant (Clash)</option>
+          <option value="metallic">Metallic</option>
+          <option value="optical-mix">Optical Mix</option>
+          <option value="accessible">High-Contrast Accessible</option>
+          <option value="psychology-calm">Psychology: Calm</option>
+          <option value="relaxing">Relaxing (Mood)</option>
+          <option value="energetic">Energetic (Mood)</option>
+          <option value="polychromatic">Polychromatic</option>
+        </optgroup>
+      </select>
     </div>
+    <div class="instructions">Select a color and a harmony to see matching colors. Click a swatch to copy its hex code!</div>
+    <div id="schemeDesc" style="margin: 0.7rem 0 0.5rem 0; color: #3c75b4; font-size: 1.05rem; min-height: 1.5em;"></div>
+    <div class="swatch-row" id="referenceRow"></div>
+    <div class="swatch-row" id="swatchRow"></div>
+    <button id="addColorBtn" style="display:none;margin:1.2rem auto 0 auto;padding:0.5rem 1.2rem;font-size:1.1rem;border-radius:8px;border:none;background:#3c75b4;color:#fff;cursor:pointer;transition:background 0.2s;">+</button>
   </div>
   <script src="common.js"></script>
 </body>
