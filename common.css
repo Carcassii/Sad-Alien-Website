@@ -258,13 +258,4 @@ body {
     .site-title {
         font-size: 8.25em;
     }
-}
-
-body[data-toolspage="true"] .navbar {
-    height: 200px;
-}
-body[data-toolspage="true"] .site-title {
-    font-size: 6em;
-    margin-top: 0.5em;
-    margin-bottom: 0.5em;
 } 
