@@ -891,6 +891,74 @@
   </div>
 
   <script src="common.js"></script>
+  <script>
+    window.addEventListener('DOMContentLoaded', function() {
+      // Only run on homepage
+      const svg = document.getElementById('trail-svg');
+      const path = document.getElementById('trail-path');
+      const spaceship = document.getElementById('spaceship');
+      if (!svg || !path || !spaceship) return;
+
+      const totalLength = path.getTotalLength();
+      let progress = 0;
+      const duration = 8000; // 8 seconds
+      const starInterval = 18; // px along path between stars
+      let lastStarDist = 0;
+      let lastTimestamp = null;
+
+      function animateSpaceship(timestamp) {
+        if (!lastTimestamp) lastTimestamp = timestamp;
+        const elapsed = timestamp - lastTimestamp;
+        lastTimestamp = timestamp;
+        progress += elapsed / duration * totalLength;
+        if (progress > totalLength) progress = totalLength;
+
+        const pos = path.getPointAtLength(progress);
+        const nextPos = path.getPointAtLength(Math.min(progress + 1, totalLength));
+        const angle = Math.atan2(nextPos.y - pos.y, nextPos.x - pos.x) * 180 / Math.PI;
+        spaceship.style.left = `${pos.x - spaceship.width / 2}px`;
+        spaceship.style.top = `${pos.y - spaceship.height / 2}px`;
+        spaceship.style.transform = `rotate(${angle}deg)`;
+        spaceship.style.position = 'absolute';
+        spaceship.style.pointerEvents = 'none';
+        spaceship.style.zIndex = 2;
+
+        // Leave a star every starInterval px
+        if (progress - lastStarDist >= starInterval) {
+          lastStarDist = progress;
+          const star = document.createElement('div');
+          star.className = 'star';
+          star.style.left = `${pos.x}px`;
+          star.style.top = `${pos.y}px`;
+          star.style.width = '2px';
+          star.style.height = '2px';
+          star.style.position = 'absolute';
+          star.style.zIndex = 1;
+          svg.parentNode.appendChild(star);
+        }
+
+        if (progress < totalLength) {
+          requestAnimationFrame(animateSpaceship);
+        }
+      }
+
+      // Position spaceship at start
+      const start = path.getPointAtLength(0);
+      spaceship.style.left = `${start.x - spaceship.width / 2}px`;
+      spaceship.style.top = `${start.y - spaceship.height / 2}px`;
+      spaceship.style.position = 'absolute';
+      spaceship.style.pointerEvents = 'none';
+      spaceship.style.zIndex = 2;
+
+      // Start animation after a short delay
+      setTimeout(() => {
+        progress = 0;
+        lastStarDist = 0;
+        lastTimestamp = null;
+        requestAnimationFrame(animateSpaceship);
+      }, 500);
+    });
+  </script>
 </body>
 </html>
 
