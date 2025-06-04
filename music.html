@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Quirky Web Synth - Sad Alien Studios</title>
-  <script src="https://unpkg.com/tone"></script>
+  <title>Music - Sad Alien Studios</title>
   <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Work+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="common.css">
   <style>
     html {
       scroll-behavior: smooth;
@@ -619,678 +619,123 @@
   </style>
 </head>
 <body>
-  <header>
-    <nav class="navbar">
-      <h1 class="site-title">Sad Alien</h1>
-      <ul class="nav-links">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="about.html">About</a></li>
-        <li class="tool-dropdown">
-          <a href="#" class="tool-link">Tools</a>
-          <div class="tool-dropdown-content">
-            <a href="colormatcher.html">Color Matcher</a>
-            <a href="tools.html">Image to Hex</a>
+  <div class="content-container">
+    <header>
+      <nav class="navbar">
+        <h1 class="site-title">Sad Alien</h1>
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li class="tool-dropdown">
+            <a href="#" class="tool-link">Tools</a>
+            <div class="tool-dropdown-content">
+              <a href="colormatcher.html">Color Matcher</a>
+              <a href="tools.html">Image to Hex</a>
+            </div>
+          </li>
+          <li><a href="music.html">Music</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="synth-container">
+      <h1>🎛️ Synthesizer!</h1>
+      <p>Press the keys or use your keyboard to play! 🎶</p>
+      
+      <div class="visualizer" id="visualizer"></div>
+
+      <div class="controls-container">
+        <div class="instrument-select">
+          <label>Choose Instrument:</label>
+          <div class="instrument-list">
+            <button class="instrument-btn active" data-instrument="spaceOrgan">Space Organ</button>
+            <button class="instrument-btn" data-instrument="clarinet">Clarinet</button>
+            <button class="instrument-btn" data-instrument="flute">Flute</button>
+            <button class="instrument-btn" data-instrument="harpsichord">Harpsichord</button>
+            <button class="instrument-btn" data-instrument="guitar">Guitar</button>
+            <button class="instrument-btn" data-instrument="trumpet">Trumpet</button>
+            <button class="instrument-btn" data-instrument="oboe">Oboe</button>
+            <button class="instrument-btn" data-instrument="organ">Organ</button>
+            <button class="instrument-btn" data-instrument="strings">Strings</button>
+            <button class="instrument-btn" data-instrument="woof">🐕 Woof</button>
           </div>
-        </li>
-        <li><a href="music.html">Music</a></li>
-        <li><a href="contact.html">Contact</a></li>
-      </ul>
-    </nav>
-  </header>
-
-  <div class="synth-container">
-  <h1>🎛️ Synthesizer!</h1>
-    <p>Press the keys or use your keyboard to play! 🎶</p>
-    
-    <div class="visualizer" id="visualizer"></div>
-
-    <div class="controls-container">
-      <div class="instrument-select">
-        <label>Choose Instrument:</label>
-        <div class="instrument-list">
-          <button class="instrument-btn active" data-instrument="spaceOrgan">Space Organ</button>
-          <button class="instrument-btn" data-instrument="clarinet">Clarinet</button>
-          <button class="instrument-btn" data-instrument="flute">Flute</button>
-          <button class="instrument-btn" data-instrument="harpsichord">Harpsichord</button>
-          <button class="instrument-btn" data-instrument="guitar">Guitar</button>
-          <button class="instrument-btn" data-instrument="trumpet">Trumpet</button>
-          <button class="instrument-btn" data-instrument="oboe">Oboe</button>
-          <button class="instrument-btn" data-instrument="organ">Organ</button>
-          <button class="instrument-btn" data-instrument="strings">Strings</button>
-          <button class="instrument-btn" data-instrument="woof">🐕 Woof</button>
+          <button class="randomize-btn">🎲 Randomize Settings!</button>
         </div>
-        <button class="randomize-btn">🎲 Randomize Settings!</button>
       </div>
-    </div>
 
-  <div class="container">
-    <div class="knob">
-      <label for="detune">Detune</label>
-      <input id="detune" type="range" min="-1200" max="1200" value="0">
-    </div>
-    <div class="knob">
-      <label for="filter">Filter Cutoff</label>
-      <input id="filter" type="range" min="100" max="5000" value="1500">
-    </div>
-    <div class="knob">
-      <label for="reverb">Reverb</label>
-      <input id="reverb" type="range" min="0" max="1" step="0.01" value="0.2">
+      <div class="container">
+        <div class="knob">
+          <label for="detune">Detune</label>
+          <input id="detune" type="range" min="-1200" max="1200" value="0">
+        </div>
+        <div class="knob">
+          <label for="filter">Filter Cutoff</label>
+          <input id="filter" type="range" min="100" max="5000" value="1500">
+        </div>
+        <div class="knob">
+          <label for="reverb">Reverb</label>
+          <input id="reverb" type="range" min="0" max="1" step="0.01" value="0.2">
+        </div>
+        <div class="knob">
+          <label for="distortion">Distortion</label>
+          <input id="distortion" type="range" min="0" max="1" step="0.01" value="0">
+        </div>
+        <div class="knob">
+          <label for="oscillator">Oscillator</label>
+          <input id="oscillator" type="range" min="0" max="3" step="1" value="0">
+        </div>
+        <div class="knob">
+          <label for="arpSpeed">Arp Speed</label>
+          <input id="arpSpeed" type="range" min="0.1" max="2" step="0.1" value="0.5">
+        </div>
+        <div class="knob">
+          <label for="arpPattern">Arp Pattern</label>
+          <select id="arpPattern" class="pattern-select">
+            <option value="up">Up</option>
+            <option value="down">Down</option>
+            <option value="upDown">Up & Down</option>
+            <option value="random">Random</option>
+            <option value="off">Off</option>
+          </select>
+        </div>
+        <div class="knob">
+          <label for="volume">Volume</label>
+          <input id="volume" type="range" min="0" max="1" step="0.01" value="0.7">
+        </div>
+        <div class="knob">
+          <label for="delay">Delay Mix</label>
+          <input id="delay" type="range" min="0" max="1" step="0.01" value="0">
+        </div>
+        <div class="knob">
+          <label for="delayTime">Delay Time</label>
+          <input id="delayTime" type="range" min="0.05" max="1" step="0.05" value="0.25">
+        </div>
       </div>
-      <div class="knob">
-        <label for="distortion">Distortion</label>
-        <input id="distortion" type="range" min="0" max="1" step="0.01" value="0">
-      </div>
-      <div class="knob">
-        <label for="oscillator">Oscillator</label>
-        <input id="oscillator" type="range" min="0" max="3" step="1" value="0">
-      </div>
-      <div class="knob">
-        <label for="arpSpeed">Arp Speed</label>
-        <input id="arpSpeed" type="range" min="0.1" max="2" step="0.1" value="0.5">
-      </div>
-      <div class="knob">
-        <label for="arpPattern">Arp Pattern</label>
-        <select id="arpPattern" class="pattern-select">
-          <option value="up">Up</option>
-          <option value="down">Down</option>
-          <option value="upDown">Up & Down</option>
-          <option value="random">Random</option>
-          <option value="off">Off</option>
-        </select>
-      </div>
-      <div class="knob">
-        <label for="volume">Volume</label>
-        <input id="volume" type="range" min="0" max="1" step="0.01" value="0.7">
-      </div>
-      <div class="knob">
-        <label for="delay">Delay Mix</label>
-        <input id="delay" type="range" min="0" max="1" step="0.01" value="0">
-      </div>
-      <div class="knob">
-        <label for="delayTime">Delay Time</label>
-        <input id="delayTime" type="range" min="0.05" max="1" step="0.05" value="0.25">
-      </div>
-    </div>
 
-    <div class="keyboard" id="keyboard">
-      <!-- First octave -->
-      <div class="key" data-note="C4"><span>A</span></div>
-      <div class="key black" data-note="C#4"><span>W</span></div>
-      <div class="key" data-note="D4"><span>S</span></div>
-      <div class="key black" data-note="D#4"><span>E</span></div>
-      <div class="key" data-note="E4"><span>D</span></div>
-      <div class="key" data-note="F4"><span>F</span></div>
-      <div class="key black" data-note="F#4"><span>T</span></div>
-      <div class="key" data-note="G4"><span>G</span></div>
-      <div class="key black" data-note="G#4"><span>Y</span></div>
-      <div class="key" data-note="A4"><span>H</span></div>
-      <div class="key black" data-note="A#4"><span>U</span></div>
-      <div class="key" data-note="B4"><span>J</span></div>
-      <!-- Start of second octave -->
-      <div class="key" data-note="C5"><span>K</span></div>
-      <div class="key black" data-note="C#5"><span>O</span></div>
-      <div class="key" data-note="D5"><span>L</span></div>
-      <div class="key black" data-note="D#5"><span>P</span></div>
-      <div class="key" data-note="E5"><span>;</span></div>
+      <div class="keyboard" id="keyboard">
+        <!-- First octave -->
+        <div class="key" data-note="C4"><span>A</span></div>
+        <div class="key black" data-note="C#4"><span>W</span></div>
+        <div class="key" data-note="D4"><span>S</span></div>
+        <div class="key black" data-note="D#4"><span>E</span></div>
+        <div class="key" data-note="E4"><span>D</span></div>
+        <div class="key" data-note="F4"><span>F</span></div>
+        <div class="key black" data-note="F#4"><span>T</span></div>
+        <div class="key" data-note="G4"><span>G</span></div>
+        <div class="key black" data-note="G#4"><span>Y</span></div>
+        <div class="key" data-note="A4"><span>H</span></div>
+        <div class="key black" data-note="A#4"><span>U</span></div>
+        <div class="key" data-note="B4"><span>J</span></div>
+        <!-- Start of second octave -->
+        <div class="key" data-note="C5"><span>K</span></div>
+        <div class="key black" data-note="C#5"><span>O</span></div>
+        <div class="key" data-note="D5"><span>L</span></div>
+        <div class="key black" data-note="D#5"><span>P</span></div>
+        <div class="key" data-note="E5"><span>;</span></div>
+      </div>
     </div>
   </div>
-
-  <script>
-    // === Crayon color palette ===
-    const crayonColors = [
-      '#FF595E', // Red
-      '#FFCA3A', // Yellow
-      '#8AC926', // Green
-      '#1982C4', // Blue
-      '#FF7DFF', // Pink
-      '#FFD6A5', // Peach
-      '#6A4C93', // Purple
-      '#FFF685', // Light Yellow
-      '#B5EAD7', // Mint
-      '#FFB5E8'  // Light Pink
-    ];
-
-    function pickRandomColor(excludeColors = []) {
-      const filtered = crayonColors.filter(c => !excludeColors.includes(c));
-      return filtered[Math.floor(Math.random() * filtered.length)];
-    }
-
-    function randomizeSynthColors() {
-      // Main container
-      const synthContainer = document.querySelector('.synth-container');
-      const containerColor = pickRandomColor();
-      synthContainer.style.background = containerColor;
-
-      // Instrument select
-      const instrumentSelect = document.querySelector('.instrument-select');
-      const selectColor = pickRandomColor([containerColor]);
-      instrumentSelect.style.background = selectColor;
-
-      // Knobs
-      const knobEls = document.querySelectorAll('.knob');
-      knobEls.forEach(knob => {
-        knob.style.background = pickRandomColor([containerColor, selectColor]);
-      });
-
-      // Keyboard background
-      const keyboard = document.querySelector('.keyboard');
-      const keyboardColor = pickRandomColor([containerColor, selectColor]);
-      keyboard.style.background = keyboardColor;
-
-      // Instrument buttons
-      const instrumentBtns = document.querySelectorAll('.instrument-btn');
-      instrumentBtns.forEach(btn => {
-        btn.style.background = pickRandomColor([containerColor, selectColor, keyboardColor]);
-      });
-
-      // Randomize randomize button too!
-      const randomizeBtn = document.querySelector('.randomize-btn');
-      randomizeBtn.style.background = pickRandomColor([containerColor, selectColor, keyboardColor]);
-    }
-
-    window.addEventListener('DOMContentLoaded', randomizeSynthColors);
-
-    // Initialize audio context and samplers
-    let currentInstrument;
-    const samplers = {};
-
-    // Set up audio chain
-    const gain = new Tone.Gain(0.7);
-    const filter = new Tone.Filter(1500, "lowpass");
-    const reverb = new Tone.Reverb(2);
-    const distortion = new Tone.Distortion(0);
-    const delay = new Tone.FeedbackDelay({
-      delayTime: 0.25,
-      feedback: 0.5,
-      wet: 0
-    });
-    const analyser = new Tone.Analyser("waveform", 128);
-
-    // Chain the effects
-    gain.chain(filter, distortion, delay, reverb, analyser, Tone.Destination);
-
-    // Set up synth
-    const synth = new Tone.PolySynth(Tone.Synth, {
-      oscillator: {
-        type: 'square8'
-      },
-      envelope: {
-        attack: 0.005,
-        decay: 0.2,
-        sustain: 0.4,
-        release: 0.4
-      },
-      volume: -12
-    }).connect(gain);
-
-    // Initialize with minimal effects
-    reverb.wet.value = 0.1;
-    delay.wet.value = 0;
-    delay.delayTime.value = 0.25;
-    delay.feedback.value = 0.3;
-    distortion.distortion = 0;
-    filter.frequency.value = 5000;
-
-    // Initialize samplers
-    async function initSamplers() {
-      const instrumentSamples = {
-        clarinet: {
-          'C4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/clarinet-mp3/C4.mp3',
-          'D4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/clarinet-mp3/D4.mp3',
-          'E4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/clarinet-mp3/E4.mp3'
-        },
-        flute: {
-          'C4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/flute-mp3/C4.mp3',
-          'D4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/flute-mp3/D4.mp3',
-          'E4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/flute-mp3/E4.mp3'
-        },
-        harpsichord: {
-          'C4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/harpsichord-mp3/C4.mp3',
-          'D4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/harpsichord-mp3/D4.mp3',
-          'E4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/harpsichord-mp3/E4.mp3'
-        },
-        guitar: {
-          'C4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/acoustic_guitar_nylon-mp3/C4.mp3',
-          'D4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/acoustic_guitar_nylon-mp3/D4.mp3',
-          'E4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/acoustic_guitar_nylon-mp3/E4.mp3'
-        },
-        trumpet: {
-          'C4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/trumpet-mp3/C4.mp3',
-          'D4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/trumpet-mp3/D4.mp3',
-          'E4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/trumpet-mp3/E4.mp3'
-        },
-        oboe: {
-          'C4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/oboe-mp3/C4.mp3',
-          'D4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/oboe-mp3/D4.mp3',
-          'E4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/oboe-mp3/E4.mp3'
-        },
-        organ: {
-          'C4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/church_organ-mp3/C4.mp3',
-          'D4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/church_organ-mp3/D4.mp3',
-          'E4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/church_organ-mp3/E4.mp3'
-        },
-        strings: {
-          'C4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/violin-mp3/C4.mp3',
-          'D4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/violin-mp3/D4.mp3',
-          'E4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/violin-mp3/E4.mp3'
-        },
-        woof: {
-          'C4': 'audio/Woof.mp3',
-          'D4': 'audio/Woof.mp3',
-          'E4': 'audio/Woof.mp3'
-        }
-      };
-
-      try {
-        for (const [name, urls] of Object.entries(instrumentSamples)) {
-          samplers[name] = new Tone.Sampler({
-            urls: urls,
-            release: 1,
-            baseUrl: '',
-            onload: () => {
-              console.log(`Loaded ${name} sampler`);
-            }
-          }).connect(gain);
-          samplers[name].volume.value = 0;
-          if (name === 'woof') {
-            samplers[name].volume.value = 6;
-          }
-        }
-
-        // Wait a bit for samplers to load
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        console.log('All samplers initialized');
-        
-        // Set initial instrument
-        currentInstrument = synth;
-      } catch (error) {
-        console.error('Error loading samplers:', error);
-      }
-    }
-
-    // Initialize everything when the page loads
-    window.addEventListener('load', async () => {
-      try {
-        await Tone.start();
-        console.log('Tone.js started');
-        await initSamplers();
-        console.log('Initialization complete');
-      } catch (error) {
-        console.error('Error during initialization:', error);
-      }
-    });
-
-    // Create stars when the page loads
-    window.addEventListener('load', createStars);
-
-    // Create random stars
-    function createStars() {
-      const navbar = document.querySelector('.navbar');
-      const numStars = 200;
-      
-      for (let i = 0; i < numStars; i++) {
-        const star = document.createElement('div');
-        star.className = 'star';
-        star.style.left = `${Math.random() * 100}%`;
-        star.style.top = `${Math.random() * 100}%`;
-        const size = 0.5 + Math.random() * 1.5;
-        star.style.width = `${size}px`;
-        star.style.height = `${size}px`;
-        star.style.setProperty('--twinkle-duration', `${2 + Math.random() * 4}s`);
-        star.style.animationDelay = `${Math.random() * 4}s`;
-        navbar.appendChild(star);
-      }
-    }
-
-    // Create visualizer
-    const visualizer = document.getElementById('visualizer');
-    const barCount = 32;
-    const bars = [];
-    
-    for (let i = 0; i < barCount; i++) {
-      const bar = document.createElement('div');
-      bar.className = 'visualizer-bar';
-      bar.style.left = `${(i / barCount) * 100}%`;
-      visualizer.appendChild(bar);
-      bars.push(bar);
-    }
-
-    // Update UI to match initial settings
-    document.getElementById('reverb').value = 0.1;
-    document.getElementById('delay').value = 0;
-    document.getElementById('delayTime').value = 0.25;
-    document.getElementById('distortion').value = 0;
-    document.getElementById('filter').value = 5000;
-    document.getElementById('volume').value = 0.7;
-    document.getElementById('arpPattern').value = 'off';
-    document.getElementById('arpSpeed').value = 0.5;
-
-    // Add arpeggiator
-    let currentArpNotes = new Set();
-    let arpInterval;
-    let currentArpStep = 0;
-    let isArpeggiating = false;
-
-    const patterns = {
-      up: (notes) => [...notes].sort((a, b) => Tone.Frequency(a).toFrequency() - Tone.Frequency(b).toFrequency()),
-      down: (notes) => [...notes].sort((a, b) => Tone.Frequency(b).toFrequency() - Tone.Frequency(a).toFrequency()),
-      upDown: (notes) => {
-        const up = patterns.up([...notes]);
-        const down = patterns.down([...notes]).slice(1, -1);
-        return [...up, ...down];
-      },
-      random: (notes) => {
-        const shuffled = [...notes];
-        for (let i = shuffled.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-        }
-        return shuffled;
-      },
-      off: () => []
-    };
-
-    function updateArpeggiator() {
-      const pattern = document.getElementById('arpPattern').value;
-      const speed = parseFloat(document.getElementById('arpSpeed').value);
-
-      // Clear existing interval
-      if (arpInterval) {
-        clearInterval(arpInterval);
-        arpInterval = null;
-      }
-
-      if (pattern === 'off') {
-        isArpeggiating = false;
-        if (currentInstrument) {
-          currentInstrument.releaseAll();
-        }
-        return;
-      }
-
-      isArpeggiating = true;
-      const interval = 1000 * (2.1 - speed);
-
-      // If no notes are held, do nothing until a note is pressed
-      if (currentArpNotes.size > 0) {
-        let lastNote = null;
-        arpInterval = setInterval(() => {
-          if (currentArpNotes.size === 0) {
-            if (currentInstrument) {
-              currentInstrument.releaseAll();
-            }
-            return;
-          }
-          const arranged = patterns[pattern]([...currentArpNotes]);
-          if (arranged.length === 0) return;
-          currentArpStep = (currentArpStep + 1) % arranged.length;
-          const note = arranged[currentArpStep];
-          // Release previous note
-          if (lastNote && currentInstrument) {
-            currentInstrument.triggerRelease(lastNote);
-          }
-          // Play the new note
-          if (currentInstrument) {
-            currentInstrument.triggerAttack(note);
-          }
-          lastNote = note;
-          // Update key visuals
-          document.querySelectorAll('.key').forEach(key => {
-            key.classList.remove('active');
-            if (key.dataset.note === note) {
-              key.classList.add('active');
-            }
-          });
-        }, interval);
-      }
-    }
-
-    // Update event handlers for key presses with improved note handling
-    const activeNotes = new Set();
-    let isMouseDown = false;
-
-    function handleNoteOn(note, key) {
-        Tone.start();
-      if (!isArpeggiating) {
-        if (currentInstrument) {
-          currentInstrument.triggerAttack(note);
-        }
-      }
-      if (key) key.classList.add('active');
-      activeNotes.add(note);
-      currentArpNotes.add(note);
-      if (isArpeggiating) {
-        updateArpeggiator();
-      }
-    }
-
-    function handleNoteOff(note, key) {
-      if (!isArpeggiating && currentInstrument) {
-        currentInstrument.triggerRelease(note);
-      }
-      if (key) key.classList.remove('active');
-      activeNotes.delete(note);
-      currentArpNotes.delete(note);
-      if (currentArpNotes.size === 0 && arpInterval) {
-        clearInterval(arpInterval);
-        arpInterval = null;
-        if (currentInstrument) {
-          currentInstrument.releaseAll();
-        }
-      }
-    }
-
-    // Add arpeggiator control listeners
-    document.getElementById('arpPattern').addEventListener('change', updateArpeggiator);
-    document.getElementById('arpSpeed').addEventListener('input', updateArpeggiator);
-
-    // Utility to enable/disable detune and oscillator knobs
-    function setSynthKnobsEnabled(enabled) {
-      const detune = document.getElementById('detune');
-      const oscillator = document.getElementById('oscillator');
-      detune.disabled = !enabled;
-      oscillator.disabled = !enabled;
-      detune.parentElement.style.opacity = enabled ? '1' : '0.5';
-      oscillator.parentElement.style.opacity = enabled ? '1' : '0.5';
-      detune.style.pointerEvents = enabled ? 'auto' : 'none';
-      oscillator.style.pointerEvents = enabled ? 'auto' : 'none';
-    }
-
-    // Update applyInstrument to release all notes and update knob state
-    function applyInstrument(instrumentName) {
-      if (currentInstrument && currentInstrument.releaseAll) {
-        currentInstrument.releaseAll(); // Release all notes from previous instrument
-      }
-      if (instrumentName === 'spaceOrgan') {
-        currentInstrument = synth;
-        setSynthKnobsEnabled(true);
-        console.log('Switched to space organ');
-      } else if (samplers[instrumentName]) {
-        currentInstrument = samplers[instrumentName];
-        setSynthKnobsEnabled(false);
-        console.log('Switched to', instrumentName);
-      }
-    }
-
-    // Randomize function
-    function randomizeSettings() {
-      const detuneValue = Math.random() * 2400 - 1200;
-      const filterValue = Math.random() * 4900 + 100;
-      const reverbValue = Math.random();
-      const distortionValue = Math.random();
-      const oscillatorValue = Math.floor(Math.random() * 4);
-
-      document.getElementById('detune').value = detuneValue;
-      document.getElementById('filter').value = filterValue;
-      document.getElementById('reverb').value = reverbValue;
-      document.getElementById('distortion').value = distortionValue;
-      document.getElementById('oscillator').value = oscillatorValue;
-
-      synth.detune.value = detuneValue;
-      filter.frequency.value = filterValue;
-      reverb.wet.value = reverbValue;
-      distortion.distortion = distortionValue;
-      synth.oscillator.type = oscillatorTypes[oscillatorValue];
-
-      document.getElementById('arpSpeed').value = 0.1 + Math.random() * 1.9;
-      const patterns = ['up', 'down', 'upDown', 'random', 'off'];
-      document.getElementById('arpPattern').value = patterns[Math.floor(Math.random() * patterns.length)];
-      updateArpeggiator();
-    }
-
-    // Add event listeners for instrument buttons
-    document.querySelectorAll('.instrument-btn').forEach(btn => {
-      btn.addEventListener('click', async () => {
-        const instrumentName = btn.dataset.instrument;
-        
-        // Remove active class from all buttons
-        document.querySelectorAll('.instrument-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-
-        try {
-          if (instrumentName === 'spaceOrgan') {
-            currentInstrument = synth;
-            applyInstrument(instrumentName);
-          } else if (samplers[instrumentName]) {
-            await Tone.start();
-            currentInstrument = samplers[instrumentName];
-            console.log(`Switched to ${instrumentName}`);
-          }
-        } catch (error) {
-          console.error(`Error switching to ${instrumentName}:`, error);
-          currentInstrument = synth;
-        }
-      });
-    });
-
-    // Add event listener for randomize button
-    document.querySelector('.randomize-btn').addEventListener('click', randomizeSettings);
-
-    // Initialize with spaceOrgan
-    applyInstrument('spaceOrgan');
-
-    const oscillatorTypes = ['sine', 'square', 'sawtooth', 'triangle'];
-
-    // Control changes
-    const oscillatorInput = document.getElementById('oscillator');
-    oscillatorInput.addEventListener('input', (e) => {
-      if (currentInstrument === synth) {
-        const type = oscillatorTypes[Math.floor(e.target.value)];
-        synth.set({
-          oscillator: { type }
-        });
-      }
-    });
-
-    // Update keyboard event listeners with improved handling
-    const keyboard = document.getElementById('keyboard');
-    const keys = keyboard.getElementsByClassName('key');
-    const keyMap = {
-      'a': 'C4', 'w': 'C#4', 's': 'D4', 'e': 'D#4', 'd': 'E4',
-      'f': 'F4', 't': 'F#4', 'g': 'G4', 'y': 'G#4', 'h': 'A4',
-      'u': 'A#4', 'j': 'B4', 'k': 'C5', 'o': 'C#5', 'l': 'D5',
-      'p': 'D#5', ';': 'E5'
-    };
-
-    Array.from(keys).forEach(key => {
-      const note = key.dataset.note;
-      
-      key.addEventListener('mousedown', () => {
-        isMouseDown = true;
-        handleNoteOn(note, key);
-      });
-      
-      key.addEventListener('mouseup', () => {
-        isMouseDown = false;
-        handleNoteOff(note, key);
-      });
-      
-      key.addEventListener('mouseleave', () => {
-        if (isMouseDown) {
-          handleNoteOff(note, key);
-        }
-      });
-      
-      key.addEventListener('mouseenter', () => {
-        if (isMouseDown) {
-          handleNoteOn(note, key);
-        }
-      });
-
-      key.addEventListener('touchstart', (e) => {
-        e.preventDefault();
-        handleNoteOn(note, key);
-      });
-      
-      key.addEventListener('touchend', (e) => {
-        e.preventDefault();
-        handleNoteOff(note, key);
-      });
-    });
-
-    // Update computer keyboard event listeners
-    const pressedKeys = new Set();
-    
-    document.addEventListener('keydown', (e) => {
-      if (e.repeat) return;
-      const note = keyMap[e.key.toLowerCase()];
-      if (note && !pressedKeys.has(e.key.toLowerCase())) {
-        pressedKeys.add(e.key.toLowerCase());
-        const key = Array.from(keys).find(k => k.dataset.note === note);
-        handleNoteOn(note, key);
-      }
-    });
-
-    document.addEventListener('keyup', (e) => {
-      const note = keyMap[e.key.toLowerCase()];
-      if (note) {
-        pressedKeys.delete(e.key.toLowerCase());
-        const key = Array.from(keys).find(k => k.dataset.note === note);
-        handleNoteOff(note, key);
-      }
-    });
-
-    // Update visualizer
-    function updateVisualizer() {
-      const waveform = analyser.getValue();
-      
-      for (let i = 0; i < bars.length; i++) {
-        const index = Math.floor(i * (waveform.length / bars.length));
-        const value = Math.abs(waveform[index]) * 200;
-        bars[i].style.height = `${value}%`;
-      }
-
-      requestAnimationFrame(updateVisualizer);
-    }
-    updateVisualizer();
-
-    // === Add knob event listeners ===
-    document.getElementById('detune').addEventListener('input', (e) => {
-      if (currentInstrument === synth) {
-        synth.set({ detune: parseFloat(e.target.value) });
-      }
-    });
-    document.getElementById('filter').addEventListener('input', (e) => {
-      filter.frequency.value = parseFloat(e.target.value);
-    });
-    document.getElementById('reverb').addEventListener('input', (e) => {
-      reverb.wet.value = parseFloat(e.target.value);
-    });
-    document.getElementById('distortion').addEventListener('input', (e) => {
-      distortion.distortion = parseFloat(e.target.value);
-    });
-    document.getElementById('volume').addEventListener('input', (e) => {
-      gain.gain.value = parseFloat(e.target.value);
-    });
-    document.getElementById('delay').addEventListener('input', (e) => {
-      delay.wet.value = parseFloat(e.target.value);
-    });
-    document.getElementById('delayTime').addEventListener('input', (e) => {
-      delay.delayTime.value = parseFloat(e.target.value);
-    });
-
-    // On page load, set initial knob state
-    setSynthKnobsEnabled(true);
-  </script>
+  <script src="common.js"></script>
 </body>
 </html>
