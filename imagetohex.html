@@ -72,4 +72,25 @@
 
 .tool-dropdown:hover .tool-link::after {
   transform: translateY(-50%) rotate(180deg);
-} 
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
+  margin: 0;
+  padding: 0;
+  z-index: 2;
+  transform: translateY(80px);
+  justify-content: center;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+<li class="tool-dropdown">
+  <a href="#" class="tool-link">Tools</a>
+  <div class="tool-dropdown-content">
+    <a href="colormatcher.html">Color Matcher</a>
+    <a href="tools.html">Image to Hex</a>
+  </div>
+</li> 
