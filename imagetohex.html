@@ -6,6 +6,17 @@
   <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Work+Sans:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="common.css">
   <style>
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      margin: 0;
+      font-family: 'Work Sans', sans-serif;
+      background: linear-gradient(to bottom, #e0eafc, #cfdef3 100%);
+      color: #222;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
     .tool-dropdown {
       display: block;
       position: relative;
@@ -103,6 +114,23 @@
   </style>
 </head>
 <body>
+  <header>
+    <nav class="navbar">
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li class="tool-dropdown">
+          <a href="#" class="tool-link">Tools</a>
+          <div class="tool-dropdown-content">
+            <a href="colormatcher.html">Color Matcher</a>
+            <a href="tools.html">Image to Hex</a>
+          </div>
+        </li>
+        <li><a href="music.html">Music</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
   <div class="content-container">
     <!-- Main tool content here -->
   </div>
