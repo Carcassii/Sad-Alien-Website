@@ -18,7 +18,7 @@ function createNavbar() {
         <li><a href="index.html">Home</a></li>
         <li><a href="about.html">About</a></li>
         <li class="tool-dropdown">
-          <a href="#" class="tool-link">Tools </a>
+          <a href="imagetohex.html" class="tool-link">Tools </a>
           <div class="tool-dropdown-content">
             <a href="colormatcher.html">Color Matcher</a>
             <a href="imagetohex.html">Image to Hex</a>
