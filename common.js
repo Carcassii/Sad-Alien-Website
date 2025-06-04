@@ -1,8 +1,9 @@
 // Function to create the navigation bar
 function createNavbar() {
+    const isHome = window.location.pathname.endsWith('index.html') || window.location.pathname === '/' || window.location.pathname === '/index.html';
     const navbar = `
     <nav class="navbar">
-      <h1 class="site-title">Sad Alien</h1>
+      ${isHome ? '<h1 class="site-title">Sad Alien</h1>' : ''}
       <ul class="nav-links">
         <li><a href="index.html">Home</a></li>
         <li><a href="about.html">About</a></li>
