@@ -186,9 +186,7 @@
       text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
     }
     .tool-dropdown {
-      display: flex;
-      align-items: center;
-      height: 100%;
+      display: block;
       position: relative;
     }
     .tool-dropdown-content {
@@ -197,8 +195,8 @@
       min-width: 170px;
       left: 50%;
       transform: translateX(-50%);
-      top: 110%;
-      background: #fff;
+      top: 100%;
+      background: rgba(138, 201, 38, 0.95);
       box-shadow: 0 4px 18px rgba(60, 117, 180, 0.13);
       border-radius: 12px;
       padding: 0.4rem 0;
@@ -208,7 +206,7 @@
     }
     .tool-dropdown-content a {
       background: none !important;
-      color: #3c75b4;
+      color: #fff;
       padding: 0.7rem 1.2rem;
       text-decoration: none;
       display: block;
@@ -221,17 +219,14 @@
       box-shadow: none;
     }
     .tool-dropdown-content a:hover {
-      background: #e0eafc;
+      background: #b6e35a;
       color: #255080;
     }
-    .tool-dropdown:hover .tool-dropdown-content,
-    .tool-dropdown:focus-within .tool-dropdown-content {
+    .tool-dropdown:hover .tool-dropdown-content {
       display: block;
     }
     .tool-link {
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: block;
       font-family: 'Patrick Hand', cursive;
       text-decoration: none;
       color: #fff;
@@ -248,6 +243,23 @@
       user-select: none;
       position: relative;
       z-index: 2;
+      padding-right: 2.2rem;
+    }
+    .tool-link::after {
+      content: '';
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0;
+      height: 0;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-top: 5px solid #fff;
+      transition: transform 0.3s ease;
+    }
+    .tool-dropdown:hover .tool-link::after {
+      transform: translateY(-50%) rotate(180deg);
     }
     .tool-link:hover, .tool-dropdown:focus-within .tool-link {
       transform: translateY(-2px) scale(1.1);

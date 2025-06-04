@@ -696,7 +696,7 @@
       min-width: 170px;
       left: 50%;
       transform: translateX(-50%);
-      top: calc(100% + 0.5rem); /* Slightly closer to the button */
+      top: 100%;
       background: rgba(138, 201, 38, 0.95);
       box-shadow: 0 4px 18px rgba(60, 117, 180, 0.13);
       border-radius: 12px;
@@ -726,8 +726,7 @@
       color: #255080;
     }
 
-    .tool-dropdown:hover .tool-dropdown-content,
-    .tool-dropdown:focus-within .tool-dropdown-content {
+    .tool-dropdown:hover .tool-dropdown-content {
       display: block;
     }
 
@@ -749,7 +748,7 @@
       user-select: none;
       position: relative;
       z-index: 2;
-      padding-right: 2.2rem; /* Make room for the arrow */
+      padding-right: 2.2rem;
     }
 
     .tool-link::after {
@@ -768,6 +767,13 @@
 
     .tool-dropdown:hover .tool-link::after {
       transform: translateY(-50%) rotate(180deg);
+    }
+
+    .tool-link:hover, .tool-dropdown:focus-within .tool-link {
+      transform: translateY(-2px) scale(1.1);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.3), 0 3px 6px rgba(0,0,0,0.2);
+      filter: brightness(1.1);
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
     }
   </style>
 </head>
