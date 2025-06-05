@@ -84,22 +84,36 @@ body {
 }
 
 .site-title {
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     font-family: 'Patrick Hand', cursive;
-    font-size: 8.25em; /* Default size for most screens */
+    font-size: 14.25em;
     color: #FFE66D;
     font-weight: 400;
-    text-align: center;
-    margin: 0 0 1rem 0;
-    animation: float 3.5s ease-in-out infinite, titleGlow 3s ease-in-out infinite;
     z-index: 2;
-  }
-  
-  /* Larger size for desktops */
-  @media (min-width: 1024px) {
+    text-align: center;
+    width: 100%;
+    margin: 0;
+    line-height: 1;
+    animation: float 3.5s ease-in-out infinite,
+               titleGlow 3s ease-in-out infinite;
+}
+
+/* Larger size for desktops */
+@media (min-width: 1024px) {
     .site-title {
-      font-size: 14.25em;
+        font-size: 14.25em;
     }
-  }
+}
+
+/* Smaller size for mobile */
+@media (max-width: 768px) {
+    .site-title {
+        font-size: 8.25em;
+    }
+}
 
 .nav-links {
     list-style: none;
