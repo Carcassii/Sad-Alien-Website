@@ -2,48 +2,30 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Image to Hex - Sad Alien Studios</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎨 Color Picker Tool</title>
+  <!-- Google Fonts -->
   <link
     href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Work+Sans:wght@400;600&display=swap"
     rel="stylesheet"
   >
-  <link rel="stylesheet" href="common.css">
   <style>
-    html {
-      scroll-behavior: smooth;
-    }
-    body {
+    /* ─── PAGE & TOOL STYLES ───────────────────────────────────────────────────── */
+    html, body {
       margin: 0;
-      font-family: 'Work Sans', sans-serif;
-      background: linear-gradient(
-        to bottom,
-        #0a1d37 0%,
-        #0a1d37 320px,
-        #3c75b4 460px,
-        #a0d2ff 640px,
-        #fffdf9 1000px,
-        #fffdf9 100%
-      );
-      color: #222;
+      padding: 0;
       min-height: 100vh;
-      overflow-x: hidden;
-    }
-    .content-container {
-      position: relative;
-      background: #fff;
-      border-radius: 16px;
-      padding: 40px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-      max-width: 800px;
-      margin: 120px auto 20px;
+      font-family: 'Work Sans', sans-serif;
+      background: linear-gradient(to bottom, #e0eafc, #cfdef3 100%);
       color: #222;
-      font-size: 1.1em;
-      line-height: 1.6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-    /* — Tool‐specific CSS (copied from tools.html) — */
+
     .container {
       background: #fff;
-      margin-top: 3rem;
+      margin: 2rem;
       padding: 2rem 2.5rem;
       border-radius: 18px;
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.10);
@@ -51,12 +33,14 @@
       width: 100%;
       text-align: center;
     }
+
     h1 {
       font-family: 'Patrick Hand', cursive;
       font-size: 2.2rem;
       margin-bottom: 1.5rem;
       color: #3c75b4;
     }
+
     .upload-label {
       display: inline-block;
       background: #3c75b4;
@@ -71,6 +55,7 @@
     .upload-label:hover {
       background: #255080;
     }
+
     #imageCanvas {
       display: block;
       margin: 1.5rem auto 1rem auto;
@@ -79,19 +64,16 @@
       max-width: 100%;
       background: #f4f4f4;
       cursor: crosshair;
-      position: relative;
-      z-index: 1;
     }
+
     .color-info {
       margin-top: 1.2rem;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 1rem;
-      position: relative;
-      z-index: 2;
-      width: 100%;
     }
+
     .color-preview {
       width: 36px;
       height: 36px;
@@ -100,6 +82,7 @@
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
       background: #fff;
     }
+
     .hex-code {
       font-family: 'Work Sans', monospace;
       font-size: 1.2rem;
@@ -110,91 +93,214 @@
       cursor: pointer;
       user-select: all;
       transition: background 0.2s;
-      z-index: 2;
     }
     .hex-code:active {
       background: #e0eafc;
     }
+
     .instructions {
       color: #666;
       font-size: 1rem;
       margin-top: 1.2rem;
     }
-    /* — End of tool‐specific CSS — */
+    /* ───────────────────────────────────────────────────────────────────────────── */
   </style>
 </head>
+
 <body>
-  <div class="content-container">
-    <div class="container">
-      <h1>🎨 Color Picker Tool</h1>
-      <label class="upload-label" for="imageInput">Upload Image</label>
-      <input
-        type="file"
-        id="imageInput"
-        accept="image/*"
-        style="display:none;"
-      >
-      <canvas id="imageCanvas" width="400" height="300"></canvas>
-      <div class="color-info" id="colorInfo" style="display:none;">
-        <div class="color-preview" id="colorPreview"></div>
-        <span class="hex-code" id="hexCode">#000000</span>
-      </div>
-      <div class="instructions">
-        Click anywhere on your image to get the hex color code!
-      </div>
+  <div class="container">
+    <h1>🎨 Color Picker Tool</h1>
+    <label class="upload-label" for="imageInput">Upload Image</label>
+    <input type="file" id="imageInput" accept="image/*" style="display: none;" />
+
+    <canvas id="imageCanvas" width="400" height="300"></canvas>
+
+    <div class="color-info" id="colorInfo" style="display: none;">
+      <div class="color-preview" id="colorPreview"></div>
+      <span class="hex-code" id="hexCode">#000000</span>
+    </div>
+
+    <div class="instructions">
+      Click (or click‐and‐drag) anywhere on your image to get the hex color code!
     </div>
   </div>
 
   <script>
-    // 1) Grab references to the DOM elements
-    const imageInput = document.getElementById('imageInput');
-    const canvas     = document.getElementById('imageCanvas');
-    const ctx        = canvas.getContext('2d');
+    // ─── VARIABLES & INITIAL SETUP ─────────────────────────────────────────────
+    const imageInput   = document.getElementById('imageInput');
+    const imageCanvas  = document.getElementById('imageCanvas');
+    const ctx          = imageCanvas.getContext('2d');
+    const colorInfo    = document.getElementById('colorInfo');
+    const colorPreview = document.getElementById('colorPreview');
+    const hexCode      = document.getElementById('hexCode');
 
-    // 2) When the user selects a file, read it as a Data URL
-    imageInput.addEventListener('change', (event) => {
-      const file = event.target.files[0];
+    let img = new Image();
+    let imgLoaded = false;
+    let lastHex = '#000000';
+    let isDragging = false;
+    let magnifierX = 0, magnifierY = 0;
+
+    // How large the magnifier circle is (in canvas pixels)
+    const MAGNIFIER_RADIUS = 50;
+    // How much to zoom into that circle
+    const MAGNIFIER_ZOOM = 4;
+
+    // When the user clicks the “Upload Image” label, forward to the hidden <input>
+    document.querySelector('.upload-label').onclick = () => {
+      imageInput.click();
+    };
+
+    // ─── LOAD IMAGE INTO CANVAS ─────────────────────────────────────────────────
+    imageInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
       if (!file) return;
-
-      // Only proceed if the file is an image
       if (!file.type.startsWith('image/')) {
         alert('Please select an image file.');
         return;
       }
 
       const reader = new FileReader();
-      reader.onload = (readerEvent) => {
-        const img = new Image();
+      reader.onload = function(ev) {
         img.onload = () => {
-          // Resize the canvas to match the image’s dimensions:
-          canvas.width  = img.width;
-          canvas.height = img.height;
-          // Draw the image at (0, 0):
-          ctx.drawImage(img, 0, 0);
+          imgLoaded = true;
+          // Scale the canvas so the image fits (max 400×400):
+          let scale = Math.min(400 / img.naturalWidth, 400 / img.naturalHeight, 1);
+          imageCanvas.width  = img.naturalWidth  * scale;
+          imageCanvas.height = img.naturalHeight * scale;
+
+          ctx.clearRect(0, 0, imageCanvas.width, imageCanvas.height);
+          ctx.drawImage(img, 0, 0, imageCanvas.width, imageCanvas.height);
         };
-        // Trigger the image’s onload by setting src to the Data URL
-        img.src = readerEvent.target.result;
+        img.src = ev.target.result;
       };
       reader.readAsDataURL(file);
     });
 
-    // 3) (Optional) Example: clicking the canvas to pick a pixel’s hex
-    canvas.addEventListener('click', (e) => {
-      // Compute click coordinates relative to canvas:
-      const rect = canvas.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
+    // ─── MOUSE POSITION & COLOR EXTRACTION ──────────────────────────────────────
+    function getCanvasCoordinates(e) {
+      const rect = imageCanvas.getBoundingClientRect();
+      const x = Math.floor((e.clientX - rect.left) * (imageCanvas.width / rect.width));
+      const y = Math.floor((e.clientY - rect.top)  * (imageCanvas.height / rect.height));
+      return { x, y };
+    }
 
-      const pixel = ctx.getImageData(x, y, 1, 1).data; 
-      const r = pixel[0], g = pixel[1], b = pixel[2];
-      // Convert to hex string:
-      const hex = '#' + [r, g, b].map(c => c.toString(16).padStart(2, '0')).join('');
-      // Show it in the <span id="hexCode">, and color‐preview:
-      document.getElementById('hexCode').textContent = hex;
-      document.getElementById('colorInfo').style.display = 'flex';
-      document.getElementById('colorPreview').style.background = hex;
+    function pickColorAt(e) {
+      if (!imgLoaded) return;
+      const { x, y } = getCanvasCoordinates(e);
+
+      // Ensure we don’t read outside the canvas
+      if (x < 0 || y < 0 || x >= imageCanvas.width || y >= imageCanvas.height) return;
+
+      const pixel = ctx.getImageData(x, y, 1, 1).data;
+      const hex = rgbToHex(pixel[0], pixel[1], pixel[2]);
+
+      colorPreview.style.background = hex;
+      hexCode.textContent = hex;
+      colorInfo.style.display = 'flex';
+      lastHex = hex;
+    }
+
+    // ─── MAGNIFIER DRAWING ───────────────────────────────────────────────────────
+    function drawMagnifier(cx, cy) {
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(cx, cy, MAGNIFIER_RADIUS, 0, Math.PI * 2);
+      ctx.closePath();
+      ctx.strokeStyle = '#3c75b4';
+      ctx.lineWidth = 3;
+      ctx.stroke();
+      ctx.clip();
+
+      // Source rectangle (a small area around the cursor)
+      const sx = cx - MAGNIFIER_RADIUS / MAGNIFIER_ZOOM;
+      const sy = cy - MAGNIFIER_RADIUS / MAGNIFIER_ZOOM;
+      const sWidth  = (MAGNIFIER_RADIUS * 2) / MAGNIFIER_ZOOM;
+      const sHeight = (MAGNIFIER_RADIUS * 2) / MAGNIFIER_ZOOM;
+
+      // Draw the zoomed‐in image beneath the circle
+      ctx.drawImage(
+        imageCanvas,
+        sx, sy, sWidth, sHeight,
+        cx - MAGNIFIER_RADIUS, cy - MAGNIFIER_RADIUS,
+        MAGNIFIER_RADIUS * 2, MAGNIFIER_RADIUS * 2
+      );
+      ctx.restore();
+    }
+
+    function redrawWithMagnifier() {
+      ctx.clearRect(0, 0, imageCanvas.width, imageCanvas.height);
+      ctx.drawImage(img, 0, 0, imageCanvas.width, imageCanvas.height);
+      if (isDragging) {
+        drawMagnifier(magnifierX, magnifierY);
+      }
+    }
+
+    function updateMagnifierPosition(e) {
+      const { x, y } = getCanvasCoordinates(e);
+      magnifierX = x;
+      magnifierY = y;
+    }
+
+    // ─── MOUSE EVENTS ON CANVAS ─────────────────────────────────────────────────
+    imageCanvas.addEventListener('mousedown', (e) => {
+      if (!imgLoaded) return;
+      isDragging = true;
+      updateMagnifierPosition(e);
+      pickColorAt(e);
+      redrawWithMagnifier();
     });
+
+    imageCanvas.addEventListener('mousemove', (e) => {
+      if (!imgLoaded || !isDragging) return;
+      updateMagnifierPosition(e);
+      pickColorAt(e);
+      redrawWithMagnifier();
+    });
+
+    imageCanvas.addEventListener('mouseup', (e) => {
+      if (!imgLoaded) return;
+      isDragging = false;
+      // Redraw the plain image & lock in the last color
+      ctx.clearRect(0, 0, imageCanvas.width, imageCanvas.height);
+      ctx.drawImage(img, 0, 0, imageCanvas.width, imageCanvas.height);
+      colorPreview.style.background = lastHex;
+      hexCode.textContent = lastHex;
+      colorInfo.style.display = 'flex';
+    });
+
+    imageCanvas.addEventListener('mouseleave', (e) => {
+      if (!imgLoaded) return;
+      isDragging = false;
+      // Redraw the plain image & lock in the last color
+      ctx.clearRect(0, 0, imageCanvas.width, imageCanvas.height);
+      ctx.drawImage(img, 0, 0, imageCanvas.width, imageCanvas.height);
+      colorPreview.style.background = lastHex;
+      hexCode.textContent = lastHex;
+      colorInfo.style.display = 'flex';
+    });
+
+    // ─── COPY HEX CODE ON CLICK ──────────────────────────────────────────────────
+    hexCode.addEventListener('click', () => {
+      navigator.clipboard.writeText(hexCode.textContent);
+      hexCode.textContent = hexCode.textContent.replace(' ✓', '') + ' ✓';
+      setTimeout(() => {
+        hexCode.textContent = hexCode.textContent.replace(' ✓', '');
+      }, 1000);
+    });
+
+    // ─── RGB → HEX UTILITY ──────────────────────────────────────────────────────
+    function rgbToHex(r, g, b) {
+      return (
+        '#' +
+        [r, g, b]
+          .map((c) => {
+            const hex = c.toString(16);
+            return hex.length === 1 ? '0' + hex : hex;
+          })
+          .join('')
+      ).toUpperCase();
+    }
+    // ─────────────────────────────────────────────────────────────────────────────
   </script>
-  <script src="common.js"></script>
 </body>
-</html> 
+</html>
