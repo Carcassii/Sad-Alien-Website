@@ -18,7 +18,6 @@ function createNavbar() {
       </ul>
     </nav>`;
     document.body.insertAdjacentHTML('afterbegin', navbar);
-    // Only on homepage, move svg-container into navbar
     if (isHome) {
         const navbarElem = document.querySelector('.navbar');
         const svgContainer = document.getElementById('svg-container');
