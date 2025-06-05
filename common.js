@@ -1,6 +1,8 @@
 // Function to create the navigation bar
 function createNavbar() {
-    const isHome = window.location.pathname.endsWith('index.html') || window.location.pathname === '/' || window.location.pathname === '/index.html';
+    const isHome = window.location.href.includes('index.html') || window.location.pathname === '/';
+    console.log('isHome?', isHome);
+    
     const navbar = `
 <nav class="navbar">
   <div class="navbar-inner">
