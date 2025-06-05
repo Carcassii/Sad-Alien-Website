@@ -92,7 +92,6 @@ body {
     top: 45%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 100%;
     margin: 0;
     line-height: 1;
     animation: float 3.5s ease-in-out infinite, titleGlow 3s ease-in-out infinite;
