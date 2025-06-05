@@ -83,15 +83,17 @@ body {
     height: 100%;
 }
 
-.site-title {
-    font-family: 'Patrick Hand', cursive;
-    font-size: 8.25em; /* Default size for most screens */
-    color: #FFE66D;
-    font-weight: 400;
-    text-align: center;
-    margin: 0 0 1rem 0;
+.navbar .site-title {
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    margin: 0;
+    line-height: 1;
+    /* Keep the same font-size and animations: */
+    font-size: 14.25em; /* matches desktop value from contact.html */
     animation: float 3.5s ease-in-out infinite, titleGlow 3s ease-in-out infinite;
-    z-index: 2;
   }
   
   /* Larger size for desktops */
