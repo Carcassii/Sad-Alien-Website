@@ -144,6 +144,57 @@
       </div>
     </div>
   </div>
+
+  <script>
+    // 1) Grab references to the DOM elements
+    const imageInput = document.getElementById('imageInput');
+    const canvas     = document.getElementById('imageCanvas');
+    const ctx        = canvas.getContext('2d');
+
+    // 2) When the user selects a file, read it as a Data URL
+    imageInput.addEventListener('change', (event) => {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      // Only proceed if the file is an image
+      if (!file.type.startsWith('image/')) {
+        alert('Please select an image file.');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (readerEvent) => {
+        const img = new Image();
+        img.onload = () => {
+          // Resize the canvas to match the image’s dimensions:
+          canvas.width  = img.width;
+          canvas.height = img.height;
+          // Draw the image at (0, 0):
+          ctx.drawImage(img, 0, 0);
+        };
+        // Trigger the image’s onload by setting src to the Data URL
+        img.src = readerEvent.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+
+    // 3) (Optional) Example: clicking the canvas to pick a pixel’s hex
+    canvas.addEventListener('click', (e) => {
+      // Compute click coordinates relative to canvas:
+      const rect = canvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      const pixel = ctx.getImageData(x, y, 1, 1).data; 
+      const r = pixel[0], g = pixel[1], b = pixel[2];
+      // Convert to hex string:
+      const hex = '#' + [r, g, b].map(c => c.toString(16).padStart(2, '0')).join('');
+      // Show it in the <span id="hexCode">, and color‐preview:
+      document.getElementById('hexCode').textContent = hex;
+      document.getElementById('colorInfo').style.display = 'flex';
+      document.getElementById('colorPreview').style.background = hex;
+    });
+  </script>
   <script src="common.js"></script>
 </body>
 </html> 
