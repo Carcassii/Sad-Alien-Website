@@ -6,130 +6,112 @@
   <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Work+Sans:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="common.css">
   <style>
-    html {
-      scroll-behavior: smooth;
-    }
     body {
-      margin: 0;
+      background: linear-gradient(to bottom, #e0eafc, #cfdef3 100%);
       font-family: 'Work Sans', sans-serif;
-      background: linear-gradient(to bottom, #0a1d37 0%, #0a1d37 320px, #3c75b4 460px, #a0d2ff 640px, #fffdf9 1000px, #fffdf9 100%);
-      color: #222;
+      margin: 0;
       min-height: 100vh;
-      overflow-x: hidden;
-    }
-    .content-container {
-      position: relative;
-      background: #fff;
-      border-radius: 16px;
-      padding: 40px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-      max-width: 800px;
-      margin: 120px auto 20px;
       color: #222;
-      font-size: 1.1em;
-      line-height: 1.6;
-    }
-    .tool-dropdown {
-      display: block;
-      position: relative;
-    }
-    .tool-dropdown-content {
-      display: none;
-      position: absolute;
-      min-width: 170px;
-      left: 50%;
-      transform: translateX(-50%);
-      top: 100%;
-      background: rgba(138, 201, 38, 0.95);
-      box-shadow: 0 4px 18px rgba(60, 117, 180, 0.13);
-      border-radius: 12px;
-      padding: 0.4rem 0;
-      border: none;
-      z-index: 100;
-      transition: opacity 0.18s;
-    }
-    .tool-dropdown-content a {
-      background: none !important;
-      color: #fff;
-      padding: 0.7rem 1.2rem;
-      text-decoration: none;
-      display: block;
-      font-family: 'Work Sans', sans-serif;
-      font-size: 1.08rem;
-      border-radius: 8px;
-      transition: background 0.18s, color 0.18s;
-      margin: 0 0.3rem;
-      text-align: left;
-      box-shadow: none;
-    }
-    .tool-dropdown-content a:hover {
-      background: #b6e35a;
-      color: #255080;
-    }
-    .tool-dropdown:hover .tool-dropdown-content {
-      display: block;
-    }
-    .tool-link {
-      display: block;
-      font-family: 'Patrick Hand', cursive;
-      text-decoration: none;
-      color: #fff;
-      padding: 0.8rem 1.4rem;
-      border-radius: 16px;
-      min-width: 100px;
-      text-align: center;
-      background: rgba(138, 201, 38, 0.85);
-      border: 1px solid rgba(255,255,255,0.2);
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2), 0 2px 4px rgba(0,0,0,0.1);
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
-      transition: all 0.3s ease;
-      cursor: pointer;
-      user-select: none;
-      position: relative;
-      z-index: 2;
-      padding-right: 2.2rem;
-    }
-    .tool-link::after {
-      content: '';
-      position: absolute;
-      right: 1rem;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 0;
-      height: 0;
-      border-left: 5px solid transparent;
-      border-right: 5px solid transparent;
-      border-top: 5px solid #fff;
-      transition: transform 0.3s ease;
-    }
-    .tool-dropdown:hover .tool-link::after {
-      transform: translateY(-50%) rotate(180deg);
-    }
-    .tool-link:hover, .tool-dropdown:focus-within .tool-link {
-      transform: translateY(-2px) scale(1.1);
-      box-shadow: 0 6px 12px rgba(0,0,0,0.3), 0 3px 6px rgba(0,0,0,0.2);
-      filter: brightness(1.1);
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-    }
-    .nav-links {
-      list-style: none;
       display: flex;
-      gap: 1.5rem;
-      margin: 0;
-      padding: 0;
-      z-index: 2;
-      transform: translateY(80px);
-      justify-content: center;
-      flex-wrap: wrap;
+      flex-direction: column;
       align-items: center;
+      justify-content: flex-start;
+    }
+    .container {
+      background: #fff;
+      margin-top: 3rem;
+      padding: 2rem 2.5rem;
+      border-radius: 18px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+      max-width: 480px;
+      width: 100%;
+      text-align: center;
+    }
+    h1 {
+      font-family: 'Patrick Hand', cursive;
+      font-size: 2.2rem;
+      margin-bottom: 1.5rem;
+      color: #3c75b4;
+    }
+    .upload-label {
+      display: inline-block;
+      background: #3c75b4;
+      color: #fff;
+      padding: 0.7rem 1.5rem;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      margin-bottom: 1.5rem;
+      transition: background 0.2s;
+    }
+    .upload-label:hover {
+      background: #255080;
+    }
+    #imageCanvas {
+      display: block;
+      margin: 1.5rem auto 1rem auto;
+      border-radius: 12px;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+      max-width: 100%;
+      background: #f4f4f4;
+      cursor: crosshair;
+      position: relative;
+      z-index: 1;
+    }
+    .color-info {
+      margin-top: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      position: relative;
+      z-index: 2;
+      width: 100%;
+    }
+    .color-preview {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      border: 2px solid #ccc;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      background: #fff;
+    }
+    .hex-code {
+      font-family: 'Work Sans', monospace;
+      font-size: 1.2rem;
+      background: #f4f4f4;
+      padding: 0.4rem 0.8rem;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      cursor: pointer;
+      user-select: all;
+      transition: background 0.2s;
+      z-index: 2;
+    }
+    .hex-code:active {
+      background: #e0eafc;
+    }
+    .instructions {
+      color: #666;
+      font-size: 1rem;
+      margin-top: 1.2rem;
     }
   </style>
 </head>
 <body>
-  
-  
+
   <div class="content-container">
-    <!-- Main tool content here, centered -->
+    <div class="container">
+      <h1>🎨 Color Picker Tool</h1>
+      <label class="upload-label" for="imageInput">Upload Image</label>
+      <input type="file" id="imageInput" accept="image/*" style="display:none;">
+      <canvas id="imageCanvas" width="400" height="300"></canvas>
+      <div class="color-info" id="colorInfo" style="display:none;">
+        <div class="color-preview" id="colorPreview"></div>
+        <span class="hex-code" id="hexCode">#000000</span>
+      </div>
+      <div class="instructions">Click anywhere on your image to get the hex color code!</div>
+    </div>
   </div>
   <script src="common.js"></script>
 </body>
