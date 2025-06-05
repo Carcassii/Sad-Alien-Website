@@ -27,6 +27,8 @@
       padding-bottom: 1rem;
       box-shadow: 0 4px 12px rgba(0,0,0,0.3);
       z-index: 1000;
+      max-height: 320px;
+      overflow: visible;
     }
     .navbar::before {
       content: "";
@@ -96,6 +98,8 @@
       width: 100%;
       left: 0;
       top: 0;
+      max-height: 320px;
+      overflow: visible;
     }
     .spaceship {
       position: absolute;
@@ -921,12 +925,12 @@
         spaceship.style.pointerEvents = 'none';
         spaceship.style.zIndex = 2;
 
-        // Leave a bright yellow star every starInterval px
+        // Leave a tidy, smaller yellow star every starInterval px
         if (progress - lastStarDist >= starInterval) {
           lastStarDist = progress;
           const star = document.createElement('div');
           star.className = 'star';
-          const size = 12 + Math.random() * 8; // 12-20px
+          const size = 6 + Math.random() * 4; // 6-10px
           star.style.left = `${pos.x - size / 2}px`;
           star.style.top = `${pos.y - size / 2}px`;
           star.style.width = `${size}px`;
@@ -935,8 +939,8 @@
           star.style.borderRadius = '50%';
           star.style.position = 'absolute';
           star.style.zIndex = 1;
-          star.style.boxShadow = '0 0 24px 8px #fff, 0 0 48px 16px #ffe066, 0 0 64px 32px #fff';
-          star.style.filter = 'brightness(1.5) drop-shadow(0 0 8px #fff)';
+          star.style.boxShadow = '0 0 12px 4px #fff, 0 0 24px 8px #ffe066';
+          star.style.filter = 'brightness(1.3)';
           svg.parentNode.appendChild(star);
         }
 
