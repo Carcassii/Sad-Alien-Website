@@ -85,14 +85,21 @@ body {
 
 .site-title {
     font-family: 'Patrick Hand', cursive;
-    font-size: 4em;
+    font-size: 8.25em; /* Default size for most screens */
     color: #FFE66D;
     font-weight: 400;
     text-align: center;
     margin: 0 0 1rem 0;
     animation: float 3.5s ease-in-out infinite, titleGlow 3s ease-in-out infinite;
     z-index: 2;
-}
+  }
+  
+  /* Larger size for desktops */
+  @media (min-width: 1024px) {
+    .site-title {
+      font-size: 14.25em;
+    }
+  }
 
 .nav-links {
     list-style: none;
