@@ -30,6 +30,11 @@ function createNavbar() {
     }
 }
 
+// Wait for the DOM to be fully loaded before creating the navbar
+document.addEventListener('DOMContentLoaded', function() {
+    createNavbar();
+});
+
 // Function to create stars
 function createStars() {
     const navbar = document.querySelector('.navbar');
@@ -51,6 +56,5 @@ function createStars() {
 
 // Initialize when the page loads
 window.addEventListener('load', () => {
-    createNavbar();
     createStars();
 }); 
