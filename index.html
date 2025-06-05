@@ -17,30 +17,7 @@
       color: #222;
       overflow-x: hidden;
     }
-    body#index-home .nav-links {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 1.5rem;
-    margin: 0;
-    padding: 0;
-    z-index: 2;
-    transform: translateY(80px); 
-    }
-    body#index-home .navbar::before {
-      position: absolute;       /* make the UL span the entire header */
-      bottom: 20px;             /* (or whatever vertical offset you already have) */
-      left: 0;                  /* pin to the left edge */
-      right: 0;                 /* pin to the right edge */
-      display: flex;
-      justify-content: center;  /* now that it's full-width, centering will work */
-      align-items: center;
-      gap: 1.5rem;
-      margin: 0;
-      padding: 0 0.5rem;        /* you can keep your side padding if you like */
-      z-index: 2;
-      transform: translateY(80px); /* keep the downward shift you added */
-    }
+ 
     body#index-home .nav-links {
       display: flex;
       justify-content: center;
