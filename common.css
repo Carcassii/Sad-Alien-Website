@@ -292,9 +292,3 @@ body {
     opacity: 0;
     cursor: pointer;
   }
-
-.content {
-    position: relative;
-    z-index: 1;
-    margin-top: 320px; /* Height of navbar */
-}
