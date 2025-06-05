@@ -23,7 +23,15 @@ function createNavbar() {
   </div>
 </nav>`;
 
-
+document.body.insertAdjacentHTML('afterbegin', navbar);
+if (isHome) {
+    const navbarElem = document.querySelector('.navbar');
+    const svgContainer = document.getElementById('svg-container');
+    if (navbarElem && svgContainer) {
+        navbarElem.appendChild(svgContainer);
+    }
+}
+}
 // Function to create stars
 function createStars() {
     const navbar = document.querySelector('.navbar');
