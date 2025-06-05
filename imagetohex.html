@@ -167,7 +167,6 @@
           accept="image/*"
         >
       </label>
-      <input type="file" id="imageInput" accept="image/*" style="display:none;" />
       <canvas id="imageCanvas" width="400" height="300"></canvas>
       <div class="color-info" id="colorInfo" style="display:none;">
         <div class="color-preview" id="colorPreview"></div>
@@ -240,12 +239,12 @@
       return { x, y };
     }
 
-    // ─── Given a click or drag event, pick that pixel’s color ───────────────
+    // ─── Given a click or drag event, pick that pixel's color ───────────────
     function pickColorAt(e) {
       if (!imgLoaded) return;
       const { x, y } = getCanvasCoordinates(e);
 
-      // Make sure we’re within canvas bounds
+      // Make sure we're within canvas bounds
       if (x < 0 || y < 0 || x >= imageCanvas.width || y >= imageCanvas.height) return;
 
       const pixel = ctx.getImageData(x, y, 1, 1).data;
