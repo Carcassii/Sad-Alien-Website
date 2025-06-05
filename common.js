@@ -28,7 +28,7 @@ function createNavbar() {
         existingNav.remove();
     }
 
-    // Insert the new navbar
+    // Insert the new navbar at the very beginning of the body
     document.body.insertAdjacentHTML('afterbegin', navbar);
 }
 
@@ -57,8 +57,23 @@ function createStars() {
     }
 }
 
+// Function to ensure content doesn't overlap with navbar
+function adjustContent() {
+    const content = document.querySelector('.content');
+    if (content) {
+        content.style.marginTop = '320px'; // Height of navbar
+    }
+}
+
 // Initialize when the DOM is fully loaded
-document.addEventListener('DOMContentLoaded', () => {
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initialize);
+} else {
+    initialize();
+}
+
+function initialize() {
     createNavbar();
     createStars();
-}); 
+    adjustContent();
+} 
