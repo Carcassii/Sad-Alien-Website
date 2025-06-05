@@ -70,19 +70,29 @@
     }
 
     .upload-label {
-      display: inline-block;
-      background: #3c75b4;
-      color: #fff;
-      padding: 0.7rem 1.5rem;
-      border-radius: 10px;
-      cursor: pointer;
-      font-size: 1.1rem;
-      margin-bottom: 1.5rem;
-      transition: background 0.2s;
-    }
-    .upload-label:hover {
-      background: #255080;
-    }
+    display: inline-block;
+    background: #3c75b4;
+    color: #fff;
+    padding: 0.7rem 1.5rem;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    position: relative; /* so the input can be absolutely positioned inside */
+    user-select: none;
+    transition: background 0.2s;
+  }
+  .upload-label:hover {
+    background: #255080;
+  }
+  .upload-label input[type="file"] {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+  }
 
     #imageCanvas {
       display: block;
@@ -149,7 +159,14 @@
   <div class="content-container">
     <div class="container">
       <h1>🎨 Color Picker Tool</h1>
-      <label class="upload-label" for="imageInput">Upload Image</label>
+      <label class="upload-label">
+        Upload Image
+        <input
+          type="file"
+          id="imageInput"
+          accept="image/*"
+        >
+      </label>
       <input type="file" id="imageInput" accept="image/*" style="display:none;" />
       <canvas id="imageCanvas" width="400" height="300"></canvas>
       <div class="color-info" id="colorInfo" style="display:none;">
