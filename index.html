@@ -221,176 +221,6 @@
       }
     }
 
-    /* Add responsive design */
-    @media screen and (max-width: 768px) {
-
-
-      body#index-home .nav-links a {
-        padding: 0.5rem 0.6rem;
-        font-size: 0.9rem;
-        min-width: auto;
-      }
-
-      body#index-home .svg-container {
-        position: absolute;
-        left: -65%;
-        width: 140%;
-        height: 280px;
-        transform: scale(0.45);
-        transform-origin: center top;
-      }
-
-      #trail-svg {
-        width: 100%;
-        height: 280px;
-      }
-
-      .spaceship {
-        width: 40px;
-      }
-
-      .particle {
-        width: 4px;
-        height: 4px;
-      }
-    }
-
-    @media screen and (max-width: 480px) {
-      body#index-home .navbar {
-        height: 260px;
-      }
-
-      body#index-home .nav-links {
-        gap: 0.6rem;
-      }
-
-      body#index-home .nav-links a {
-        padding: 0.3rem 0.6rem;
-        font-size: 0.85rem;
-      }
-
-      body#index-home .svg-container {
-        left: -80%;
-        width: 150%;
-        height: 260px;
-        transform: scale(0.31);
-        transform-origin: center top;
-      }
-
-      #trail-svg {
-        height: 260px;
-      }
-
-      .spaceship {
-        width: 35px;
-      }
-    }
-
-    /* Make content responsive */
-    .content {
-      text-align: center;
-      padding: 4rem 1rem 1rem; /* Adjusted padding for mobile */
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    .title-section {
-      margin: 2rem auto 4rem;
-      max-width: 800px;
-      padding: 2rem;
-      background: rgba(255, 255, 255, 0.8);
-      border-radius: 20px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-      backdrop-filter: blur(8px);
-    }
-
-    .title-section h1 {
-      font-family: 'Patrick Hand', cursive;
-      font-size: 3.5rem;
-      margin: 0 0 1rem;
-      color: #e74c3c; /* A friendly, vibrant red */
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-    }
-
-    .title-section .subtitle {
-      font-size: 1.4rem;
-      line-height: 1.6;
-      margin: 0;
-      color: #3c75b4;
-      font-family: 'Work Sans', sans-serif;
-      font-weight: 600;
-    }
-
-    @media screen and (max-width: 768px) {
-      .title-section {
-        margin: 1.5rem 1rem 3rem;
-        padding: 1.5rem;
-      }
-
-      .title-section h1 {
-        font-size: 2.5rem;
-      }
-
-      .title-section .subtitle {
-        font-size: 1.2rem;
-      }
-    }
-
-    .description {
-      text-align: center;
-      max-width: 800px;
-      margin: 4rem auto;
-      padding: 2rem;
-      background: rgba(255, 255, 255, 0.8);
-      border-radius: 20px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-      backdrop-filter: blur(8px);
-    }
-    
-    .description p {
-      font-size: 1.2rem;
-      line-height: 1.8;
-      margin: 0;
-      color: #333;
-    }
-
-    @media screen and (max-width: 768px) {
-      .description {
-        margin: 3rem 1rem;
-        padding: 1.5rem;
-      }
-      
-      .description p {
-        font-size: 1.1rem;
-        line-height: 1.6;
-      }
-    }
-
-    .trailer iframe {
-      width: 100%; /* Full width on mobile */
-      max-width: 720px;
-      height: 56.25vw; /* Maintain 16:9 aspect ratio */
-      max-height: 405px;
-      border: none;
-      border-radius: 12px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-    }
-
-    .screenshot-gallery {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 1rem;
-      padding: 0 1rem;
-      margin-top: 2rem;
-    }
-
-    .screenshot-gallery img {
-      width: 100%;
-      height: auto;
-      border-radius: 12px;
-      transition: transform 0.3s ease;
-    }
-
     /* Modal styles */
     .modal-backdrop {
       display: none;
@@ -492,27 +322,6 @@
       right: 20px;
     }
 
-    @media screen and (max-width: 768px) {
-      .modal {
-        width: 95vw;
-        height: 75vh;
-        padding: 10px;
-      }
-      
-      .modal-nav {
-        padding: 15px 12px;
-        font-size: 20px;
-      }
-      
-      .modal-prev {
-        left: 10px;
-      }
-      
-      .modal-next {
-        right: 10px;
-      }
-    }
-
     .intro-balloon {
       margin: 2rem auto 2.5rem;
       max-width: 800px;
@@ -570,21 +379,7 @@
       color: #333;
       margin: 0;
     }
-    @media screen and (max-width: 768px) {
-      .intro-balloon {
-        margin: 1.5rem 1rem 2rem;
-        padding: 1.5rem 0.7rem;
-      }
-      .intro-balloon h1 {
-        font-size: 2.7rem;
-      }
-      .intro-balloon .subtitle {
-        font-size: 1.1rem;
-      }
-      .intro-balloon .description-text {
-        font-size: 1rem;
-      }
-    }
+
     .trailer h2,
     .screenshots h2 {
       font-family: 'Patrick Hand', cursive;
@@ -601,12 +396,7 @@
     .screenshots h2 {
       font-size: 2.1rem;
     }
-    @media screen and (max-width: 768px) {
-      .trailer h2,
-      .screenshots h2 {
-        font-size: 1.5rem;
-      }
-    }
+
     .section-bubble {
       margin: 2.5rem auto 2.5rem;
       max-width: 900px;
@@ -623,17 +413,7 @@
       position: relative;
       z-index: 2;
     }
-    @media screen and (max-width: 768px) {
-      .section-bubble {
-        margin: 1.2rem 0.5rem 1.5rem;
-        padding: 0.7rem 0.2rem 1.2rem 0.2rem;
-        border-radius: 12px;
-      }
-      .section-bubble h2 {
-        margin-top: 0.2rem;
-        margin-bottom: 1rem;
-      }
-    }
+
     .tool-dropdown {
       display: block;
       position: relative;
