@@ -198,11 +198,6 @@
     // How much to zoom into that circle
     const MAGNIFIER_ZOOM = 4;
 
-    // Clicking the “Upload Image” label opens the hidden <input>
-    document.querySelector('.upload-label').onclick = () => {
-      imageInput.click();
-    };
-
     // ─── Load the image into the canvas ────────────────────────────────────
     imageInput.addEventListener('change', (e) => {
       const file = e.target.files[0];
