@@ -22,7 +22,16 @@ function createNavbar() {
     </ul>
   </div>
 </nav>`;
+
+    // Remove any existing navbar first
+    const existingNav = document.querySelector('.navbar');
+    if (existingNav) {
+        existingNav.remove();
+    }
+
+    // Insert the new navbar at the very beginning of the body
     document.body.insertAdjacentHTML('afterbegin', navbar);
+
     if (isHome) {
         const navbarElem = document.querySelector('.navbar');
         const svgContainer = document.getElementById('svg-container');
@@ -35,6 +44,12 @@ function createNavbar() {
 // Function to create stars
 function createStars() {
     const navbar = document.querySelector('.navbar');
+    if (!navbar) return; // Exit if navbar doesn't exist
+    
+    // Remove existing stars
+    const existingStars = document.querySelectorAll('.star');
+    existingStars.forEach(star => star.remove());
+    
     const numStars = 200;
     
     for (let i = 0; i < numStars; i++) {
@@ -51,9 +66,10 @@ function createStars() {
     }
 }
 
-
-// Initialize when the page loads
-window.addEventListener('load', () => {
+// Initialize when the DOM is fully loaded
+document.addEventListener('DOMContentLoaded', () => {
+    // Create navbar first
     createNavbar();
+    // Then create stars
     createStars();
 }); 
