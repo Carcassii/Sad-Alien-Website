@@ -92,7 +92,7 @@
       text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
     }
     .svg-container {
-      position: absolute;
+      position: relative;
       top: 0;
       left: 10%;
       width: 100%;
@@ -924,7 +924,7 @@
         spaceship.style.pointerEvents = 'none';
         spaceship.style.zIndex = 2;
 
-        // Leave a super bright glowing star every starInterval px
+        // Leave a bright yellow star every starInterval px
         if (progress - lastStarDist >= starInterval) {
           lastStarDist = progress;
           const star = document.createElement('div');
@@ -934,15 +934,12 @@
           star.style.top = `${pos.y - size / 2}px`;
           star.style.width = `${size}px`;
           star.style.height = `${size}px`;
-          star.style.background = '#fff';
+          star.style.background = 'radial-gradient(circle, #ffe066 60%, #fff 100%)';
           star.style.borderRadius = '50%';
           star.style.position = 'absolute';
           star.style.zIndex = 1;
-          star.style.boxShadow = `
-            0 0 0 4px #fff,
-            0 0 16px 8px #fff,
-            0 0 32px 16px #fff
-          `;
+          star.style.boxShadow = '0 0 24px 8px #fff, 0 0 48px 16px #ffe066, 0 0 64px 32px #fff';
+          star.style.filter = 'brightness(1.5) drop-shadow(0 0 8px #fff)';
           svg.parentNode.appendChild(star);
         }
 
