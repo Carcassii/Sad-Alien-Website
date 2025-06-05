@@ -88,7 +88,7 @@ body {
     font-size: 8.25em; /* Default size for most screens */
     color: #FFE66D;
     font-weight: 400;
-    position: absolute;
+    position: center;
     top: 45%;
     left: 50%;
     transform: translate(-50%, -50%);
