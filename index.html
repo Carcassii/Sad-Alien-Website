@@ -906,6 +906,7 @@
       const starInterval = 18; // px along path between stars
       let lastStarDist = 0;
       let lastTimestamp = null;
+      let finished = false;
 
       function animateSpaceship(timestamp) {
         if (!lastTimestamp) lastTimestamp = timestamp;
@@ -924,15 +925,15 @@
         spaceship.style.pointerEvents = 'none';
         spaceship.style.zIndex = 2;
 
-        // Leave a star every starInterval px
+        // Leave a bigger star every starInterval px
         if (progress - lastStarDist >= starInterval) {
           lastStarDist = progress;
           const star = document.createElement('div');
           star.className = 'star';
-          star.style.left = `${pos.x}px`;
-          star.style.top = `${pos.y}px`;
-          star.style.width = '2px';
-          star.style.height = '2px';
+          star.style.left = `${pos.x - 4}px`;
+          star.style.top = `${pos.y - 4}px`;
+          star.style.width = '8px';
+          star.style.height = '8px';
           star.style.position = 'absolute';
           star.style.zIndex = 1;
           svg.parentNode.appendChild(star);
@@ -940,7 +941,35 @@
 
         if (progress < totalLength) {
           requestAnimationFrame(animateSpaceship);
+        } else if (!finished) {
+          finished = true;
+          flyAway(pos, angle);
         }
+      }
+
+      function flyAway(pos, angle) {
+        // Animate spaceship flying to the right
+        let flyProgress = 0;
+        const flyDuration = 1500; // ms
+        const startX = pos.x;
+        const startY = pos.y;
+        const endX = startX + 500; // fly 500px to the right
+        const endY = startY - 80; // slight upward angle
+        function animateFlyAway(ts) {
+          if (!animateFlyAway.start) animateFlyAway.start = ts;
+          const t = Math.min((ts - animateFlyAway.start) / flyDuration, 1);
+          const x = startX + (endX - startX) * t;
+          const y = startY + (endY - startY) * t;
+          spaceship.style.left = `${x - spaceship.width / 2}px`;
+          spaceship.style.top = `${y - spaceship.height / 2}px`;
+          spaceship.style.transform = `rotate(${angle + 30}deg)`;
+          if (t < 1) {
+            requestAnimationFrame(animateFlyAway);
+          } else {
+            spaceship.style.opacity = '0';
+          }
+        }
+        requestAnimationFrame(animateFlyAway);
       }
 
       // Position spaceship at start
