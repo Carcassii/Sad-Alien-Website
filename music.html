@@ -1,17 +1,739 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Music – Sad Alien</title>
-  <link rel="stylesheet" href="common.css" />
-  <link rel="stylesheet" href="music.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <title>Music - Sad Alien Studios</title>
+  <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Work+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="common.css">
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      margin: 0;
+      font-family: 'Work Sans', sans-serif;
+      background: linear-gradient(to bottom, #0a1d37 0%, #0a1d37 320px, #3c75b4 460px, #a0d2ff 640px, #fffdf9 1000px, #fffdf9 100%);
+      color: #fff;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .star {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: #fff;
+      border-radius: 50%;
+      animation: twinkle var(--twinkle-duration) ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.2; transform: scale(0.8); }
+      50% { opacity: 1; transform: scale(1.2); }
+    }
+
+    .navbar {
+      position: relative;
+      height: 320px;
+      background: #0a1d37;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      padding-bottom: 1rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      z-index: 1000;
+    }
+
+    .navbar::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: none;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    @keyframes float {
+      0%, 100% { 
+        transform: translate(-50%, -50%); 
+      }
+      50% { 
+        transform: translate(-50%, calc(-50% - 10px)); 
+      }
+    }
+
+    @keyframes titleGlow {
+      0%, 100% {
+        text-shadow: 0 0 5px #FFE66D,
+                     0 0 10px #FFA500,
+                     0 0 15px rgba(255, 165, 0, 0.3);
+      }
+      50% {
+        text-shadow: 0 0 10px #FFE66D,
+                     0 0 20px #FFA500,
+                     0 0 30px rgba(255, 165, 0, 0.6);
+      }
+    }
+
+    .site-title {
+      position: absolute;
+      top: 45%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: 'Patrick Hand', cursive;
+      font-size: 14.25em;
+      color: #FFE66D;
+      font-weight: 400;
+      z-index: 2;
+      text-align: center;
+      width: 100%;
+      margin: 0;
+      line-height: 1;
+      animation: float 3.5s ease-in-out infinite,
+                 titleGlow 3s ease-in-out infinite;
+    }
+
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 1.5rem;
+      margin: 0;
+      padding: 0;
+      z-index: 2;
+      transform: translateY(80px);
+      justify-content: center;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .nav-links a {
+      font-family: 'Patrick Hand', cursive;
+      text-decoration: none;
+      color: #fff;
+      padding: 0.8rem 1.4rem;
+      transition: all 0.3s ease;
+      border-radius: 16px;
+      position: relative;
+      font-size: 1.2rem;
+      min-width: 100px;
+      text-align: center;
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(255,255,255,0.2);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2), 0 2px 4px rgba(0,0,0,0.1);
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+    }
+
+    .nav-links li:nth-child(1) a {
+      background: rgba(255, 89, 94, 0.85);
+    }
+    .nav-links li:nth-child(2) a {
+      background: rgba(255, 202, 58, 0.85);
+    }
+    .nav-links li:nth-child(3) a {
+      background: rgba(138, 201, 38, 0.85);
+    }
+    .nav-links li:nth-child(4) a {
+      background: rgba(25, 130, 196, 0.85);
+    }
+    .nav-links li:nth-child(5) a {
+      background: rgba(255, 125, 255, 0.85);
+    }
+
+    .nav-links a:hover {
+      transform: translateY(-2px) scale(1.1);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.3), 0 3px 6px rgba(0,0,0,0.2);
+      filter: brightness(1.1);
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .synth-container {
+      position: relative;
+      background: rgba(255, 89, 94, 0.85);
+      border: 8px solid rgba(255, 255, 255, 0.2);
+      border-radius: 30px;
+      padding: 30px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2), 0 2px 4px rgba(0,0,0,0.1);
+      max-width: 800px;
+      margin: 120px auto 20px;
+      backdrop-filter: blur(4px);
+    }
+
+    h1 {
+      font-family: 'Patrick Hand', cursive;
+      font-size: 2.5em;
+      margin-bottom: 0.2em;
+      color: #fff;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      animation: bounce 2s ease-in-out infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .controls-container {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .instrument-select {
+      background: rgba(255, 202, 58, 0.85);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 16px;
+      padding: 25px;
+      color: #fff;
+      flex: 1;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2), 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .instrument-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 15px;
+      margin-top: 15px;
+    }
+
+    .instrument-btn {
+      background: rgba(138, 201, 38, 0.85);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #fff;
+      padding: 12px 16px;
+      border-radius: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: 'Patrick Hand', cursive;
+      font-size: 1.1em;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2), 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .instrument-btn:hover {
+      transform: translateY(-2px) scale(1.1);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.3), 0 3px 6px rgba(0,0,0,0.2);
+      filter: brightness(1.1);
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .instrument-btn.active {
+      background: rgba(25, 130, 196, 0.85);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+    }
+
+    .randomize-btn {
+      background: rgba(255, 125, 255, 0.85);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #fff;
+      padding: 15px 25px;
+      border-radius: 16px;
+      cursor: pointer;
+      font-family: 'Patrick Hand', cursive;
+      font-size: 1.3em;
+      transition: all 0.3s ease;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+      margin-top: 25px;
+      width: 100%;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2), 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .randomize-btn:hover {
+      transform: translateY(-2px) scale(1.05);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.3), 0 3px 6px rgba(0,0,0,0.2);
+      filter: brightness(1.1);
+    }
+
+    .knob {
+      background: rgba(255, 89, 94, 0.85);
+      border: 1px solid rgba(255,255,255,0.2);
+      padding: 20px;
+      border-radius: 16px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2), 0 2px 4px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .knob:nth-child(2n) {
+      background: rgba(255, 202, 58, 0.85);
+    }
+
+    .knob:nth-child(3n) {
+      background: rgba(138, 201, 38, 0.85);
+    }
+
+    .knob label {
+      font-family: 'Patrick Hand', cursive;
+      font-size: 1.4em;
+      color: #fff;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+      margin-bottom: 15px;
+      display: block;
+    }
+
+    input[type=range] {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 12px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      outline: none;
+      border: 2px solid #fff;
+      box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 28px;
+      height: 28px;
+      background: linear-gradient(145deg, #ffffff, #f0f0f0);
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      border: 2px solid #fff;
+    }
+
+    input[type=range]::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+      background: linear-gradient(145deg, #ffffff, #FFE66D);
+    }
+
+    .keyboard {
+      display: flex;
+      justify-content: center;
+      position: relative;
+      margin-top: 30px;
+      padding: 20px;
+      height: 200px;
+      background: rgba(25, 130, 196, 0.85);
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.2);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2), 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .key {
+      width: 60px;
+      height: 180px;
+      background: linear-gradient(to bottom, #ffffff, #e0e0e0);
+      border-radius: 0 0 10px 10px;
+      cursor: pointer;
+      transition: all 0.1s;
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 10px;
+      color: #4A4A4A;
+      font-weight: bold;
+      margin: 0 2px;
+      z-index: 0;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      border: 1px solid rgba(0,0,0,0.1);
+      touch-action: manipulation;
+    }
+
+    .key.black {
+      width: 40px;
+      height: 120px;
+      background: #4A4A4A;
+      position: absolute;
+      z-index: 1;
+      color: #fff;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      border: 1px solid rgba(0,0,0,0.2);
+      border-radius: 0 0 8px 8px;
+      transform: translateX(-50%);
+      touch-action: manipulation;
+    }
+
+    .key:hover, .key:active {
+      background: linear-gradient(to bottom, #ffffff, #f0f0f0);
+      transform: translateY(2px);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .key.black:hover, .key.black:active {
+      background: #333333;
+      transform: translateY(2px) translateX(-50%);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .key.active {
+      background: #FFD93D;
+      transform: translateY(2px);
+      color: #4A4A4A;
+      box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);
+    }
+
+    .key.black.active {
+      background: #FFD93D;
+      color: #4A4A4A;
+      transform: translateY(2px) translateX(-50%);
+      box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);
+    }
+
+    .key span {
+      font-size: 1.2em;
+      opacity: 0.8;
+      pointer-events: none;
+    }
+
+    .key.black span {
+      color: #fff;
+      opacity: 0.9;
+      pointer-events: none;
+    }
+
+    .visualizer {
+      height: 100px;
+      background: rgba(255, 202, 58, 0.85);
+      margin: 20px 0;
+      border-radius: 15px;
+      overflow: hidden;
+      position: relative;
+      border: 4px solid rgba(255, 89, 94, 0.85);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2), 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .visualizer-bar {
+      position: absolute;
+      bottom: 0;
+      width: 3px;
+      background: linear-gradient(to top, 
+        #fff,
+        #ffd93d
+      );
+      transition: height 0.1s;
+      box-shadow: 0 0 10px #ffd93d;
+      border-radius: 3px 3px 0 0;
+    }
+
+    /* Restore black key positions for realistic keyboard */
+    /* These values are tuned for 60px white keys and 40px black keys */
+    .key.black[data-note="C#4"] { left: 136px; }
+    .key.black[data-note="D#4"] { left: 200px; }
+    .key.black[data-note="F#4"] { left: 332px; }
+    .key.black[data-note="G#4"] { left: 396px; }
+    .key.black[data-note="A#4"] { left: 466px; }
+    .key.black[data-note="C#5"] { left: 594px; }
+    .key.black[data-note="D#5"] { left: 658px; }
+
+    .pattern-select {
+      width: 100%;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.2);
+      border: 3px solid #fff;
+      border-radius: 12px;
+      color: #fff;
+      font-family: 'Patrick Hand', cursive;
+      font-size: 1.1em;
+      cursor: pointer;
+      outline: none;
+      transition: all 0.3s ease;
+      box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.1);
+    }
+
+    .pattern-select:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2),
+                  inset 0 0 15px rgba(255, 255, 255, 0.2);
+    }
+
+    .pattern-select option {
+      background: #905CFF;
+      color: #fff;
+      font-family: 'Patrick Hand', cursive;
+    }
+
+    @media (max-width: 768px) {
+      .navbar {
+        height: 280px;
+      }
+      
+      .nav-links {
+        gap: 0.6rem;
+        flex-direction: row;
+        justify-content: center;
+        flex-wrap: nowrap;
+        padding: 0 0.5rem;
+        transform: translateY(120px);
+      }
+
+      .nav-links a {
+        padding: 0.5rem 0.6rem;
+        font-size: 0.9rem;
+        min-width: auto;
+      }
+
+      .container {
+        grid-template-columns: 1fr;
+      }
+
+      .key {
+        width: 45px;
+        height: 140px;
+      }
+
+      .key.black {
+        width: 30px;
+        height: 90px;
+      }
+
+      .site-title {
+        font-size: 8.25em;
+      }
+    }
+
+    @media screen and (max-width: 480px) {
+      .navbar {
+        height: 260px;
+      }
+
+      .nav-links {
+        gap: 0.6rem;
+      }
+
+      .nav-links a {
+        padding: 0.3rem 0.6rem;
+        font-size: 0.85rem;
+      }
+
+      .key {
+        width: 35px;
+        height: 120px;
+      }
+
+      .key.black {
+        width: 25px;
+        height: 75px;
+      }
+
+      .key span {
+        font-size: 0.9em;
+      }
+    }
+
+    .tool-dropdown {
+      display: block;
+      position: relative;
+    }
+    .tool-dropdown-content {
+      display: none;
+      position: absolute;
+      min-width: 170px;
+      left: 50%;
+      transform: translateX(-50%);
+      top: 100%;
+      background: rgba(138, 201, 38, 0.95);
+      box-shadow: 0 4px 18px rgba(60, 117, 180, 0.13);
+      border-radius: 12px;
+      padding: 0.4rem 0;
+      border: none;
+      z-index: 100;
+      transition: opacity 0.18s;
+    }
+    .tool-dropdown-content a {
+      background: none !important;
+      color: #fff;
+      padding: 0.7rem 1.2rem;
+      text-decoration: none;
+      display: block;
+      font-family: 'Work Sans', sans-serif;
+      font-size: 1.08rem;
+      border-radius: 8px;
+      transition: background 0.18s, color 0.18s;
+      margin: 0 0.3rem;
+      text-align: left;
+      box-shadow: none;
+    }
+    .tool-dropdown-content a:hover {
+      background: #b6e35a;
+      color: #255080;
+    }
+    .tool-dropdown:hover .tool-dropdown-content {
+      display: block;
+    }
+    .tool-link {
+      display: block;
+      font-family: 'Patrick Hand', cursive;
+      text-decoration: none;
+      color: #fff;
+      padding: 0.8rem 1.4rem;
+      border-radius: 16px;
+      min-width: 100px;
+      text-align: center;
+      background: rgba(138, 201, 38, 0.85);
+      border: 1px solid rgba(255,255,255,0.2);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2), 0 2px 4px rgba(0,0,0,0.1);
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      user-select: none;
+      position: relative;
+      z-index: 2;
+      padding-right: 2.2rem;
+    }
+    .tool-link::after {
+      content: '';
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0;
+      height: 0;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-top: 5px solid #fff;
+      transition: transform 0.3s ease;
+    }
+    .tool-dropdown:hover .tool-link::after {
+      transform: translateY(-50%) rotate(180deg);
+    }
+    .tool-link:hover, .tool-dropdown:focus-within .tool-link {
+      transform: translateY(-2px) scale(1.1);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.3), 0 3px 6px rgba(0,0,0,0.2);
+      filter: brightness(1.1);
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+  </style>
 </head>
 <body>
-  <!-- The navbar will be injected here by common.js -->
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <h1 class="site-title">Sad Alien</h1>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li class="tool-dropdown">
+          <a href="imagetohex.html" class="tool-link">Tools</a>
+          <div class="tool-dropdown-content">
+            <a href="colormatcher.html">Color Matcher</a>
+            <a href="imagetohex.html">Image to Hex</a>
+          </div>
+        </li>
+        <li><a href="music.html">Music</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
   <div class="content-container">
-    <!-- Music content goes here -->
+    <div class="synth-container">
+      <h1>🎛️ Synthesizer!</h1>
+      <p>Press the keys or use your keyboard to play! 🎶</p>
+      
+      <div class="visualizer" id="visualizer"></div>
+
+      <div class="controls-container">
+        <div class="instrument-select">
+          <label>Choose Instrument:</label>
+          <div class="instrument-list">
+            <button class="instrument-btn active" data-instrument="spaceOrgan">Space Organ</button>
+            <button class="instrument-btn" data-instrument="clarinet">Clarinet</button>
+            <button class="instrument-btn" data-instrument="flute">Flute</button>
+            <button class="instrument-btn" data-instrument="harpsichord">Harpsichord</button>
+            <button class="instrument-btn" data-instrument="guitar">Guitar</button>
+            <button class="instrument-btn" data-instrument="trumpet">Trumpet</button>
+            <button class="instrument-btn" data-instrument="oboe">Oboe</button>
+            <button class="instrument-btn" data-instrument="organ">Organ</button>
+            <button class="instrument-btn" data-instrument="strings">Strings</button>
+            <button class="instrument-btn" data-instrument="woof">🐕 Woof</button>
+          </div>
+          <button class="randomize-btn">🎲 Randomize Settings!</button>
+        </div>
+      </div>
+
+      <div class="container">
+        <div class="knob">
+          <label for="detune">Detune</label>
+          <input id="detune" type="range" min="-1200" max="1200" value="0">
+        </div>
+        <div class="knob">
+          <label for="filter">Filter Cutoff</label>
+          <input id="filter" type="range" min="100" max="5000" value="1500">
+        </div>
+        <div class="knob">
+          <label for="reverb">Reverb</label>
+          <input id="reverb" type="range" min="0" max="1" step="0.01" value="0.2">
+        </div>
+        <div class="knob">
+          <label for="distortion">Distortion</label>
+          <input id="distortion" type="range" min="0" max="1" step="0.01" value="0">
+        </div>
+        <div class="knob">
+          <label for="oscillator">Oscillator</label>
+          <input id="oscillator" type="range" min="0" max="3" step="1" value="0">
+        </div>
+        <div class="knob">
+          <label for="arpSpeed">Arp Speed</label>
+          <input id="arpSpeed" type="range" min="0.1" max="2" step="0.1" value="0.5">
+        </div>
+        <div class="knob">
+          <label for="arpPattern">Arp Pattern</label>
+          <select id="arpPattern" class="pattern-select">
+            <option value="up">Up</option>
+            <option value="down">Down</option>
+            <option value="upDown">Up & Down</option>
+            <option value="random">Random</option>
+            <option value="off">Off</option>
+          </select>
+        </div>
+        <div class="knob">
+          <label for="volume">Volume</label>
+          <input id="volume" type="range" min="0" max="1" step="0.01" value="0.7">
+        </div>
+        <div class="knob">
+          <label for="delay">Delay Mix</label>
+          <input id="delay" type="range" min="0" max="1" step="0.01" value="0">
+        </div>
+        <div class="knob">
+          <label for="delayTime">Delay Time</label>
+          <input id="delayTime" type="range" min="0.05" max="1" step="0.05" value="0.25">
+        </div>
+      </div>
+
+      <div class="keyboard" id="keyboard">
+        <!-- First octave -->
+        <div class="key" data-note="C4"><span>A</span></div>
+        <div class="key black" data-note="C#4"><span>W</span></div>
+        <div class="key" data-note="D4"><span>S</span></div>
+        <div class="key black" data-note="D#4"><span>E</span></div>
+        <div class="key" data-note="E4"><span>D</span></div>
+        <div class="key" data-note="F4"><span>F</span></div>
+        <div class="key black" data-note="F#4"><span>T</span></div>
+        <div class="key" data-note="G4"><span>G</span></div>
+        <div class="key black" data-note="G#4"><span>Y</span></div>
+        <div class="key" data-note="A4"><span>H</span></div>
+        <div class="key black" data-note="A#4"><span>U</span></div>
+        <div class="key" data-note="B4"><span>J</span></div>
+        <!-- Start of second octave -->
+        <div class="key" data-note="C5"><span>K</span></div>
+        <div class="key black" data-note="C#5"><span>O</span></div>
+        <div class="key" data-note="D5"><span>L</span></div>
+        <div class="key black" data-note="D#5"><span>P</span></div>
+        <div class="key" data-note="E5"><span>;</span></div>
+      </div>
+    </div>
   </div>
   <script src="common.js"></script>
 </body>

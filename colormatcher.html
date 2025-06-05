@@ -1,17 +1,390 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Color Matcher – Sad Alien</title>
-  <link rel="stylesheet" href="common.css" />
-  <link rel="stylesheet" href="colormatcher.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Color Matcher - Sad Alien Studios</title>
+  <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Work+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="common.css">
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      margin: 0;
+      font-family: 'Work Sans', sans-serif;
+      background: linear-gradient(to bottom, #0a1d37 0%, #0a1d37 320px, #3c75b4 460px, #a0d2ff 640px, #fffdf9 1000px, #fffdf9 100%);
+      color: #222;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    .content-container {
+      position: relative;
+      background: #fff;
+      border-radius: 16px;
+      padding: 40px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+      max-width: 800px;
+      margin: 120px auto 20px;
+      color: #222;
+      font-size: 1.1em;
+      line-height: 1.6;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .container {
+      background: #fff;
+      margin-top: 3rem;
+      padding: 2rem 2.5rem;
+      border-radius: 18px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+      max-width: 520px;
+      width: 100%;
+      text-align: center;
+    }
+    h1 {
+      font-family: 'Patrick Hand', cursive;
+      font-size: 2.2rem;
+      margin-bottom: 1.5rem;
+      color: #3c75b4;
+    }
+    .input-row {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .input-row label {
+      font-size: 1.1rem;
+      color: #3c75b4;
+    }
+    .input-row input[type="color"] {
+      width: 40px;
+      height: 40px;
+      border: none;
+      border-radius: 8px;
+      background: none;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    }
+    .input-row input[type="text"] {
+      font-size: 1.1rem;
+      padding: 0.4rem 0.8rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      width: 110px;
+      text-align: center;
+    }
+    .input-row select {
+      font-size: 1.1rem;
+      padding: 0.4rem 0.8rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      background: #f4f4f4;
+    }
+    .swatch-row {
+      display: flex;
+      gap: 1.2rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+    }
+    .swatch {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      user-select: all;
+    }
+    .swatch-color {
+      width: 54px;
+      height: 54px;
+      border-radius: 12px;
+      border: 2px solid #eee;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      margin-bottom: 0.3rem;
+      transition: border 0.2s;
+    }
+    .swatch:hover .swatch-color {
+      border: 2px solid #3c75b4;
+    }
+    .swatch-hex {
+      font-family: 'Work Sans', monospace;
+      font-size: 1.1rem;
+      background: #f4f4f4;
+      padding: 0.2rem 0.7rem;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      transition: background 0.2s;
+    }
+    .swatch-hex:active {
+      background: #e0eafc;
+    }
+    .instructions {
+      color: #666;
+      font-size: 1rem;
+      margin-top: 1.2rem;
+    }
+    .navbar {
+      position: relative;
+      height: 320px;
+      background: #0a1d37;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      padding-bottom: 1rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      z-index: 1000;
+    }
+    .navbar::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: none;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 1.5rem;
+      margin: 0;
+      padding: 0;
+      z-index: 2;
+      transform: translateY(80px);
+      justify-content: center;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .nav-links a {
+      font-family: 'Patrick Hand', cursive;
+      text-decoration: none;
+      color: #fff;
+      padding: 0.8rem 1.4rem;
+      transition: all 0.3s ease;
+      border-radius: 16px;
+      position: relative;
+      font-size: 1.2rem;
+      min-width: 100px;
+      text-align: center;
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(255,255,255,0.2);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2), 0 2px 4px rgba(0,0,0,0.1);
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+    }
+    .nav-links li:nth-child(1) a {
+      background: rgba(255, 89, 94, 0.85);
+    }
+    .nav-links li:nth-child(2) a {
+      background: rgba(255, 202, 58, 0.85);
+    }
+    .nav-links li:nth-child(3) a {
+      background: rgba(138, 201, 38, 0.85);
+    }
+    .nav-links li:nth-child(4) a {
+      background: rgba(25, 130, 196, 0.85);
+    }
+    .nav-links li:nth-child(5) a {
+      background: rgba(255, 125, 255, 0.85);
+    }
+    .nav-links a:hover {
+      transform: translateY(-2px) scale(1.1);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.3), 0 3px 6px rgba(0,0,0,0.2);
+      filter: brightness(1.1);
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+    .tool-dropdown {
+      display: block;
+      position: relative;
+    }
+    .tool-dropdown-content {
+      display: none;
+      position: absolute;
+      min-width: 170px;
+      left: 50%;
+      transform: translateX(-50%);
+      top: 100%;
+      background: rgba(138, 201, 38, 0.95);
+      box-shadow: 0 4px 18px rgba(60, 117, 180, 0.13);
+      border-radius: 12px;
+      padding: 0.4rem 0;
+      border: none;
+      z-index: 100;
+      transition: opacity 0.18s;
+    }
+    .tool-dropdown-content a {
+      background: none !important;
+      color: #fff;
+      padding: 0.7rem 1.2rem;
+      text-decoration: none;
+      display: block;
+      font-family: 'Work Sans', sans-serif;
+      font-size: 1.08rem;
+      border-radius: 8px;
+      transition: background 0.18s, color 0.18s;
+      margin: 0 0.3rem;
+      text-align: left;
+      box-shadow: none;
+    }
+    .tool-dropdown-content a:hover {
+      background: #b6e35a;
+      color: #255080;
+    }
+    .tool-dropdown:hover .tool-dropdown-content {
+      display: block;
+    }
+    .tool-link {
+      display: block;
+      font-family: 'Patrick Hand', cursive;
+      text-decoration: none;
+      color: #fff;
+      padding: 0.8rem 1.4rem;
+      border-radius: 16px;
+      min-width: 100px;
+      text-align: center;
+      background: rgba(138, 201, 38, 0.85);
+      border: 1px solid rgba(255,255,255,0.2);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2), 0 2px 4px rgba(0,0,0,0.1);
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      user-select: none;
+      position: relative;
+      z-index: 2;
+      padding-right: 2.2rem;
+    }
+    .tool-link::after {
+      content: '';
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0;
+      height: 0;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-top: 5px solid #fff;
+      transition: transform 0.3s ease;
+    }
+    .tool-dropdown:hover .tool-link::after {
+      transform: translateY(-50%) rotate(180deg);
+    }
+    .tool-link:hover, .tool-dropdown:focus-within .tool-link {
+      transform: translateY(-2px) scale(1.1);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.3), 0 3px 6px rgba(0,0,0,0.2);
+      filter: brightness(1.1);
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+    @media (max-width: 768px) {
+      .navbar {
+        height: 280px;
+      }
+      .nav-links {
+        gap: 0.6rem;
+        flex-direction: row;
+        justify-content: center;
+        flex-wrap: nowrap;
+        padding: 0 0.5rem;
+        transform: translateY(120px);
+      }
+      .nav-links a {
+        padding: 0.5rem 0.6rem;
+        font-size: 0.9rem;
+        min-width: auto;
+      }
+    }
+    @media screen and (max-width: 480px) {
+      .navbar {
+        height: 260px;
+      }
+      .nav-links {
+        gap: 0.6rem;
+      }
+      .nav-links a {
+        padding: 0.3rem 0.6rem;
+        font-size: 0.85rem;
+      }
+    }
+  </style>
 </head>
 <body>
-  <!-- The navbar will be injected here by common.js -->
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <h1 class="site-title">Sad Alien</h1>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li class="tool-dropdown">
+          <a href="imagetohex.html" class="tool-link">Tools</a>
+          <div class="tool-dropdown-content">
+            <a href="colormatcher.html">Color Matcher</a>
+            <a href="imagetohex.html">Image to Hex</a>
+          </div>
+        </li>
+        <li><a href="music.html">Music</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
   <div class="content-container">
-    <!-- Color matcher content goes here -->
+    <h1>🎨 Color Theme Matcher</h1>
+    <div class="input-row">
+      <label for="colorPicker">Pick a color:</label>
+      <input type="color" id="colorPicker" value="#3c75b4">
+      <input type="text" id="hexInput" value="#3c75b4" maxlength="7">
+      <select id="schemeSelect">
+        <option value="complementary">Complementary</option>
+        <option value="analogous">Analogous</option>
+        <option value="triadic">Triadic</option>
+        <option value="split-complementary">Split Complementary</option>
+        <option value="tetradic">Tetradic</option>
+        <option value="square">Square</option>
+        <option value="monochromatic">Monochromatic</option>
+        <option value="diadic">Diadic</option>
+        <option value="pentadic">Pentadic</option>
+        <option value="pastel">Pastel</option>
+        <option value="earth">Earth Tones</option>
+        <option value="warm">Warm Colors</option>
+        <option value="cool">Cool Colors</option>
+        <option value="highkey">High-Key</option>
+        <option value="lowkey">Low-Key</option>
+        <optgroup label="More...">
+          <option value="gradient">Gradient (Color Ramp)</option>
+          <option value="gradient-extended">Gradient Extended</option>
+          <option value="achromatic">Achromatic (Greyscale)</option>
+          <option value="accented-neutral">Accented Neutral</option>
+          <option value="compound">Compound (Complementary Analogous)</option>
+          <option value="fauvist">Fauvist (Vivid)</option>
+          <option value="autumn">Autumn (Seasonal)</option>
+          <option value="spring">Spring (Seasonal)</option>
+          <option value="summer">Summer (Seasonal)</option>
+          <option value="winter">Winter (Seasonal)</option>
+          <option value="retro50s">Retro 50s</option>
+          <option value="discordant">Discordant (Clash)</option>
+          <option value="metallic">Metallic</option>
+          <option value="optical-mix">Optical Mix</option>
+          <option value="accessible">High-Contrast Accessible</option>
+          <option value="psychology-calm">Psychology: Calm</option>
+          <option value="relaxing">Relaxing (Mood)</option>
+          <option value="energetic">Energetic (Mood)</option>
+          <option value="polychromatic">Polychromatic</option>
+        </optgroup>
+      </select>
+    </div>
+    <div class="instructions">Select a color and a harmony to see matching colors. Click a swatch to copy its hex code!</div>
+    <div id="schemeDesc" style="margin: 0.7rem 0 0.5rem 0; color: #3c75b4; font-size: 1.05rem; min-height: 1.5em;"></div>
+    <div class="swatch-row" id="referenceRow"></div>
+    <div class="swatch-row" id="swatchRow"></div>
+    <button id="addColorBtn" style="display:none;margin:1.2rem auto 0 auto;padding:0.5rem 1.2rem;font-size:1.1rem;border-radius:8px;border:none;background:#3c75b4;color:#fff;cursor:pointer;transition:background 0.2s;">+</button>
   </div>
   <script src="common.js"></script>
 </body>
