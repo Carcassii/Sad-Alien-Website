@@ -239,33 +239,53 @@
   </style>
 </head>
 <body>
-  <div class="content">
-    <div class="game-container">
-      <h1>Multiplayer Pinball</h1>
-      <div class="game-wrapper">
-        <canvas id="pinballCanvas"></canvas>
-        <div class="game-controls">
-          <h3>Controls:</h3>
-          <p>← → Arrow keys: Control flippers</p>
-          <p>↓ Hold and release: Launch ball</p>
-        </div>
-        <div class="high-scores">
-          <h3>High Scores</h3>
-          <ul class="score-list" id="scoreList">
-            <!-- Scores will be populated dynamically -->
-          </ul>
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <h1 class="site-title">Sad Alien</h1>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li class="tool-dropdown">
+          <a href="imagetohex.html" class="tool-link">Tools</a>
+          <div class="tool-dropdown-content">
+            <a href="colormatcher.html">Color Matcher</a>
+            <a href="imagetohex.html">Image to Hex</a>
+          </div>
+        </li>
+        <li><a href="music.html">Music</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+  <div class="content-container">
+    <div class="content">
+      <div class="game-container">
+        <h1>Multiplayer Pinball</h1>
+        <div class="game-wrapper">
+          <canvas id="pinballCanvas"></canvas>
+          <div class="game-controls">
+            <h3>Controls:</h3>
+            <p>← → Arrow keys: Control flippers</p>
+            <p>↓ Hold and release: Launch ball</p>
+          </div>
+          <div class="high-scores">
+            <h3>High Scores</h3>
+            <ul class="score-list" id="scoreList">
+              <!-- Scores will be populated dynamically -->
+            </ul>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- Player Name Modal -->
-  <div class="modal" id="nameModal">
-    <div class="modal-content">
-      <h2>Enter Your Name</h2>
-      <input type="text" id="playerNameInput" maxlength="16" placeholder="Your name..." autofocus />
-      <br />
-      <button id="startGameBtn">Start Game</button>
+    <!-- Player Name Modal -->
+    <div class="modal" id="nameModal">
+      <div class="modal-content">
+        <h2>Enter Your Name</h2>
+        <input type="text" id="playerNameInput" maxlength="16" placeholder="Your name..." autofocus />
+        <br />
+        <button id="startGameBtn">Start Game</button>
+      </div>
     </div>
   </div>
 
