@@ -925,17 +925,21 @@
         spaceship.style.pointerEvents = 'none';
         spaceship.style.zIndex = 2;
 
-        // Leave a bigger star every starInterval px
+        // Leave a glowing star every starInterval px
         if (progress - lastStarDist >= starInterval) {
           lastStarDist = progress;
           const star = document.createElement('div');
           star.className = 'star';
-          star.style.left = `${pos.x - 4}px`;
-          star.style.top = `${pos.y - 4}px`;
-          star.style.width = '8px';
-          star.style.height = '8px';
+          const size = 6 + Math.random() * 6; // 6-12px
+          star.style.left = `${pos.x - size / 2}px`;
+          star.style.top = `${pos.y - size / 2}px`;
+          star.style.width = `${size}px`;
+          star.style.height = `${size}px`;
+          star.style.background = '#ffea6b';
+          star.style.borderRadius = '50%';
           star.style.position = 'absolute';
           star.style.zIndex = 1;
+          star.style.boxShadow = `0 0 12px 4px #fff8cc, 0 0 32px 8px #ffea6b88`;
           svg.parentNode.appendChild(star);
         }
 
