@@ -17,7 +17,7 @@
       color: #222;
       overflow-x: hidden;
     }
-    .navbar {
+    body#index-home .navbar {
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -26,7 +26,7 @@
       overflow: visible;
       position: relative;
     }
-    .navbar::before {
+    body#index-home .navbar::before {
       content: "";
       position: absolute;
       top: 0;
@@ -38,7 +38,7 @@
       z-index: 0;
       overflow: hidden;
     }
-    .nav-links {
+    body#index-home .nav-links {
       display: flex;
       justify-content: center;
       align-items: center;
@@ -47,7 +47,7 @@
       padding: 0;
       z-index: 2;
     }
-    .nav-links a {
+    body#index-home .nav-links a {
       font-family: 'Patrick Hand', cursive;
       text-decoration: none;
       color: #fff;
@@ -64,29 +64,29 @@
       text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
     }
 
-    .nav-links li:nth-child(1) a {
+    body#index-home .nav-links li:nth-child(1) a {
       background: rgba(255, 89, 94, 0.85);  /* Crayon Red */
     }
-    .nav-links li:nth-child(2) a {
+    body#index-home .nav-links li:nth-child(2) a {
       background: rgba(255, 202, 58, 0.85);  /* Crayon Yellow */
     }
-    .nav-links li:nth-child(3) a {
+    body#index-home .nav-links li:nth-child(3) a {
       background: rgba(138, 201, 38, 0.85);  /* Crayon Green */
     }
-    .nav-links li:nth-child(4) a {
+    body#index-home .nav-links li:nth-child(4) a {
       background: rgba(25, 130, 196, 0.85);  /* Crayon Blue */
     }
-    .nav-links li:nth-child(5) a {
+    body#index-home .nav-links li:nth-child(5) a {
       background: rgba(255, 125, 255, 0.85);  /* Crayon Pink */
     }
 
-    .nav-links a:hover {
+    body#index-home .nav-links a:hover {
       transform: translateY(-2px) scale(1.1);
       box-shadow: 0 6px 12px rgba(0,0,0,0.3), 0 3px 6px rgba(0,0,0,0.2);
       filter: brightness(1.1);
       text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
     }
-    .svg-container {
+    body#index-home .svg-container {
       position: relative;
       margin: 0 auto;
       left: 0;
@@ -252,14 +252,14 @@
 
     /* Add responsive design */
     @media screen and (max-width: 768px) {
-      .navbar {
+      body#index-home .navbar {
         height: 280px;
         width: 100%;
         overflow: visible;
         position: relative;
       }
       
-      .nav-links {
+      body#index-home .nav-links {
         position: absolute;
         bottom: 20px;
         left: 0;
@@ -272,13 +272,13 @@
         z-index: 1000;
       }
 
-      .nav-links a {
+      body#index-home .nav-links a {
         padding: 0.5rem 0.6rem;
         font-size: 0.9rem;
         min-width: auto;
       }
 
-      .svg-container {
+      body#index-home .svg-container {
         position: absolute;
         left: -65%;
         width: 140%;
@@ -303,20 +303,20 @@
     }
 
     @media screen and (max-width: 480px) {
-      .navbar {
+      body#index-home .navbar {
         height: 260px;
       }
 
-      .nav-links {
+      body#index-home .nav-links {
         gap: 0.6rem;
       }
 
-      .nav-links a {
+      body#index-home .nav-links a {
         padding: 0.3rem 0.6rem;
         font-size: 0.85rem;
       }
 
-      .svg-container {
+      body#index-home .svg-container {
         left: -80%;
         width: 150%;
         height: 260px;
@@ -772,7 +772,7 @@
     }
   </style>
 </head>
-<body>
+<body id="index-home">
   <div class="svg-container" id="svg-container">
     <svg viewBox="0 0 1920 1080" style="height: 1000px;" preserveAspectRatio="xMidYMid meet" id="trail-svg">
       <path class="draw-path" id="trail-path" d="M 1596.9 488.8
