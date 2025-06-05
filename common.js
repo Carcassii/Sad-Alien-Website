@@ -1,19 +1,8 @@
 // Function to create the navigation bar
 function createNavbar() {
     const isHome = window.location.pathname.endsWith('index.html') || window.location.pathname === '/' || window.location.pathname === '/index.html';
-    if (isHome) {
-        // Insert the animated title above the SVG spaceship
-        const svgContainer = document.querySelector('.svg-container');
-        if (svgContainer) {
-            const title = document.createElement('h1');
-            title.className = 'site-title';
-            title.textContent = 'Sad Alien';
-            svgContainer.parentNode.insertBefore(title, svgContainer);
-        }
-    }
     const navbar = `
     <nav class="navbar">
-      ${!isHome ? '<h1 class="site-title">Sad Alien</h1>' : ''}
       <ul class="nav-links">
         <li><a href="index.html">Home</a></li>
         <li><a href="about.html">About</a></li>
@@ -28,10 +17,8 @@ function createNavbar() {
         <li><a href="contact.html">Contact</a></li>
       </ul>
     </nav>`;
-
-    // Insert the navbar at the beginning of the body
     document.body.insertAdjacentHTML('afterbegin', navbar);
-    // Move svg-container into navbar on homepage
+    // Only on homepage, move svg-container into navbar
     if (isHome) {
         const navbarElem = document.querySelector('.navbar');
         const svgContainer = document.getElementById('svg-container');
