@@ -6,7 +6,6 @@
   <title>Sad Alien Studios</title>
   <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Work+Sans:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="common.css">
-  <script src="common.js" defer></script>
   <style>
     html {
       scroll-behavior: smooth;
@@ -59,12 +58,13 @@
       text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
     }
     body#index-home .svg-container {
-      position: relative;
-      margin: 0 auto;
-      left: 0;
+      position: absolute;
       top: 0;
-      max-height: 320px;
+      left: 0;
+      width: 100%;
+      height: 100%;
       overflow: visible;
+      z-index: 1;
     }
     .spaceship {
       position: absolute;
@@ -507,9 +507,11 @@
   </style>
 </head>
 <body id="index-home">
-     
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <h1 class="site-title">Sad Alien Studios</h1>
       <div class="svg-container" id="svg-container">
-        <svg viewBox="0 0 1920 1080" style="height: 1000px;" preserveAspectRatio="xMidYMid meet" id="trail-svg">
+        <svg viewBox="0 0 1920 1080" style="height: 320px;" preserveAspectRatio="xMidYMid meet" id="trail-svg">
           <path class="draw-path" id="trail-path" d="M 1596.9 488.8
           Q 1591.8 485.5 1588.65 485.5 1586.9 485.5 1583.4 486.85 1579.9 488.25 1576.55 489.8 1572.65 490.55 1564.45 495.65 1556.25 500.75 1549.05 505.8 1541.8 511.1 1539.85 513.05 1536.55 515 1531.25 518.9 1525.8 522.6 1521.7 525.55
           L 1517.4 528.25
@@ -578,7 +580,23 @@
         </svg>
         <img src="Images/spaceship.png" alt="Spaceship" class="spaceship" id="spaceship" />
       </div>
-    
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="games.html">Games</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li class="tool-dropdown">
+          <a href="#" class="tool-link">Tools</a>
+          <div class="tool-dropdown-content">
+            <a href="tools/upload.html">Upload</a>
+            <a href="tools/convert.html">Convert</a>
+            <a href="tools/compress.html">Compress</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </nav>
+     
   <div class="content">
     <div class="intro-balloon">
       <h1>Mystery on the Mountain</h1>
