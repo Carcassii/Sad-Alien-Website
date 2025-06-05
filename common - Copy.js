@@ -2,24 +2,22 @@
 function createNavbar() {
     const isHome = window.location.pathname.endsWith('index.html') || window.location.pathname === '/' || window.location.pathname === '/index.html';
     const navbar = `
-<nav class="navbar">
-  <div class="navbar-inner">
-    ${!isHome ? '<h1 class="site-title">Sad Alien</h1>' : ''}
-    <ul class="nav-links">
-      <li><a href="index.html">Home</a></li>
-      <li><a href="about.html">About</a></li>
-      <li class="tool-dropdown">
-        <a href="imagetohex.html" class="tool-link">Tools</a>
-        <div class="tool-dropdown-content">
-          <a href="colormatcher.html">Color Matcher</a>
-          <a href="imagetohex.html">Image to Hex</a>
-        </div>
-      </li>
-      <li><a href="music.html">Music</a></li>
-      <li><a href="contact.html">Contact</a></li>
-    </ul>
-  </div>
-</nav>`;
+    <nav class="navbar">
+      ${!isHome ? '<h1 class="site-title">Sad Alien</h1>' : ''}
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li class="tool-dropdown">
+          <a href="imagetohex.html" class="tool-link">Tools </a>
+          <div class="tool-dropdown-content">
+            <a href="colormatcher.html">Color Matcher</a>
+            <a href="imagetohex.html">Image to Hex</a>
+          </div>
+        </li>
+        <li><a href="music.html">Music</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>`;
     document.body.insertAdjacentHTML('afterbegin', navbar);
     if (isHome) {
         const navbarElem = document.querySelector('.navbar');

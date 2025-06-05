@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>About - Sad Alien Studios</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Work+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="common.css">
+  <style>
+    .content-container {
+      position: relative;
+      background: #fff;
+      border-radius: 16px;
+      padding: 40px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+      max-width: 800px;
+      margin: 120px auto 20px;
+      color: #222;
+      font-size: 1.1em;
+      line-height: 1.6;
+    }
+
+    .profile-section {
+      display: flex;
+      gap: 40px;
+      align-items: flex-start;
+      margin-bottom: 40px;
+    }
+
+    .profile-image {
+      flex-shrink: 0;
+      width: 280px;
+      height: 280px;
+      border-radius: 40px;
+      object-fit: cover;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      clip-path: polygon(
+        15% 0%,
+        85% 0%,
+        100% 15%,
+        100% 85%,
+        85% 100%,
+        15% 100%,
+        0% 85%,
+        0% 15%
+      );
+    }
+
+    .profile-image:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.2);
+    }
+
+    .profile-content {
+      flex: 1;
+    }
+
+    .section {
+      background: #fff;
+      border-radius: 12px;
+      padding: 25px;
+      margin: 30px 0;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      transition: all 0.3s ease;
+    }
+
+    .section:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      font-family: 'Patrick Hand', cursive;
+      color: #0a1d37;
+      font-size: 2em;
+      margin-bottom: 20px;
+    }
+
+    .feature-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .feature-list li {
+      margin: 15px 0;
+      padding-left: 25px;
+      position: relative;
+    }
+
+    .feature-list li::before {
+      content: '🚀';
+      position: absolute;
+      left: 0;
+      top: 2px;
+    }
+
+    .team-member {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin: 20px 0;
+    }
+
+    .avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: #3c75b4;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2em;
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    @media (max-width: 768px) {
+      .content-container {
+        margin: 80px 20px 20px;
+        padding: 20px;
+      }
+
+      .profile-section {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 20px;
+      }
+
+      .profile-image {
+        width: 200px;
+        height: 200px;
+      }
+
+      .section {
+        padding: 15px;
+      }
+
+      .team-member {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="content-container">
+    <div class="profile-section">
+      <img src="Images/Matteo.png" alt="Matteo" class="profile-image">
+      <div class="profile-content">
+        <h2>About Sad Alien Studios</h2>
+        <p>Welcome to Sad Alien Studios, where I create humoristic, lighthearted games for people who are going through tough times and need a little light in their lives. As an all-round game developer and musician, I focus on crafting cozy, inclusive experiences that offer a moment of joy and escape.</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>My Story</h2>
+      <p>Games have always been a source of hope throughout my life. I've experienced my fair share of negativity, but I could always count on games to lift my spirits. From an early age, I discovered that losing myself in game worlds could help me feel a lot better. Some might call it escapism, but to me, it can be a lifeline!</p>
+      <p>Now that I have the skills to create games myself, I want to pay it forward. In a world filled with wars, climate change, and accidentally dropped ice cream cones, I believe we all need a little more joy and coziness.</p>
+    </div>
+
+    <div class="section">
+      <h2>My Mission</h2>
+      <p>At Sad Alien Studios, I create games that are:</p>
+      <ul class="feature-list">
+        <li>Free from violence</li>
+        <li>Filled with humor (but never at anyone's expense)</li>
+        <li>Cozy and cute</li>
+        <li>Inclusive and welcoming to everyone</li>
+        <li>Pure, harmless fun</li>
+      </ul>
+      <p>My goal is simple: to create games that offer a safe space for anyone who, like me, finds comfort and hope in gaming. Whether you're having a tough day or just need a moment of lighthearted joy, I hope my games can be that little ray of sunshine you're looking for.</p>
+    </div>
+
+    <div class="section">
+      <h2>Join the Journey</h2>
+      <p>Whether you're a fellow game enthusiast, someone going through a tough time, or just looking for some wholesome fun, you're welcome here. Check out my projects, try my synthesizer, or shoot me an email! - I'd love to hear from you!</p>
+    </div>
+  </div>
+
+  <script src="common.js"></script>
+</body>
+</html> 

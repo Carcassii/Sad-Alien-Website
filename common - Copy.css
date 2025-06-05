@@ -73,25 +73,22 @@ body {
     }
 }
 
-.navbar-inner {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-end;
-    position: relative;
-    width: 100%;
-    height: 100%;
-}
-
 .site-title {
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     font-family: 'Patrick Hand', cursive;
-    font-size: 4em;
+    font-size: 14.25em;
     color: #FFE66D;
     font-weight: 400;
-    text-align: center;
-    margin: 0 0 1rem 0;
-    animation: float 3.5s ease-in-out infinite, titleGlow 3s ease-in-out infinite;
     z-index: 2;
+    text-align: center;
+    width: 100%;
+    margin: 0;
+    line-height: 1;
+    animation: float 3.5s ease-in-out infinite,
+               titleGlow 3s ease-in-out infinite;
 }
 
 .nav-links {
