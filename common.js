@@ -51,15 +51,6 @@ function createStars() {
     }
 }
 
-if (!window.location.pathname.includes("index.html")) {
-  const header = document.querySelector(".navbar");
-  if (header) {
-    const title = document.createElement("h1");
-    title.className = "site-title";
-    title.textContent = "Sad Alien";
-    header.appendChild(title);
-  }
-}
 
 // Initialize when the page loads
 window.addEventListener('load', () => {
