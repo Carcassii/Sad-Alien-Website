@@ -2,30 +2,58 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <!-- Ensure mobile‐responsiveness -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🎨 Color Picker Tool</title>
+  <title>Image to Hex - Sad Alien Studios</title>
+
   <!-- Google Fonts -->
   <link
     href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Work+Sans:wght@400;600&display=swap"
     rel="stylesheet"
   >
-  <style>
-    /* ─── PAGE & TOOL STYLES ───────────────────────────────────────────────────── */
-    html, body {
-      margin: 0;
-      padding: 0;
-      min-height: 100vh;
-      font-family: 'Work Sans', sans-serif;
-      background: linear-gradient(to bottom, #e0eafc, #cfdef3 100%);
-      color: #222;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
 
+  <!-- Common site styling (background gradient, navbar, stars, etc.) -->
+  <link rel="stylesheet" href="common.css"> :contentReference[oaicite:0]{index=0}
+
+  <style>
+    /* ─── Base page styles (from your original imagetohex.html) ───────────────── */
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      margin: 0;
+      font-family: 'Work Sans', sans-serif;
+      background: linear-gradient(
+        to bottom,
+        #0a1d37 0%,
+        #0a1d37 320px,
+        #3c75b4 460px,
+        #a0d2ff 640px,
+        #fffdf9 1000px,
+        #fffdf9 100%
+      );
+      color: #222;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    .content-container {
+      position: relative;
+      background: #fff;
+      border-radius: 16px;
+      padding: 40px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+      max-width: 800px;
+      margin: 120px auto 20px;
+      color: #222;
+      font-size: 1.1em;
+      line-height: 1.6;
+    }
+    /* ───────────────────────────────────────────────────────────────────────────── */
+
+    /* ─── Tool-specific CSS (copied from tools.html) ───────────────────────────── */
     .container {
       background: #fff;
-      margin: 2rem;
+      margin-top: 3rem;
       padding: 2rem 2.5rem;
       border-radius: 18px;
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.10);
@@ -64,6 +92,8 @@
       max-width: 100%;
       background: #f4f4f4;
       cursor: crosshair;
+      position: relative;
+      z-index: 1;
     }
 
     .color-info {
@@ -72,6 +102,9 @@
       align-items: center;
       justify-content: center;
       gap: 1rem;
+      position: relative;
+      z-index: 2;
+      width: 100%;
     }
 
     .color-preview {
@@ -93,6 +126,7 @@
       cursor: pointer;
       user-select: all;
       transition: background 0.2s;
+      z-index: 2;
     }
     .hex-code:active {
       background: #e0eafc;
@@ -108,25 +142,45 @@
 </head>
 
 <body>
-  <div class="container">
-    <h1>🎨 Color Picker Tool</h1>
-    <label class="upload-label" for="imageInput">Upload Image</label>
-    <input type="file" id="imageInput" accept="image/*" style="display: none;" />
-
-    <canvas id="imageCanvas" width="400" height="300"></canvas>
-
-    <div class="color-info" id="colorInfo" style="display: none;">
-      <div class="color-preview" id="colorPreview"></div>
-      <span class="hex-code" id="hexCode">#000000</span>
+  <!-- ─── Navbar (copied from tools.html) ─────────────────────────────────────── -->
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <h1 class="site-title">Sad Alien</h1>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li class="tool-dropdown">
+          <a href="imagetohex.html" class="tool-link">Tools</a>
+          <div class="tool-dropdown-content">
+            <a href="colormatcher.html">Color Matcher</a>
+            <a href="imagetohex.html">Image to Hex</a>
+          </div>
+        </li>
+        <li><a href="music.html">Music</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
     </div>
+  </nav> :contentReference[oaicite:1]{index=1} :contentReference[oaicite:2]{index=2}
 
-    <div class="instructions">
-      Click (or click‐and‐drag) anywhere on your image to get the hex color code!
+  <!-- ─── Tool container (same as before) ─────────────────────────────────────── -->
+  <div class="content-container">
+    <div class="container">
+      <h1>🎨 Color Picker Tool</h1>
+      <label class="upload-label" for="imageInput">Upload Image</label>
+      <input type="file" id="imageInput" accept="image/*" style="display:none;" />
+      <canvas id="imageCanvas" width="400" height="300"></canvas>
+      <div class="color-info" id="colorInfo" style="display:none;">
+        <div class="color-preview" id="colorPreview"></div>
+        <span class="hex-code" id="hexCode">#000000</span>
+      </div>
+      <div class="instructions">
+        Click (or click-and-drag) anywhere on your image to get the hex color code!
+      </div>
     </div>
   </div>
 
+  <!-- ─── “Image → Hex” JavaScript logic (100% client-side) ────────────────── -->
   <script>
-    // ─── VARIABLES & INITIAL SETUP ─────────────────────────────────────────────
     const imageInput   = document.getElementById('imageInput');
     const imageCanvas  = document.getElementById('imageCanvas');
     const ctx          = imageCanvas.getContext('2d');
@@ -140,31 +194,33 @@
     let isDragging = false;
     let magnifierX = 0, magnifierY = 0;
 
-    // How large the magnifier circle is (in canvas pixels)
+    // How big the magnifier circle is (in canvas pixels)
     const MAGNIFIER_RADIUS = 50;
     // How much to zoom into that circle
     const MAGNIFIER_ZOOM = 4;
 
-    // When the user clicks the “Upload Image” label, forward to the hidden <input>
+    // Clicking the “Upload Image” label opens the hidden <input>
     document.querySelector('.upload-label').onclick = () => {
       imageInput.click();
     };
 
-    // ─── LOAD IMAGE INTO CANVAS ─────────────────────────────────────────────────
+    // ─── Load the image into the canvas ────────────────────────────────────
     imageInput.addEventListener('change', (e) => {
       const file = e.target.files[0];
       if (!file) return;
+
+      // Only proceed if the file is an image
       if (!file.type.startsWith('image/')) {
         alert('Please select an image file.');
         return;
       }
 
       const reader = new FileReader();
-      reader.onload = function(ev) {
+      reader.onload = (ev) => {
         img.onload = () => {
           imgLoaded = true;
           // Scale the canvas so the image fits (max 400×400):
-          let scale = Math.min(400 / img.naturalWidth, 400 / img.naturalHeight, 1);
+          const scale = Math.min(400 / img.naturalWidth, 400 / img.naturalHeight, 1);
           imageCanvas.width  = img.naturalWidth  * scale;
           imageCanvas.height = img.naturalHeight * scale;
 
@@ -176,7 +232,7 @@
       reader.readAsDataURL(file);
     });
 
-    // ─── MOUSE POSITION & COLOR EXTRACTION ──────────────────────────────────────
+    // ─── Convert mouse coordinates into canvas-pixel coordinates ────────────
     function getCanvasCoordinates(e) {
       const rect = imageCanvas.getBoundingClientRect();
       const x = Math.floor((e.clientX - rect.left) * (imageCanvas.width / rect.width));
@@ -184,11 +240,12 @@
       return { x, y };
     }
 
+    // ─── Given a click or drag event, pick that pixel’s color ───────────────
     function pickColorAt(e) {
       if (!imgLoaded) return;
       const { x, y } = getCanvasCoordinates(e);
 
-      // Ensure we don’t read outside the canvas
+      // Make sure we’re within canvas bounds
       if (x < 0 || y < 0 || x >= imageCanvas.width || y >= imageCanvas.height) return;
 
       const pixel = ctx.getImageData(x, y, 1, 1).data;
@@ -200,7 +257,7 @@
       lastHex = hex;
     }
 
-    // ─── MAGNIFIER DRAWING ───────────────────────────────────────────────────────
+    // ─── Draw the circular magnifier around the cursor ─────────────────────
     function drawMagnifier(cx, cy) {
       ctx.save();
       ctx.beginPath();
@@ -211,13 +268,13 @@
       ctx.stroke();
       ctx.clip();
 
-      // Source rectangle (a small area around the cursor)
+      // Source region (a small square) around the cursor
       const sx = cx - MAGNIFIER_RADIUS / MAGNIFIER_ZOOM;
       const sy = cy - MAGNIFIER_RADIUS / MAGNIFIER_ZOOM;
       const sWidth  = (MAGNIFIER_RADIUS * 2) / MAGNIFIER_ZOOM;
       const sHeight = (MAGNIFIER_RADIUS * 2) / MAGNIFIER_ZOOM;
 
-      // Draw the zoomed‐in image beneath the circle
+      // Draw the zoomed portion inside the circle
       ctx.drawImage(
         imageCanvas,
         sx, sy, sWidth, sHeight,
@@ -227,6 +284,7 @@
       ctx.restore();
     }
 
+    // ─── Redraw the original image & (if dragging) overlay the magnifier ───
     function redrawWithMagnifier() {
       ctx.clearRect(0, 0, imageCanvas.width, imageCanvas.height);
       ctx.drawImage(img, 0, 0, imageCanvas.width, imageCanvas.height);
@@ -241,7 +299,7 @@
       magnifierY = y;
     }
 
-    // ─── MOUSE EVENTS ON CANVAS ─────────────────────────────────────────────────
+    // ─── Mouse events on the canvas ────────────────────────────────────────
     imageCanvas.addEventListener('mousedown', (e) => {
       if (!imgLoaded) return;
       isDragging = true;
@@ -279,16 +337,16 @@
       colorInfo.style.display = 'flex';
     });
 
-    // ─── COPY HEX CODE ON CLICK ──────────────────────────────────────────────────
+    // ─── Copy hex code to clipboard on click ─────────────────────────────────
     hexCode.addEventListener('click', () => {
       navigator.clipboard.writeText(hexCode.textContent);
-      hexCode.textContent = hexCode.textContent.replace(' ✓', '') + ' ✓';
+      hexCode.textContent = hexCode.textContent + ' ✓';
       setTimeout(() => {
         hexCode.textContent = hexCode.textContent.replace(' ✓', '');
       }, 1000);
     });
 
-    // ─── RGB → HEX UTILITY ──────────────────────────────────────────────────────
+    // ─── RGB → HEX conversion utility ────────────────────────────────────────
     function rgbToHex(r, g, b) {
       return (
         '#' +
@@ -300,7 +358,9 @@
           .join('')
       ).toUpperCase();
     }
-    // ─────────────────────────────────────────────────────────────────────────────
   </script>
+
+  <!-- ─── common.js must come last (builds stars + navbar if needed) ─────── -->
+  <script src="common.js"></script>
 </body>
 </html>
