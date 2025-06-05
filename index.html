@@ -51,20 +51,18 @@
       z-index: 2;
     }
     body#index-home .nav-links a {
-      font-family: 'Patrick Hand', cursive;
-      text-decoration: none;
-      color: #fff;
-      padding: 0.8rem 1.4rem;
-      transition: all 0.3s ease;
-      border-radius: 16px;
-      position: relative;
-      font-size: 1.2rem;
-      min-width: 100px;
-      text-align: center;
-      backdrop-filter: blur(4px);
-      border: 1px solid rgba(255,255,255,0.2);
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2), 0 2px 4px rgba(0,0,0,0.1);
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+      position: absolute;
+      bottom: 20px;           /* Push 20px up from the bottom of the 320px header */
+      left: 0;                /* Pin to left edge of header */
+      right: 0;               /* Pin to right edge of header */
+      display: flex;          /* Make it a flex container (full width) */
+      justify-content: center;/* Center the <li> items horizontally */
+      align-items: center;    /* Center them vertically within that 20px offset */
+      gap: 1.5rem;            /* The existing gap you already want */
+      margin: 0;
+      padding: 0 0.5rem;      /* Optional side padding like before */
+      z-index: 2;
+      transform: translateY(80px); /* Keep the vertical shift you wanted */
     }
 
     body#index-home .nav-links li:nth-child(1) a {
