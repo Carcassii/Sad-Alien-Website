@@ -1,17 +1,16 @@
 // Function to create the navigation bar
 function createNavbar() {
     const isHome = window.location.href.includes('index.html') || window.location.pathname === '/';
-    console.log('isHome?', isHome);
     
     const navbar = `
 <nav class="navbar">
   <div class="navbar-inner">
-    ${!isHome ? '<h1 class="site-title">Sad Alien</h1>' : ''}
+    <h1 class="site-title">Sad Alien</h1>
     <ul class="nav-links">
       <li><a href="index.html">Home</a></li>
       <li><a href="about.html">About</a></li>
       <li class="tool-dropdown">
-        <a class="tool-link">Tools</a>
+        <a href="tools.html" class="tool-link">Tools</a>
         <div class="tool-dropdown-content">
           <a href="colormatcher.html">Color Matcher</a>
           <a href="imagetohex.html">Image to Hex</a>
@@ -23,18 +22,25 @@ function createNavbar() {
   </div>
 </nav>`;
 
-document.body.insertAdjacentHTML('afterbegin', navbar);
-if (isHome) {
-    const navbarElem = document.querySelector('.navbar');
-    const svgContainer = document.getElementById('svg-container');
-    if (navbarElem && svgContainer) {
-        navbarElem.appendChild(svgContainer);
+    // Remove any existing navbar first
+    const existingNav = document.querySelector('.navbar');
+    if (existingNav) {
+        existingNav.remove();
     }
+
+    // Insert the new navbar
+    document.body.insertAdjacentHTML('afterbegin', navbar);
 }
-}
+
 // Function to create stars
 function createStars() {
     const navbar = document.querySelector('.navbar');
+    if (!navbar) return; // Exit if navbar doesn't exist
+    
+    // Remove existing stars
+    const existingStars = document.querySelectorAll('.star');
+    existingStars.forEach(star => star.remove());
+    
     const numStars = 200;
     
     for (let i = 0; i < numStars; i++) {
@@ -51,9 +57,8 @@ function createStars() {
     }
 }
 
-
-// Initialize when the page loads
-window.addEventListener('load', () => {
+// Initialize when the DOM is fully loaded
+document.addEventListener('DOMContentLoaded', () => {
     createNavbar();
     createStars();
 }); 
