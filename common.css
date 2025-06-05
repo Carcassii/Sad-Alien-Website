@@ -87,9 +87,11 @@ body {
     font-family: 'Patrick Hand', cursive;
     font-size: 4em;
     color: #FFE66D;
-    margin-bottom: 1rem;
-    animation: float 3.5s ease-in-out infinite, titleGlow 3s ease-in-out infinite;
+    font-weight: 400;
     text-align: center;
+    margin: 0 0 1rem 0;
+    animation: float 3.5s ease-in-out infinite, titleGlow 3s ease-in-out infinite;
+    z-index: 2;
 }
 
 .nav-links {
