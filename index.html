@@ -18,17 +18,13 @@
       overflow-x: hidden;
     }
     .navbar {
-      position: relative;
-      height: 320px;
-      background: #0a1d37;
       display: flex;
-      justify-content: center;
-      align-items: flex-end;
-      padding-bottom: 1rem;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-      z-index: 1000;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
       max-height: 320px;
       overflow: visible;
+      position: relative;
     }
     .navbar::before {
       content: "";
@@ -43,16 +39,13 @@
       overflow: hidden;
     }
     .nav-links {
-      list-style: none;
       display: flex;
+      justify-content: center;
+      align-items: center;
       gap: 1.5rem;
       margin: 0;
       padding: 0;
       z-index: 2;
-      transform: translateY(80px);
-      justify-content: center;
-      flex-wrap: wrap;
-      align-items: center;
     }
     .nav-links a {
       font-family: 'Patrick Hand', cursive;
@@ -95,7 +88,7 @@
     }
     .svg-container {
       position: relative;
-      width: 100%;
+      margin: 0 auto;
       left: 0;
       top: 0;
       max-height: 320px;
