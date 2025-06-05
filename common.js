@@ -31,6 +31,14 @@ function createNavbar() {
 
     // Insert the navbar at the beginning of the body
     document.body.insertAdjacentHTML('afterbegin', navbar);
+    // Move svg-container into navbar on homepage
+    if (isHome) {
+        const navbarElem = document.querySelector('.navbar');
+        const svgContainer = document.getElementById('svg-container');
+        if (navbarElem && svgContainer) {
+            navbarElem.appendChild(svgContainer);
+        }
+    }
 }
 
 // Function to create stars
