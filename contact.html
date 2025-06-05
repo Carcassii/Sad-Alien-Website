@@ -202,105 +202,53 @@
     }
 
     .form-group {
-      margin-bottom: 20px;
+      margin-bottom: 1.5rem;
     }
 
-    label {
+    .form-group label {
       display: block;
-      margin-bottom: 8px;
-      font-family: 'Patrick Hand', cursive;
-      font-size: 1.2em;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
       color: #0a1d37;
     }
 
-    input, textarea {
+    .form-group input,
+    .form-group textarea {
       width: 100%;
-      padding: 12px;
-      border: 2px solid #3c75b4;
-      border-radius: 12px;
+      padding: 0.8rem;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
       font-family: 'Work Sans', sans-serif;
-      font-size: 1em;
-      transition: all 0.3s ease;
-      background: rgba(255, 255, 255, 0.9);
+      font-size: 1rem;
+      transition: border-color 0.3s ease;
     }
 
-    input:focus, textarea:focus {
+    .form-group input:focus,
+    .form-group textarea:focus {
       outline: none;
-      border-color: #FFE66D;
-      box-shadow: 0 0 10px rgba(255, 230, 109, 0.3);
+      border-color: #3c75b4;
     }
 
-    textarea {
+    .form-group textarea {
       min-height: 150px;
       resize: vertical;
     }
 
     .submit-btn {
       background: #3c75b4;
-      color: white;
+      color: #fff;
       border: none;
-      padding: 15px 30px;
-      border-radius: 12px;
-      font-family: 'Patrick Hand', cursive;
-      font-size: 1.3em;
+      padding: 1rem 2rem;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      font-weight: 600;
       cursor: pointer;
       transition: all 0.3s ease;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
 
     .submit-btn:hover {
-      background: #2D0320;
+      background: #255080;
       transform: translateY(-2px);
-      box-shadow: 0 6px 16px rgba(0,0,0,0.2);
-    }
-
-    .submit-btn:active {
-      transform: translateY(0);
-    }
-
-    .social-links {
-      display: flex;
-      gap: 20px;
-      justify-content: center;
-      margin-top: 40px;
-      flex-wrap: wrap;
-    }
-
-    .social-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      font-size: 1.5em;
-      text-decoration: none;
-      color: white;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      border: 2px solid rgba(255,255,255,0.2);
-    }
-
-    .social-btn:hover {
-      transform: translateY(-3px) scale(1.1);
-      box-shadow: 0 6px 16px rgba(0,0,0,0.2);
-      filter: brightness(1.1);
-    }
-
-    .social-btn.linkedin {
-      background: #0077B5;
-    }
-
-    .social-btn.tiktok {
-      background: #000000;
-    }
-
-    .social-btn.bluesky {
-      background: #0085FF;
-    }
-
-    .social-btn.instagram {
-      background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
     }
 
     @media (max-width: 768px) {
@@ -450,44 +398,25 @@
   </nav>
   <div class="content-container">
     <div class="contact-section">
-      <img src="Images/sadalien.png" alt="Sad Alien Mascot" class="alien-image">
+      <img src="Images/alien.png" alt="Sad Alien" class="alien-image">
       <div class="contact-form">
         <h2>Get in Touch!</h2>
-        <p>Have a question or want to collaborate? Or did you put your pants on backwards today? I would love to hear from you! Fill out the form below and I'll get back to you as soon as possible.</p>
-        
-        <form action="https://formsubmit.co/sadalien.studios@gmail.com" method="POST">
+        <p>Have a question or want to collaborate? I'd love to hear from you! Fill out the form below and I'll get back to you as soon as possible.</p>
+        <form id="contactForm">
           <div class="form-group">
-            <label for="name">Your Name</label>
+            <label for="name">Name</label>
             <input type="text" id="name" name="name" required>
           </div>
-          
           <div class="form-group">
-            <label for="email">Your Email</label>
+            <label for="email">Email</label>
             <input type="email" id="email" name="email" required>
           </div>
-          
           <div class="form-group">
-            <label for="message">Your Message</label>
+            <label for="message">Message</label>
             <textarea id="message" name="message" required></textarea>
           </div>
-          
-          <button type="submit" class="submit-btn">Send Message 🚀</button>
+          <button type="submit" class="submit-btn">Send Message</button>
         </form>
-
-        <div class="social-links">
-          <a href="https://www.linkedin.com/in/matteo-karkazis-a067a81a7/" class="social-btn linkedin" target="_blank" title="LinkedIn">
-            <i class="fab fa-linkedin-in"></i>
-          </a>
-          <a href="https://www.tiktok.com/@sadaliengames" class="social-btn tiktok" target="_blank" title="TikTok">
-            <i class="fab fa-tiktok"></i>
-          </a>
-          <a href="https://bsky.app/profile/matteokarkazis.bsky.social" class="social-btn bluesky" target="_blank" title="Bluesky">
-            <i class="fas fa-cloud"></i>
-          </a>
-          <a href="https://www.instagram.com/sadalien.games/" class="social-btn instagram" target="_blank" title="Instagram">
-            <i class="fab fa-instagram"></i>
-          </a>
-        </div>
       </div>
     </div>
   </div>
