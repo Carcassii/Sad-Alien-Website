@@ -718,238 +718,147 @@
       </div>
     </div>
   </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
   <script src="common-fixed.js" defer></script>
   <script>
     // Audio context and settings
     let audioContext;
-    let currentInstrument = 'spaceOrgan';
+    let currentInstrument;
     let activeNotes = new Set();
     let arpeggiatorInterval = null;
     let arpeggiatorNotes = [];
     let arpeggiatorIndex = 0;
     let arpeggiatorSpeed = 0.5;
     let arpeggiatorPattern = 'up';
+    let isArpeggiating = false;
+    let currentArpStep = 0;
+    let currentArpNotes = new Set();
 
-    // Initialize audio context on user interaction
-    function initAudio() {
-      if (!audioContext) {
-        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    // Create Tone.js synth and effects
+    const synth = new Tone.PolySynth(Tone.Synth).toDestination();
+    const filter = new Tone.Filter(1500, "lowpass").toDestination();
+    const reverb = new Tone.Reverb(2).toDestination();
+    const distortion = new Tone.Distortion(0).toDestination();
+    const delay = new Tone.FeedbackDelay(0.25, 0.5).toDestination();
+    const gain = new Tone.Gain(0.7).toDestination();
+
+    // Connect effects
+    synth.connect(filter);
+    filter.connect(distortion);
+    distortion.connect(reverb);
+    reverb.connect(delay);
+    delay.connect(gain);
+
+    // Sample URLs for each instrument
+    const sampleUrls = {
+      clarinet: {
+        'C4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/clarinet-mp3/C4.mp3',
+        'D4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/clarinet-mp3/D4.mp3',
+        'E4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/clarinet-mp3/E4.mp3'
+      },
+      flute: {
+        'C4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/flute-mp3/C4.mp3',
+        'D4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/flute-mp3/D4.mp3',
+        'E4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/flute-mp3/E4.mp3'
+      },
+      harpsichord: {
+        'C4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/harpsichord-mp3/C4.mp3',
+        'D4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/harpsichord-mp3/D4.mp3',
+        'E4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/harpsichord-mp3/E4.mp3'
+      },
+      guitar: {
+        'C4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/acoustic_guitar_nylon-mp3/C4.mp3',
+        'D4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/acoustic_guitar_nylon-mp3/D4.mp3',
+        'E4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/acoustic_guitar_nylon-mp3/E4.mp3'
+      },
+      trumpet: {
+        'C4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/trumpet-mp3/C4.mp3',
+        'D4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/trumpet-mp3/D4.mp3',
+        'E4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/trumpet-mp3/E4.mp3'
+      },
+      oboe: {
+        'C4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/oboe-mp3/C4.mp3',
+        'D4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/oboe-mp3/D4.mp3',
+        'E4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/oboe-mp3/E4.mp3'
+      },
+      organ: {
+        'C4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/church_organ-mp3/C4.mp3',
+        'D4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/church_organ-mp3/D4.mp3',
+        'E4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/church_organ-mp3/E4.mp3'
+      },
+      strings: {
+        'C4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/violin-mp3/C4.mp3',
+        'D4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/violin-mp3/D4.mp3',
+        'E4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/violin-mp3/E4.mp3'
+      },
+      woof: {
+        'C4': 'audio/Woof.mp3',
+        'D4': 'audio/Woof.mp3',
+        'E4': 'audio/Woof.mp3'
+      }
+    };
+
+    // Initialize samplers
+    const samplers = {};
+    async function initSamplers() {
+      try {
+        for (const [name, urls] of Object.entries(sampleUrls)) {
+          samplers[name] = new Tone.Sampler({
+            urls: urls,
+            release: 1,
+            baseUrl: '',
+            onload: () => {
+              console.log(`Loaded ${name} sampler`);
+            }
+          }).connect(gain);
+          samplers[name].volume.value = 0;
+          if (name === 'woof') {
+            samplers[name].volume.value = 6;
+          }
+        }
+
+        // Wait a bit for samplers to load
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        console.log('All samplers initialized');
+        
+        // Set initial instrument
+        currentInstrument = synth;
+      } catch (error) {
+        console.error('Error loading samplers:', error);
       }
     }
 
-    // Create oscillator for a note
-    function createOscillator(frequency, type = 'sine') {
-      const oscillator = audioContext.createOscillator();
-      const gainNode = audioContext.createGain();
-      const filter = audioContext.createBiquadFilter();
-      const distortion = audioContext.createWaveShaper();
-      const reverb = audioContext.createConvolver();
-      const delay = audioContext.createDelay();
-      const delayGain = audioContext.createGain();
-
-      // Set up oscillator based on instrument
-      switch(currentInstrument) {
-        case 'spaceOrgan':
-          oscillator.type = 'sine';
-          oscillator.detune.value = parseFloat(document.getElementById('detune').value);
-          break;
-        case 'clarinet':
-          oscillator.type = 'triangle';
-          oscillator.detune.value = parseFloat(document.getElementById('detune').value) + 50;
-          break;
-        case 'flute':
-          oscillator.type = 'sine';
-          oscillator.detune.value = parseFloat(document.getElementById('detune').value) - 30;
-          break;
-        case 'harpsichord':
-          oscillator.type = 'square';
-          oscillator.detune.value = parseFloat(document.getElementById('detune').value) + 100;
-          break;
-        case 'guitar':
-          oscillator.type = 'sawtooth';
-          oscillator.detune.value = parseFloat(document.getElementById('detune').value) + 200;
-          break;
-        case 'trumpet':
-          oscillator.type = 'square';
-          oscillator.detune.value = parseFloat(document.getElementById('detune').value) + 150;
-          break;
-        case 'oboe':
-          oscillator.type = 'triangle';
-          oscillator.detune.value = parseFloat(document.getElementById('detune').value) - 50;
-          break;
-        case 'organ':
-          oscillator.type = 'sine';
-          oscillator.detune.value = parseFloat(document.getElementById('detune').value) + 300;
-          break;
-        case 'strings':
-          oscillator.type = 'sine';
-          oscillator.detune.value = parseFloat(document.getElementById('detune').value) + 400;
-          break;
-        case 'woof':
-          oscillator.type = 'sawtooth';
-          oscillator.detune.value = parseFloat(document.getElementById('detune').value) - 200;
-          break;
-        default:
-          oscillator.type = 'sine';
-          oscillator.detune.value = parseFloat(document.getElementById('detune').value);
+    // Initialize audio on first user interaction
+    async function initAudio() {
+      if (!audioContext) {
+        await Tone.start();
+        console.log('Tone.js started');
+        await initSamplers();
+        createStars();
+        currentInstrument = synth;
+        console.log('Initialization complete');
       }
-
-      oscillator.frequency.value = frequency;
-
-      // Set up filter with different characteristics per instrument
-      filter.type = 'lowpass';
-      switch(currentInstrument) {
-        case 'spaceOrgan':
-          filter.frequency.value = parseFloat(document.getElementById('filter').value);
-          filter.Q.value = 1;
-          break;
-        case 'clarinet':
-          filter.frequency.value = parseFloat(document.getElementById('filter').value) * 0.7;
-          filter.Q.value = 2;
-          break;
-        case 'flute':
-          filter.frequency.value = parseFloat(document.getElementById('filter').value) * 1.2;
-          filter.Q.value = 0.5;
-          break;
-        case 'harpsichord':
-          filter.frequency.value = parseFloat(document.getElementById('filter').value) * 1.5;
-          filter.Q.value = 3;
-          break;
-        case 'guitar':
-          filter.frequency.value = parseFloat(document.getElementById('filter').value) * 0.8;
-          filter.Q.value = 4;
-          break;
-        case 'trumpet':
-          filter.frequency.value = parseFloat(document.getElementById('filter').value) * 0.9;
-          filter.Q.value = 2.5;
-          break;
-        case 'oboe':
-          filter.frequency.value = parseFloat(document.getElementById('filter').value) * 0.6;
-          filter.Q.value = 1.5;
-          break;
-        case 'organ':
-          filter.frequency.value = parseFloat(document.getElementById('filter').value) * 1.3;
-          filter.Q.value = 0.8;
-          break;
-        case 'strings':
-          filter.frequency.value = parseFloat(document.getElementById('filter').value) * 1.1;
-          filter.Q.value = 0.3;
-          break;
-        case 'woof':
-          filter.frequency.value = parseFloat(document.getElementById('filter').value) * 0.4;
-          filter.Q.value = 5;
-          break;
-        default:
-          filter.frequency.value = parseFloat(document.getElementById('filter').value);
-          filter.Q.value = 1;
-      }
-
-      // Set up distortion with different characteristics per instrument
-      function makeDistortionCurve(amount) {
-        const samples = 44100;
-        const curve = new Float32Array(samples);
-        for (let i = 0; i < samples; i++) {
-          const x = (i * 2) / samples - 1;
-          curve[i] = (Math.PI + amount) * x / (Math.PI + amount * Math.abs(x));
-        }
-        return curve;
-      }
-
-      let distortionAmount = parseFloat(document.getElementById('distortion').value);
-      switch(currentInstrument) {
-        case 'guitar':
-          distortionAmount *= 2;
-          break;
-        case 'trumpet':
-          distortionAmount *= 1.5;
-          break;
-        case 'woof':
-          distortionAmount *= 3;
-          break;
-      }
-      distortion.curve = makeDistortionCurve(distortionAmount);
-
-      // Set up delay
-      delay.delayTime.value = parseFloat(document.getElementById('delayTime').value);
-      delayGain.gain.value = parseFloat(document.getElementById('delay').value);
-
-      // Set up reverb with different characteristics per instrument
-      const reverbAmount = parseFloat(document.getElementById('reverb').value);
-      const reverbGain = audioContext.createGain();
-      switch(currentInstrument) {
-        case 'spaceOrgan':
-          reverbGain.gain.value = reverbAmount * 1.5;
-          break;
-        case 'organ':
-          reverbGain.gain.value = reverbAmount * 2;
-          break;
-        case 'strings':
-          reverbGain.gain.value = reverbAmount * 1.8;
-          break;
-        default:
-          reverbGain.gain.value = reverbAmount;
-      }
-
-      // Connect nodes
-      oscillator.connect(filter);
-      filter.connect(distortion);
-      distortion.connect(gainNode);
-      distortion.connect(delay);
-      delay.connect(delayGain);
-      delayGain.connect(gainNode);
-      gainNode.connect(reverbGain);
-      reverbGain.connect(audioContext.destination);
-
-      // Set volume with slight variations per instrument
-      let volume = parseFloat(document.getElementById('volume').value);
-      switch(currentInstrument) {
-        case 'trumpet':
-          volume *= 1.2;
-          break;
-        case 'woof':
-          volume *= 1.5;
-          break;
-        case 'flute':
-          volume *= 0.8;
-          break;
-      }
-      gainNode.gain.value = volume;
-
-      return { oscillator, gainNode };
     }
 
     // Play a note
     function playNote(note) {
       if (!audioContext) initAudio();
-      
-      const noteFrequencies = {
-        'C4': 261.63, 'C#4': 277.18, 'D4': 293.66, 'D#4': 311.13,
-        'E4': 329.63, 'F4': 349.23, 'F#4': 369.99, 'G4': 392.00,
-        'G#4': 415.30, 'A4': 440.00, 'A#4': 466.16, 'B4': 493.88,
-        'C5': 523.25, 'C#5': 554.37, 'D5': 587.33, 'D#5': 622.25,
-        'E5': 659.25
-      };
-
-      const frequency = noteFrequencies[note];
-      if (!frequency) return;
-
-      const { oscillator, gainNode } = createOscillator(frequency);
-      oscillator.start();
-      activeNotes.add({ note, oscillator, gainNode });
-
-      // Visual feedback
-      const key = document.querySelector(`[data-note="${note}"]`);
-      if (key) key.classList.add('active');
+      if (currentInstrument) {
+        currentInstrument.triggerAttack(note);
+        activeNotes.add(note);
+        
+        // Visual feedback
+        const key = document.querySelector(`[data-note="${note}"]`);
+        if (key) key.classList.add('active');
+      }
     }
 
     // Stop a note
     function stopNote(note) {
-      const noteObj = Array.from(activeNotes).find(n => n.note === note);
-      if (noteObj) {
-        noteObj.gainNode.gain.setTargetAtTime(0, audioContext.currentTime, 0.015);
-        noteObj.oscillator.stop(audioContext.currentTime + 0.015);
-        activeNotes.delete(noteObj);
-
+      if (currentInstrument) {
+        currentInstrument.triggerRelease(note);
+        activeNotes.delete(note);
+        
         // Visual feedback
         const key = document.querySelector(`[data-note="${note}"]`);
         if (key) key.classList.remove('active');
@@ -1011,31 +920,152 @@
       btn.addEventListener('click', () => {
         document.querySelectorAll('.instrument-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        currentInstrument = btn.dataset.instrument;
+        applyInstrument(btn.dataset.instrument);
       });
     });
 
-    // Handle control changes
-    document.querySelectorAll('input, select').forEach(control => {
-      control.addEventListener('input', () => {
-        // Update active notes with new settings
-        activeNotes.forEach(noteObj => {
-          const { oscillator, gainNode } = createOscillator(
-            noteFrequencies[noteObj.note],
-            document.getElementById('oscillator').value
-          );
-          noteObj.oscillator.stop();
-          noteObj.gainNode.disconnect();
-          oscillator.start();
-          activeNotes.add({ note: noteObj.note, oscillator, gainNode });
-        });
-      });
+    // Utility to enable/disable detune and oscillator knobs
+    function setSynthKnobsEnabled(enabled) {
+      const detune = document.getElementById('detune');
+      const oscillator = document.getElementById('oscillator');
+      detune.disabled = !enabled;
+      oscillator.disabled = !enabled;
+      detune.parentElement.style.opacity = enabled ? '1' : '0.5';
+      oscillator.parentElement.style.opacity = enabled ? '1' : '0.5';
+      detune.style.pointerEvents = enabled ? 'auto' : 'none';
+      oscillator.style.pointerEvents = enabled ? 'auto' : 'none';
+    }
+
+    // Function to apply instrument settings
+    function applyInstrument(instrumentName) {
+      if (currentInstrument && currentInstrument.releaseAll) {
+        currentInstrument.releaseAll(); // Release all notes from previous instrument
+      }
+      if (instrumentName === 'spaceOrgan') {
+        currentInstrument = synth;
+        setSynthKnobsEnabled(true);
+        console.log('Switched to space organ');
+      } else if (samplers[instrumentName]) {
+        currentInstrument = samplers[instrumentName];
+        setSynthKnobsEnabled(false);
+        console.log('Switched to', instrumentName);
+      }
+    }
+
+    // Arpeggiator patterns
+    const patterns = {
+      up: notes => notes,
+      down: notes => [...notes].reverse(),
+      upDown: notes => [...notes, ...notes.slice(0, -1).reverse()],
+      random: notes => {
+        const shuffled = [...notes];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        return shuffled;
+      }
+    };
+
+    // Update arpeggiator
+    function updateArpeggiator() {
+      const pattern = document.getElementById('arpPattern').value;
+      const speed = parseFloat(document.getElementById('arpSpeed').value);
+      
+      // Clear existing interval
+      if (arpeggiatorInterval) {
+        clearInterval(arpeggiatorInterval);
+      }
+
+      if (pattern === 'off') {
+        isArpeggiating = false;
+        return;
+      }
+
+      isArpeggiating = true;
+      const interval = 1000 * (2.1 - speed);
+
+      // If no notes are held, do nothing until a note is pressed
+      if (currentArpNotes.size > 0) {
+        let lastNote = null;
+        arpeggiatorInterval = setInterval(() => {
+          if (!isArpeggiating) {
+            if (lastNote && currentInstrument) {
+              currentInstrument.triggerRelease(lastNote);
+            }
+            return;
+          }
+
+          const arranged = patterns[pattern]([...currentArpNotes]);
+          if (arranged.length === 0) return;
+
+          currentArpStep = (currentArpStep + 1) % arranged.length;
+          const note = arranged[currentArpStep];
+          
+          // Release previous note
+          if (lastNote && currentInstrument) {
+            currentInstrument.triggerRelease(lastNote);
+          }
+
+          // Play the new note
+          if (currentInstrument) {
+            currentInstrument.triggerAttack(note);
+          }
+          lastNote = note;
+
+          // Update key visuals
+          document.querySelectorAll('.key').forEach(key => {
+            key.classList.remove('active');
+            if (key.dataset.note === note) {
+              key.classList.add('active');
+            }
+          });
+        }, interval);
+      }
+    }
+
+    // Add event listeners for arpeggiator controls
+    document.getElementById('arpPattern').addEventListener('change', updateArpeggiator);
+    document.getElementById('arpSpeed').addEventListener('input', updateArpeggiator);
+
+    // Add knob event listeners
+    document.getElementById('detune').addEventListener('input', (e) => {
+      if (currentInstrument === synth) {
+        synth.detune.value = parseFloat(e.target.value);
+      }
+    });
+
+    document.getElementById('filter').addEventListener('input', (e) => {
+      filter.frequency.value = parseFloat(e.target.value);
+    });
+
+    document.getElementById('reverb').addEventListener('input', (e) => {
+      reverb.wet.value = parseFloat(e.target.value);
+    });
+
+    document.getElementById('distortion').addEventListener('input', (e) => {
+      distortion.distortion = parseFloat(e.target.value);
+    });
+
+    document.getElementById('volume').addEventListener('input', (e) => {
+      gain.gain.value = parseFloat(e.target.value);
+    });
+
+    document.getElementById('delay').addEventListener('input', (e) => {
+      delay.wet.value = parseFloat(e.target.value);
+    });
+
+    document.getElementById('delayTime').addEventListener('input', (e) => {
+      delay.delayTime.value = parseFloat(e.target.value);
     });
 
     // Initialize audio on first user interaction
     document.addEventListener('click', initAudio, { once: true });
     document.addEventListener('keydown', initAudio, { once: true });
     document.addEventListener('touchstart', initAudio, { once: true });
+
+    // On page load, set initial knob state
+    setSynthKnobsEnabled(true);
   </script>
 </body>
 </html>
