@@ -932,8 +932,22 @@
         for (const [note, url] of Object.entries(notes)) {
           try {
             const resp = await fetch(url);
+            if (!resp.ok) {
+              console.warn(`HTTP error for ${instr} ${note}: ${resp.status} ${resp.statusText} at ${url}`);
+              continue;
+            } else {
+              console.log(`Fetched ${instr} ${note} from ${url}`);
+            }
             const arrayBuf = await resp.arrayBuffer();
-            const decoded = await audioContext.decodeAudioData(arrayBuf);
+            const decoded = await audioContext.decodeAudioData(arrayBuf).catch(err => {
+              console.warn(`Decoding failed for ${instr} ${note} at ${url}:`, err);
+              return null;
+            });
+            if (!decoded) {
+              console.warn(`Decoded buffer is null for ${instr} ${note} at ${url}`);
+            } else {
+              console.log(`Decoded audio for ${instr} ${note}`);
+            }
             audioBuffers[instr][note] = decoded;
           } catch (err) {
             console.warn(`Failed to load ${instr} ${note} from ${url}:`, err);
@@ -1016,13 +1030,24 @@
 
     function playSampleBasedNote(note) {
       const buffersForInst = audioBuffers[currentInstrument];
-      if (!buffersForInst) return;
+      if (!buffersForInst) {
+        console.warn(`No buffers loaded for instrument: ${currentInstrument}`);
+        return;
+      }
       const nearest = findNearestSample(buffersForInst, note);
-      if (!nearest) return;
+      if (!nearest) {
+        console.warn(`No nearest sample found for note ${note} in instrument ${currentInstrument}`);
+        return;
+      }
 
       const { sampleNote, semitoneDelta } = nearest;
       const sampleBuffer = buffersForInst[sampleNote];
-      if (!sampleBuffer) return;
+      if (!sampleBuffer) {
+        console.warn(`No sample buffer for ${currentInstrument} ${sampleNote}`);
+        return;
+      }
+
+      console.log(`Playing sample for ${currentInstrument} ${note} (using ${sampleNote}, semitoneDelta=${semitoneDelta})`);
 
       const source = audioContext.createBufferSource();
       const gainNode = audioContext.createGain();
