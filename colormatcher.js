@@ -802,7 +802,11 @@ function showReferenceSwatch(hex) {
 function updateSwatches(hex, scheme) {
   const swatchRow = document.getElementById('swatchRow');
   swatchRow.innerHTML = '';
-  let n = colorCount[scheme] || 5;
+  // Use nColors input for variable schemes, otherwise use colorCount default
+  const variableSchemes = ['analogous', 'monochromatic', 'pastel', 'earth', 'warm', 'cool', 'highkey', 'lowkey', 'gradient'];
+  let n = variableSchemes.includes(scheme)
+    ? (parseInt(document.getElementById('nColors').value) || colorCount[scheme] || 5)
+    : (colorCount[scheme] || 5);
   let colors = [];
   
   switch (scheme) {
