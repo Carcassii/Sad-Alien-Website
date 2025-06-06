@@ -1,3 +1,50 @@
+// === CONFIGURE THIS: paste your Apps Script web app URL inside the quotes ===
+const GOOGLE_SHEET_LOGGING_URL = "https://script.google.com/macros/s/AKfycbzuHGkySv9i6roLqw2RaWgkoCZ0AphdcTF7yTMQ8C5HfeiFJWaAI2ICpSO2uAWcHZ1-/exec";
+
+// In-memory log array (optional fallback)
+let hexCopyLog = [];
+
+// On page load, try to restore any previously saved log from localStorage
+(function loadExistingLog() {
+  try {
+    const json = localStorage.getItem("hexCopyLog");
+    if (json) {
+      hexCopyLog = JSON.parse(json);
+    }
+  } catch(e) {
+    console.warn("Could not parse existing hexCopyLog:", e);
+    hexCopyLog = [];
+  }
+})();
+
+/**
+ * Call this function whenever someone copies a hex code.
+ * It does two things:
+ *   1) pushes { hex, timestamp } into a local array + localStorage
+ *   2) sends a POST to your Google Sheet's Apps Script endpoint
+ */
+function recordCopy(hex) {
+  const entry = {
+    hex: hex.toLowerCase(),
+    timestamp: new Date().toISOString()
+  };
+
+  // === 1) Persist locally in case the network is offline ===
+  hexCopyLog.push(entry);
+  try {
+    localStorage.setItem("hexCopyLog", JSON.stringify(hexCopyLog));
+  } catch (ignore) {}
+
+  // === 2) Send it to your Google Sheet via Apps Script ===
+  fetch(GOOGLE_SHEET_LOGGING_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(entry)
+  }).catch(err => {
+    console.error("Failed to POST to Google Sheet:", err);
+  });
+}
+
 // Color conversion utilities
 function hexToHsl(hex) {
   // Remove the # if present
@@ -791,10 +838,17 @@ function showReferenceSwatch(hex) {
   swatch.className = 'swatch';
   swatch.innerHTML = `<div class="swatch-color" style="background:${hex}"></div><span class="swatch-hex">${hex}</span>`;
   swatch.onclick = function() {
-    navigator.clipboard.writeText(hex);
-    const hexSpan = swatch.querySelector('.swatch-hex');
-    hexSpan.textContent = hex + ' ✓';
-    setTimeout(() => { hexSpan.textContent = hex; }, 1000);
+    navigator.clipboard.writeText(hex)
+      .then(() => {
+        const hexSpan = swatch.querySelector('.swatch-hex');
+        hexSpan.textContent = hex + ' ✓';
+        setTimeout(() => { hexSpan.textContent = hex; }, 1000);
+        // Log the copy
+        recordCopy(hex);
+      })
+      .catch(err => {
+        console.error("Clipboard write failed:", err);
+      });
   };
   referenceRow.appendChild(swatch);
 }
@@ -930,10 +984,17 @@ function updateSwatches(hex, scheme) {
     swatch.className = 'swatch';
     swatch.innerHTML = `<div class="swatch-color" style="background:${color}"></div><span class="swatch-hex">${color}</span>`;
     swatch.onclick = function() {
-      navigator.clipboard.writeText(color);
-      const hexSpan = swatch.querySelector('.swatch-hex');
-      hexSpan.textContent = color + ' ✓';
-      setTimeout(() => { hexSpan.textContent = color; }, 1000);
+      navigator.clipboard.writeText(color)
+        .then(() => {
+          const hexSpan = swatch.querySelector('.swatch-hex');
+          hexSpan.textContent = color + ' ✓';
+          setTimeout(() => { hexSpan.textContent = color; }, 1000);
+          // Log the copy
+          recordCopy(color);
+        })
+        .catch(err => {
+          console.error("Clipboard write failed:", err);
+        });
     };
     swatchRow.appendChild(swatch);
   });
