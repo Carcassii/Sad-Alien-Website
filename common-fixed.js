@@ -8,7 +8,7 @@ function createNavbar() {
   const navbar = `
 <nav class="navbar">
   <div class="navbar-inner">
-    ${!isHome ? '<h1 class="site-title">Sad Alien</h1>' : ''}
+    <h1 class="site-title">Sad Alien</h1>
     <ul class="nav-links">
       <li><a href="index.html">Home</a></li>
       <li><a href="about.html">About</a></li>
@@ -39,7 +39,7 @@ function createNavbar() {
 // Function to create stars in the navbar
 function createStars() {
   const navbar = document.querySelector('.navbar');
-  if (!navbar) return; // If for some reason .navbar isn’t on the page, don’t crash
+  if (!navbar) return; // If for some reason .navbar isn't on the page, don't crash
 
   const numStars = 200;
   for (let i = 0; i < numStars; i++) {
@@ -60,4 +60,4 @@ function createStars() {
 window.addEventListener('load', () => {
   createNavbar();
   createStars();
-});  //<— This “});” is the critical closing brace/paren for the listener
+});  //<— This "});" is the critical closing brace/paren for the listener
