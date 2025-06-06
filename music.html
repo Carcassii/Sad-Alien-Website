@@ -724,25 +724,25 @@
     // ------------------------------------------------------------------------------------------------
     // Globals & Configuration
     // ------------------------------------------------------------------------------------------------
-    let audioContext = null;
-    let filterNode = null;
-    let distortionNode = null;
-    let delayNode = null;
-    let reverbNode = null;
-    let delayGainNode = null;
-    let mainGainNode = null;
-    let audioIsReady = false;
+    let audioContext       = null;
+    let filterNode         = null;
+    let distortionNode     = null;
+    let reverbNode         = null;
+    let delayNode          = null;
+    let delayGainNode      = null;
+    let delayFeedbackNode  = null;
+    let mainGainNode       = null;
+    let audioIsReady       = false;
 
-    let currentInstrument = 'spaceOrgan';
-    const activeNotes = new Set();
-    let voiceObjects = {};       // { noteName: { node: OscillatorNode or AudioBufferSourceNode, gainNode: GainNode, timeoutId: number | null } }
-    let arpIntervalId = null;    // ID for setInterval when ARP is active
-    let arpStepIndex = 0;
+    let currentInstrument  = 'spaceOrgan';
+    const activeNotes      = new Set();
+    let voiceObjects       = {};
+    let arpIntervalId      = null;
+    let arpStepIndex       = 0;
+    const heldKeys         = new Set();
 
     let currentOscillatorType = 'sine';
     let currentDetuneValue = 0;  // in cents
-
-    const heldKeys = new Set();
 
     // ARP settings (pulled from knobs)
     function getArpSpeed() { return parseFloat(document.getElementById('arpSpeed').value); }
@@ -854,36 +854,44 @@
     // Effect Chain Setup (filter → distortion → reverb → delay → volume → destination)
     // ------------------------------------------------------------------------------------------------
     async function setupEffectsChain() {
+      // 1) Filter
       filterNode = audioContext.createBiquadFilter();
       filterNode.type = 'lowpass';
       filterNode.frequency.value = parseFloat(document.getElementById('filter').value);
 
+      // 2) Distortion
       distortionNode = audioContext.createWaveShaper();
-      distortionNode.curve = makeDistortionCurve(parseFloat(document.getElementById('distortion').value) * 100);
+      distortionNode.curve = makeDistortionCurve(
+        parseFloat(document.getElementById('distortion').value) * 100
+      );
       distortionNode.oversample = '4x';
 
-      // Create a Convolver + WetGain + DryGain
+      // 3) Reverb (Convolver + Wet/Dry)
       reverbNode = audioContext.createConvolver();
-      reverbBuffer = await fetchImpulseResponse();
+      const reverbBuffer = await fetchImpulseResponse();
       reverbNode.buffer = reverbBuffer;
 
-      // Two gain nodes to mix dry ↔ wet
       const reverbWetGain = audioContext.createGain();
       const reverbDryGain = audioContext.createGain();
-      // Default: 20% wet → 80% dry
       reverbWetGain.gain.value = parseFloat(document.getElementById('reverb').value);
       reverbDryGain.gain.value = 1 - reverbWetGain.gain.value;
 
-      // Delay chain
+      // 4) Delay + Delay Mix
       delayNode = audioContext.createDelay(5.0);
       delayNode.delayTime.value = parseFloat(document.getElementById('delayTime').value);
+
       delayGainNode = audioContext.createGain();
       delayGainNode.gain.value = parseFloat(document.getElementById('delay').value);
 
+      // 5) **NEW**: feedback so that delay echoes repeat
+      delayFeedbackNode = audioContext.createGain();
+      delayFeedbackNode.gain.value = 0.4; // default feedback amount (you can expose this to a UI knob)
+
+      // 6) Master Output
       mainGainNode = audioContext.createGain();
       mainGainNode.gain.value = parseFloat(document.getElementById('volume').value);
 
-      // Chain routing:
+      // ─── Hookup ─────────────────────────────────────────────────────────────────
       filterNode.connect(distortionNode);
       distortionNode.connect(reverbDryGain);
       distortionNode.connect(reverbNode);
@@ -893,13 +901,22 @@
       reverbDryGain.connect(afterReverbMerge);
       reverbWetGain.connect(afterReverbMerge);
 
+      // a) Dry path straight to mainGain
+      afterReverbMerge.connect(mainGainNode);
+
+      // b) Wet path: → delay → delayGain → mainGain
       afterReverbMerge.connect(delayNode);
       delayNode.connect(delayGainNode);
       delayGainNode.connect(mainGainNode);
-      afterReverbMerge.connect(mainGainNode);
+
+      // c) **Feedback loop**: feed a portion of the delay's output back into its input
+      delayNode.connect(delayFeedbackNode);
+      delayFeedbackNode.connect(delayNode);
+
+      // d) Finally to destination
       mainGainNode.connect(audioContext.destination);
 
-      // Make reverbWetGain and reverbDryGain accessible for the #reverb slider:
+      // Expose reverbDry/Wet so "reverb" slider works:
       window._reverbWetGain = reverbWetGain;
       window._reverbDryGain = reverbDryGain;
     }
@@ -1119,10 +1136,18 @@
         stopSampleBasedNote(note);
       }
 
-      // Clean up visuals & state
       const keyEl = document.querySelector(`[data-note="${note}"]`);
       if (keyEl) keyEl.classList.remove('active');
+
       heldKeys.delete(note);
+
+      // ❶ Remove from activeNotes:
+      activeNotes.delete(note);
+
+      // ❷ If no more active notes, stop the arpeggiator:
+      if (activeNotes.size === 0) {
+        stopArpeggiator();
+      }
     }
 
     function stopAllNotes() {
@@ -1152,12 +1177,15 @@
       const speed = getArpSpeed();
 
       arpIntervalId = setInterval(() => {
-        const notesArray = Array.from(activeNotes).sort((a, b) => NOTE_TO_SEMITONE[a] - NOTE_TO_SEMITONE[b]);
+        // 1) Build a sorted array of all currently held notes:
+        const notesArray = Array.from(activeNotes)
+          .sort((a, b) => NOTE_TO_SEMITONE[a] - NOTE_TO_SEMITONE[b]);
         if (notesArray.length === 0) {
           stopArpeggiator();
           return;
         }
 
+        // 2) Pick which note to play based on the pattern and arpStepIndex
         let noteToPlay = null;
         switch (pattern) {
           case 'up':
@@ -1166,17 +1194,16 @@
           case 'down':
             noteToPlay = notesArray[(notesArray.length - 1) - (arpStepIndex % notesArray.length)];
             break;
-          case 'upDown':
-            {
-              const cycleLen = notesArray.length * 2 - 2;
-              const idx = arpStepIndex % cycleLen;
-              if (idx < notesArray.length) {
-                noteToPlay = notesArray[idx];
-              } else {
-                noteToPlay = notesArray[cycleLen - idx];
-          }
+          case 'upDown': {
+            const cycleLen = notesArray.length * 2 - 2;
+            const idx = arpStepIndex % cycleLen;
+            if (idx < notesArray.length) {
+              noteToPlay = notesArray[idx];
+            } else {
+              noteToPlay = notesArray[cycleLen - idx];
             }
             break;
+          }
           case 'random':
             noteToPlay = notesArray[Math.floor(Math.random() * notesArray.length)];
             break;
@@ -1184,13 +1211,15 @@
             break;
         }
 
+        // 3) Stop any notes that aren't the "current" noteToPlay
         for (const n of notesArray) {
           if (n !== noteToPlay && activeNotes.has(n)) {
             if (currentInstrument === 'spaceOrgan') stopOscillatorNote(n);
             else stopSampleBasedNote(n);
-        }
+          }
         }
 
+        // 4) Actually play noteToPlay:
         if (noteToPlay) {
           if (currentInstrument === 'spaceOrgan') {
             playOscillatorNote(noteToPlay);
@@ -1201,7 +1230,8 @@
           const keyEl = document.querySelector(`[data-note="${noteToPlay}"]`);
           if (keyEl) keyEl.classList.add('active');
 
-          const gateTime = speed * 0.9 * 1000;
+          // 5) Schedule a "gate" to cut that note off before the next interval:
+          const gateTime = speed * 0.9 * 1000; // 90% of each step
           setTimeout(() => {
             if (activeNotes.has(noteToPlay)) {
               if (currentInstrument === 'spaceOrgan') stopOscillatorNote(noteToPlay);
@@ -1221,11 +1251,12 @@
         clearInterval(arpIntervalId);
         arpIntervalId = null;
       }
+      // Kill any sounding notes and clear activeNotes
       activeNotes.forEach((n) => {
         if (currentInstrument === 'spaceOrgan') stopOscillatorNote(n);
         else stopSampleBasedNote(n);
-        const keyEl2 = document.querySelector(`[data-note="${n}"]`);
-        if (keyEl2) keyEl2.classList.remove('active');
+        const keyEl = document.querySelector(`[data-note="${n}"]`);
+        if (keyEl) keyEl.classList.remove('active');
       });
       activeNotes.clear();
     }
