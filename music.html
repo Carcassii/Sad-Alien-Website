@@ -1257,13 +1257,21 @@
         clearInterval(arpIntervalId);
         arpIntervalId = null;
       }
-      // Kill any sounding notes and clear activeNotes
-      activeNotes.forEach((n) => {
-        if (currentInstrument === 'spaceOrgan') stopOscillatorNote(n);
-        else stopSampleBasedNote(n);
+
+      // ──────────────────────────────────────────────────────────────────────
+      // Kill every voice that might still be playing, regardless of activeNotes
+      Object.keys(voiceObjects).forEach((n) => {
+        const v = voiceObjects[n];
+        if (v.node && v.node.stop) {
+          try { v.node.stop(); } catch (_) {}
+        }
         const keyEl = document.querySelector(`[data-note="${n}"]`);
         if (keyEl) keyEl.classList.remove('active');
+        delete voiceObjects[n];
       });
+
+      // ──────────────────────────────────────────────────────────────────────
+      // Also clear the activeNotes set so there's no leftover "note in ARP"
       activeNotes.clear();
     }
 
