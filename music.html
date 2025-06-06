@@ -852,10 +852,10 @@
     async function setupEffectsChain() {
       filterNode = audioContext.createBiquadFilter();
       filterNode.type = 'lowpass';
-      filterNode.frequency.value = 1500;
+      filterNode.frequency.value = parseFloat(document.getElementById('filter').value);
 
       distortionNode = audioContext.createWaveShaper();
-      distortionNode.curve = makeDistortionCurve(0);
+      distortionNode.curve = makeDistortionCurve(parseFloat(document.getElementById('distortion').value) * 100);
       distortionNode.oversample = '4x';
 
       // Create a Convolver + WetGain + DryGain
@@ -944,40 +944,12 @@
     async function initAudio() {
       if (!audioContext) {
         audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        await audioContext.resume();
+        await setupEffectsChain();
+        attachUIListeners();
+        // Optionally: await loadReverbInBackground();
+        loadAllSamples(); // Start loading samples in the background
       }
-      await audioContext.resume(); // Ensure context is running
-
-      // 1) Build a minimal "dry" chain immediately, so oscillators can play:
-      filterNode = audioContext.createBiquadFilter();
-      filterNode.type = 'lowpass';
-      filterNode.frequency.value = parseFloat(document.getElementById('filter').value);
-
-      distortionNode = audioContext.createWaveShaper();
-      distortionNode.curve = makeDistortionCurve(parseFloat(document.getElementById('distortion').value) * 100);
-      distortionNode.oversample = '4x';
-
-      delayNode = audioContext.createDelay(5.0);
-      delayNode.delayTime.value = parseFloat(document.getElementById('delayTime').value);
-      delayGainNode = audioContext.createGain();
-      delayGainNode.gain.value = parseFloat(document.getElementById('delay').value);
-
-      mainGainNode = audioContext.createGain();
-      mainGainNode.gain.value = parseFloat(document.getElementById('volume').value);
-
-      // Wire up: filter → distortion → delay → mainGain → destination
-      filterNode.connect(distortionNode);
-      distortionNode.connect(delayNode);
-      delayNode.connect(delayGainNode);
-      delayGainNode.connect(mainGainNode);
-      mainGainNode.connect(audioContext.destination);
-
-      // 2) Kick off reverb loading & patch it in when ready:
-      loadReverbInBackground();
-
-      // 3) Kick off sample loading (but do not await it):
-      loadAllSamples().then(() => {
-        console.log('All samples decoded');
-      });
     }
 
     // ------------------------------------------------------------------------------------------------
@@ -1202,57 +1174,50 @@
     // ------------------------------------------------------------------------------------------------
     // Hook up UI Controls (knobs & dropdowns)
     // ------------------------------------------------------------------------------------------------
-    document.getElementById('filter').addEventListener('input', (e) => {
-      filterNode.frequency.value = parseFloat(e.target.value);
-    });
-
-    document.getElementById('distortion').addEventListener('input', (e) => {
-      distortionNode.curve = makeDistortionCurve(parseFloat(e.target.value) * 100);
-    });
-
-    document.getElementById('reverb').addEventListener('input', (e) => {
-      const wet = parseFloat(e.target.value);
-      const dry = 1 - wet;
-      window._reverbWetGain.gain.setTargetAtTime(wet, audioContext.currentTime, 0.01);
-      window._reverbDryGain.gain.setTargetAtTime(dry, audioContext.currentTime, 0.01);
-    });
-
-    document.getElementById('delay').addEventListener('input', (e) => {
-      delayGainNode.gain.value = parseFloat(e.target.value);
-    });
-
-    document.getElementById('delayTime').addEventListener('input', (e) => {
-      delayNode.delayTime.value = parseFloat(e.target.value);
-    });
-
-    document.getElementById('volume').addEventListener('input', (e) => {
-      mainGainNode.gain.value = parseFloat(e.target.value);
-    });
-
-    document.getElementById('detune').addEventListener('input', (e) => {
-      currentDetuneValue = parseFloat(e.target.value);
-    });
-
-    document.getElementById('oscillator').addEventListener('input', (e) => {
-      const types = ['sine', 'square', 'triangle', 'sawtooth'];
-      currentOscillatorType = types[Math.floor(parseFloat(e.target.value))] || 'sine';
-    });
-
-    document.getElementById('arpPattern').addEventListener('change', () => {
-      if (heldNotes.size === 0) return;
-      if (getArpPattern() === 'off') stopArpeggiator();
-      else {
-        stopArpeggiator();
-        startArpeggiator();
-      }
-    });
-
-    document.getElementById('arpSpeed').addEventListener('input', () => {
-      if (arpIntervalId !== null) {
-        stopArpeggiator();
-        startArpeggiator();
-      }
-    });
+    function attachUIListeners() {
+      document.getElementById('filter').addEventListener('input', (e) => {
+        filterNode.frequency.value = parseFloat(e.target.value);
+      });
+      document.getElementById('distortion').addEventListener('input', (e) => {
+        distortionNode.curve = makeDistortionCurve(parseFloat(e.target.value) * 100);
+      });
+      document.getElementById('reverb').addEventListener('input', (e) => {
+        const wet = parseFloat(e.target.value);
+        const dry = 1 - wet;
+        window._reverbWetGain.gain.setTargetAtTime(wet, audioContext.currentTime, 0.01);
+        window._reverbDryGain.gain.setTargetAtTime(dry, audioContext.currentTime, 0.01);
+      });
+      document.getElementById('delay').addEventListener('input', (e) => {
+        delayGainNode.gain.value = parseFloat(e.target.value);
+      });
+      document.getElementById('delayTime').addEventListener('input', (e) => {
+        delayNode.delayTime.value = parseFloat(e.target.value);
+      });
+      document.getElementById('volume').addEventListener('input', (e) => {
+        mainGainNode.gain.value = parseFloat(e.target.value);
+      });
+      document.getElementById('detune').addEventListener('input', (e) => {
+        currentDetuneValue = parseFloat(e.target.value);
+      });
+      document.getElementById('oscillator').addEventListener('input', (e) => {
+        const types = ['sine', 'square', 'triangle', 'sawtooth'];
+        currentOscillatorType = types[Math.floor(parseFloat(e.target.value))] || 'sine';
+      });
+      document.getElementById('arpPattern').addEventListener('change', () => {
+        if (heldNotes.size === 0) return;
+        if (getArpPattern() === 'off') stopArpeggiator();
+        else {
+          stopArpeggiator();
+          startArpeggiator();
+        }
+      });
+      document.getElementById('arpSpeed').addEventListener('input', () => {
+        if (arpIntervalId !== null) {
+          stopArpeggiator();
+          startArpeggiator();
+        }
+      });
+    }
 
     // "Randomize Settings!" button
     document.querySelector('.randomize-btn').addEventListener('click', () => {
