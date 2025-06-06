@@ -674,11 +674,11 @@
         <div class="knob">
           <label for="arpPattern">Arp Pattern</label>
           <select id="arpPattern" class="pattern-select">
+            <option value="off" selected>Off</option>
             <option value="up">Up</option>
             <option value="down">Down</option>
             <option value="upDown">Up & Down</option>
             <option value="random">Random</option>
-            <option value="off">Off</option>
           </select>
         </div>
         <div class="knob">
@@ -947,7 +947,11 @@
       if (audioContext) return;
       audioContext = new (window.AudioContext || window.webkitAudioContext)();
       await setupEffectsChain();
-      await loadAllSamples();
+
+      // Kick off sample loading in the background, but don't block:
+      loadAllSamples().then(() => {
+        console.log('All samples are now decoded.');
+      });
     }
 
     // ------------------------------------------------------------------------------------------------
