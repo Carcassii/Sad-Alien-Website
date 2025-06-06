@@ -743,7 +743,6 @@
     let currentDetuneValue = 0;  // in cents
 
     const heldKeys = new Set();
-    const heldMouseNotes = new Set();
 
     // ARP settings (pulled from knobs)
     function getArpSpeed() { return parseFloat(document.getElementById('arpSpeed').value); }
@@ -951,7 +950,7 @@
             audioBuffers[instr][note] = decoded;
           } catch (err) {
             console.warn(`Failed to load ${instr} ${note} from ${url}:`, err);
-          }
+    }
         }
       }
       console.log('✅ All sample URLs decoded (or attempted).');
@@ -993,7 +992,7 @@
         if (!btn) return;
         const note = btn.dataset.note;
         playNote(note, 0, 1.0);
-      });
+    });
     }
 
     // ------------------------------------------------------------------------------------------------
@@ -1178,7 +1177,7 @@
                 noteToPlay = notesArray[idx];
               } else {
                 noteToPlay = notesArray[cycleLen - idx];
-              }
+          }
             }
             break;
           case 'random':
@@ -1192,7 +1191,7 @@
           if (n !== noteToPlay && activeNotes.has(n)) {
             if (currentInstrument === 'spaceOrgan') stopOscillatorNote(n);
             else stopSampleBasedNote(n);
-          }
+        }
         }
 
         if (noteToPlay) {
@@ -1332,34 +1331,25 @@
     document.querySelectorAll('.key').forEach((keyEl) => {
       keyEl.addEventListener('mousedown', () => {
         const note = keyEl.dataset.note;
-        if (!heldMouseNotes.has(note)) {
-          playNote(note);
-          heldMouseNotes.add(note);
-        }
+        playNote(note);
       });
       keyEl.addEventListener('mouseup', () => {
         const note = keyEl.dataset.note;
         stopNote(note);
-        heldMouseNotes.delete(note);
       });
       keyEl.addEventListener('mouseleave', () => {
         const note = keyEl.dataset.note;
         stopNote(note);
-        heldMouseNotes.delete(note);
       });
       keyEl.addEventListener('touchstart', (ev) => {
         ev.preventDefault();
         const note = keyEl.dataset.note;
-        if (!heldMouseNotes.has(note)) {
-          playNote(note);
-          heldMouseNotes.add(note);
-        }
+        playNote(note);
       });
       keyEl.addEventListener('touchend', (ev) => {
         ev.preventDefault();
         const note = keyEl.dataset.note;
         stopNote(note);
-        heldMouseNotes.delete(note);
       });
     });
 
@@ -1370,10 +1360,10 @@
       btn.addEventListener('click', () => {
         document.querySelectorAll('.instrument-btn').forEach((b) => b.classList.remove('active'));
         btn.classList.add('active');
-
+        
         currentInstrument = btn.dataset.instrument;
         stopAllNotes();
-
+        
         const isOrg = currentInstrument === 'spaceOrgan';
         setSynthKnobsEnabled(isOrg);
       });
