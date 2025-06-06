@@ -725,8 +725,13 @@
     // Globals & Configuration
     // ------------------------------------------------------------------------------------------------
     let audioContext = null;
-    let filterNode, distortionNode, reverbNode, delayNode, delayGainNode, mainGainNode;
-    let reverbBuffer = null;
+    let filterNode = null;
+    let distortionNode = null;
+    let delayNode = null;
+    let reverbNode = null;
+    let delayGainNode = null;
+    let mainGainNode = null;
+    let audioIsReady = false;
 
     let currentInstrument = 'spaceOrgan';
     const activeNotes = new Set();
@@ -872,9 +877,9 @@
 
       // Delay chain
       delayNode = audioContext.createDelay(5.0);
-      delayNode.delayTime.value = 0.2;
+      delayNode.delayTime.value = parseFloat(document.getElementById('delayTime').value);
       delayGainNode = audioContext.createGain();
-      delayGainNode.gain.value = 0.2;
+      delayGainNode.gain.value = parseFloat(document.getElementById('delay').value);
 
       mainGainNode = audioContext.createGain();
       mainGainNode.gain.value = parseFloat(document.getElementById('volume').value);
@@ -941,7 +946,11 @@
     // ------------------------------------------------------------------------------------------------
     // Initialize AudioContext and entire setup on first user interaction
     // ------------------------------------------------------------------------------------------------
-    async function initAudio() {
+    async function handleFirstGesture(e) {
+      document.removeEventListener('click', handleFirstGesture);
+      document.removeEventListener('keydown', handleFirstGesture);
+      document.removeEventListener('touchstart', handleFirstGesture);
+
       if (!audioContext) {
         audioContext = new (window.AudioContext || window.webkitAudioContext)();
         await audioContext.resume();
@@ -949,7 +958,27 @@
         attachUIListeners();
         // Optionally: await loadReverbInBackground();
         loadAllSamples(); // Start loading samples in the background
+        audioIsReady = true;
+        console.log('✅ AudioContext resumed and all nodes connected. You can now play notes.');
       }
+
+      // Now that audioIsReady === true, it's safe to let keypresses or clicks trigger playNote():
+      // (a) Keyboard "keydown" to play a note:
+      document.addEventListener('keydown', (ev) => {
+        const key = ev.key.toLowerCase();
+        const note = keyMap[key];
+        if (note) {
+          playNote(note);
+        }
+      });
+
+      // (b) Clicking a button on the on-screen keyboard:
+      document.getElementById('keyboard').addEventListener('click', (ev) => {
+        const btn = ev.target.closest('.key');
+        if (!btn) return;
+        const note = btn.dataset.note;
+        playNote(note, 0, 1.0);
+      });
     }
 
     // ------------------------------------------------------------------------------------------------
@@ -1027,9 +1056,11 @@
       delete voiceObjects[note];
     }
 
-    function playNote(note) {
-      if (!audioContext) { initAudio().then(() => playNote(note)); return; }
-
+    function playNote(note, time = 0.0, duration = 1.0) {
+      if (!audioIsReady) {
+        // If user tries to play before initAudio is done, just ignore.
+        return;
+      }
       if (currentInstrument === 'spaceOrgan') {
         playOscillatorNote(note);
       } else {
@@ -1319,9 +1350,9 @@
     setSynthKnobsEnabled(true);
 
     // Only set up audio in response to a user gesture:
-    document.addEventListener('click', initAudio, { once: true });
-    document.addEventListener('keydown', initAudio, { once: true });
-    document.addEventListener('touchstart', initAudio, { once: true });
+    document.addEventListener('click', handleFirstGesture, { once: true });
+    document.addEventListener('keydown', handleFirstGesture, { once: true });
+    document.addEventListener('touchstart', handleFirstGesture, { once: true });
 
     // On page unload, stop audio
     window.addEventListener('beforeunload', stopAllNotes);
