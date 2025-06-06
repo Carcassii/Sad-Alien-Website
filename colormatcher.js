@@ -971,9 +971,26 @@ function initColorMatcher() {
   
   function updateAll() {
     const hex = colorPicker.value;
+    const scheme = schemeSelect.value;
+    const n = parseInt(document.getElementById('nColors').value) || 5;
+    
+    // Update hex input
     hexInput.value = hex;
+    
+    // Show reference swatch
     showReferenceSwatch(hex);
-    updateSwatches(hex, schemeSelect.value);
+    
+    // Update scheme description
+    const schemeDesc = document.getElementById('schemeDesc');
+    schemeDesc.textContent = getSchemeDescription(scheme);
+    
+    // Show/hide add color button based on scheme
+    const addColorBtn = document.getElementById('addColorBtn');
+    const schemesWithAddButton = ['analogous', 'monochromatic', 'pastel', 'earth', 'warm', 'cool', 'highkey', 'lowkey', 'gradient'];
+    addColorBtn.style.display = schemesWithAddButton.includes(scheme) ? 'block' : 'none';
+    
+    // Update swatches
+    updateSwatches(hex, scheme);
   }
   
   colorPicker.addEventListener('input', updateAll);
@@ -991,4 +1008,54 @@ function initColorMatcher() {
 }
 
 // Initialize when the DOM is loaded
-document.addEventListener('DOMContentLoaded', initColorMatcher); 
+document.addEventListener('DOMContentLoaded', initColorMatcher);
+
+// Add event listener for the add color button
+document.getElementById('addColorBtn').addEventListener('click', function() {
+  const hex = colorPicker.value;
+  const scheme = schemeSelect.value;
+  const n = parseInt(document.getElementById('nColors').value) || 5;
+  const newN = n + 1;
+  document.getElementById('nColors').value = newN;
+  updateSwatches(hex, scheme);
+});
+
+function getSchemeDescription(scheme) {
+  const descriptions = {
+    'complementary': 'Two colors opposite each other on the color wheel, creating high contrast and visual impact.',
+    'analogous': 'Colors adjacent to each other on the color wheel, creating a harmonious and cohesive look.',
+    'triadic': 'Three colors equally spaced around the color wheel, offering vibrant contrast while maintaining harmony.',
+    'split-complementary': 'A base color and two colors adjacent to its complement, offering high contrast with less tension.',
+    'tetradic': 'Four colors arranged into two complementary pairs, creating a rich and diverse color scheme.',
+    'square': 'Four colors evenly spaced around the color wheel, creating a balanced and vibrant palette.',
+    'monochromatic': 'Variations of a single color, creating a cohesive and sophisticated look.',
+    'diadic': 'Two colors separated by one color on the color wheel, offering a balanced contrast.',
+    'pentadic': 'Five colors evenly spaced around the color wheel, creating a rich and diverse palette.',
+    'pastel': 'Soft, light versions of colors, creating a gentle and soothing atmosphere.',
+    'earth': 'Natural, muted tones inspired by nature, creating a warm and organic feel.',
+    'warm': 'Colors from the red, orange, and yellow families, creating an energetic and inviting atmosphere.',
+    'cool': 'Colors from the blue, green, and purple families, creating a calm and soothing atmosphere.',
+    'highkey': 'Light, bright colors with high value, creating an airy and uplifting mood.',
+    'lowkey': 'Dark, rich colors with low value, creating a dramatic and sophisticated atmosphere.',
+    'gradient': 'A smooth transition between colors, creating a dynamic and flowing effect.',
+    'gradient-extended': 'An extended gradient with more color steps, offering more subtle transitions.',
+    'achromatic': 'A grayscale palette using only black, white, and grays.',
+    'accented-neutral': 'Neutral colors with a single accent color for visual interest.',
+    'compound': 'A combination of complementary and analogous colors, offering both harmony and contrast.',
+    'fauvist': 'Bold, vivid colors with high saturation, creating an energetic and expressive look.',
+    'autumn': 'Warm, earthy tones inspired by fall foliage.',
+    'spring': 'Fresh, light colors inspired by spring blossoms.',
+    'summer': 'Bright, vibrant colors inspired by summer landscapes.',
+    'winter': 'Cool, crisp colors inspired by winter scenes.',
+    'retro50s': 'Soft, pastel colors reminiscent of 1950s design.',
+    'discordant': 'Colors that intentionally clash, creating tension and visual interest.',
+    'metallic': 'Colors with a metallic sheen, creating a luxurious and sophisticated look.',
+    'optical-mix': 'Colors that create optical illusions when viewed together.',
+    'accessible': 'High-contrast colors designed for maximum readability and accessibility.',
+    'psychology-calm': 'Colors chosen for their calming psychological effects.',
+    'relaxing': 'Soft, muted colors designed to create a peaceful atmosphere.',
+    'energetic': 'Bright, vibrant colors designed to create excitement and energy.',
+    'polychromatic': 'Multiple colors from across the spectrum, creating a vibrant and diverse palette.'
+  };
+  return descriptions[scheme] || 'A custom color scheme.';
+} 

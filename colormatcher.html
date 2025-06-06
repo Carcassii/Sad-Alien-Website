@@ -130,6 +130,9 @@
       font-size: 1rem;
       margin-top: 1.2rem;
     }
+    #addColorBtn:hover {
+      background: #2c5a94;
+    }
    
     @media (max-width: 768px) {
       .navbar {
@@ -171,6 +174,7 @@
       <label for="colorPicker">Pick a color:</label>
       <input type="color" id="colorPicker" value="#3c75b4">
       <input type="text" id="hexInput" value="#3c75b4" maxlength="7">
+      <input type="hidden" id="nColors" value="5">
       <select id="schemeSelect">
         <option value="complementary">Complementary</option>
         <option value="analogous">Analogous</option>
