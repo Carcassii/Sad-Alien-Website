@@ -742,12 +742,11 @@
     let currentOscillatorType = 'sine';
     let currentDetuneValue = 0;  // in cents
 
+    const heldKeys = new Set();
+
     // ARP settings (pulled from knobs)
     function getArpSpeed() { return parseFloat(document.getElementById('arpSpeed').value); }
     function getArpPattern() { return document.getElementById('arpPattern').value; }
-
-    // ⏰ Keep track of which notes are currently "held" (for ARP & polyphony)
-    const heldNotes = new Set(); // same as activeNotes, but we'll use it to drive ARP
 
     // Key → Note mapping
     const keyMap = {
@@ -981,8 +980,9 @@
       document.addEventListener('keydown', (ev) => {
         const key = ev.key.toLowerCase();
         const note = keyMap[key];
-        if (note) {
+        if (note && !heldKeys.has(note)) {
           playNote(note);
+          heldKeys.add(note);
         }
       });
 
@@ -1100,12 +1100,11 @@
         playSampleBasedNote(note);
       }
       activeNotes.add(note);
-      heldNotes.add(note);
 
       const keyEl = document.querySelector(`[data-note="${note}"]`);
       if (keyEl) keyEl.classList.add('active');
 
-      if (getArpPattern() !== 'off' && heldNotes.size === 1) {
+      if (getArpPattern() !== 'off' && activeNotes.size === 1) {
         startArpeggiator();
       }
     }
@@ -1125,6 +1124,8 @@
       // Remove visual highlight
       const keyEl = document.querySelector(`[data-note="${note}"]`);
       if (keyEl) keyEl.classList.remove('active');
+
+      heldKeys.delete(note);
     }
 
     function stopAllNotes() {
@@ -1137,7 +1138,6 @@
       }
       voiceObjects = {};
       activeNotes.clear();
-      heldNotes.clear();
 
       document.querySelectorAll('.key').forEach((k) => k.classList.remove('active'));
       stopArpeggiator();
@@ -1149,13 +1149,13 @@
     function startArpeggiator() {
       if (arpIntervalId !== null) return;
       const pattern = getArpPattern();
-      if (pattern === 'off' || heldNotes.size === 0) return;
+      if (pattern === 'off' || activeNotes.size === 0) return;
 
       arpStepIndex = 0;
       const speed = getArpSpeed();
 
       arpIntervalId = setInterval(() => {
-        const notesArray = Array.from(heldNotes).sort((a, b) => NOTE_TO_SEMITONE[a] - NOTE_TO_SEMITONE[b]);
+        const notesArray = Array.from(activeNotes).sort((a, b) => NOTE_TO_SEMITONE[a] - NOTE_TO_SEMITONE[b]);
         if (notesArray.length === 0) {
           stopArpeggiator();
           return;
@@ -1225,7 +1225,6 @@
         arpIntervalId = null;
       }
       activeNotes.forEach((n) => {
-        if (heldNotes.has(n)) return;
         if (currentInstrument === 'spaceOrgan') stopOscillatorNote(n);
         else stopSampleBasedNote(n);
         const keyEl2 = document.querySelector(`[data-note="${n}"]`);
@@ -1267,7 +1266,7 @@
         currentOscillatorType = types[Math.floor(parseFloat(e.target.value))] || 'sine';
       });
       document.getElementById('arpPattern').addEventListener('change', () => {
-        if (heldNotes.size === 0) return;
+        if (activeNotes.size === 0) return;
         if (getArpPattern() === 'off') stopArpeggiator();
         else {
           stopArpeggiator();
@@ -1316,7 +1315,10 @@
     document.addEventListener('keydown', (e) => {
       if (e.repeat) return;
       const note = keyMap[e.key.toLowerCase()];
-      if (note) playNote(note);
+      if (note && !heldKeys.has(note)) {
+        playNote(note);
+        heldKeys.add(note);
+      }
     });
 
     document.addEventListener('keyup', (e) => {
