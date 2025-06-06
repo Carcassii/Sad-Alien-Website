@@ -726,14 +726,80 @@
     let currentInstrument = 'spaceOrgan';
     let activeNotes = new Set();
     let oscillators = {};
+    let audioBuffers = {};
 
     // Initialize audio context
     async function initAudio() {
       if (!audioContext) {
         audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        await Tone.start();
         console.log('Audio initialized');
+        await loadAudioBuffers();
         createStars();
+      }
+    }
+
+    // Load audio buffers for all instruments
+    async function loadAudioBuffers() {
+      const sampleUrls = {
+        clarinet: {
+          'C4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/clarinet-mp3/C4.mp3',
+          'D4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/clarinet-mp3/D4.mp3',
+          'E4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/clarinet-mp3/E4.mp3'
+        },
+        flute: {
+          'C4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/flute-mp3/C4.mp3',
+          'D4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/flute-mp3/D4.mp3',
+          'E4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/flute-mp3/E4.mp3'
+        },
+        harpsichord: {
+          'C4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/harpsichord-mp3/C4.mp3',
+          'D4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/harpsichord-mp3/D4.mp3',
+          'E4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/harpsichord-mp3/E4.mp3'
+        },
+        guitar: {
+          'C4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/acoustic_guitar_nylon-mp3/C4.mp3',
+          'D4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/acoustic_guitar_nylon-mp3/D4.mp3',
+          'E4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/acoustic_guitar_nylon-mp3/E4.mp3'
+        },
+        trumpet: {
+          'C4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/trumpet-mp3/C4.mp3',
+          'D4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/trumpet-mp3/D4.mp3',
+          'E4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/trumpet-mp3/E4.mp3'
+        },
+        oboe: {
+          'C4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/oboe-mp3/C4.mp3',
+          'D4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/oboe-mp3/D4.mp3',
+          'E4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/oboe-mp3/E4.mp3'
+        },
+        organ: {
+          'C4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/church_organ-mp3/C4.mp3',
+          'D4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/church_organ-mp3/D4.mp3',
+          'E4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/church_organ-mp3/E4.mp3'
+        },
+        strings: {
+          'C4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/violin-mp3/C4.mp3',
+          'D4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/violin-mp3/D4.mp3',
+          'E4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/violin-mp3/E4.mp3'
+        },
+        woof: {
+          'C4': 'audio/Woof.mp3',
+          'D4': 'audio/Woof.mp3',
+          'E4': 'audio/Woof.mp3'
+        }
+      };
+
+      try {
+        for (const [instrument, notes] of Object.entries(sampleUrls)) {
+          audioBuffers[instrument] = {};
+          for (const [note, url] of Object.entries(notes)) {
+            const response = await fetch(url);
+            const arrayBuffer = await response.arrayBuffer();
+            audioBuffers[instrument][note] = await audioContext.decodeAudioData(arrayBuffer);
+          }
+        }
+        console.log('All audio buffers loaded');
+      } catch (error) {
+        console.error('Error loading audio buffers:', error);
       }
     }
 
@@ -743,23 +809,19 @@
       const gainNode = audioContext.createGain();
       const filter = audioContext.createBiquadFilter();
       
-      // Set up oscillator
       oscillator.type = 'sine';
       oscillator.frequency.value = getNoteFrequency(note);
       
-      // Set up filter
       filter.type = 'lowpass';
       filter.frequency.value = 1500;
       
-      // Set up gain
       gainNode.gain.value = 0.3;
       
-      // Connect nodes
       oscillator.connect(filter);
       filter.connect(gainNode);
       gainNode.connect(audioContext.destination);
       
-      return { oscillator, gainNode };
+      return { oscillator, gainNode, filter };
     }
 
     // Get frequency for a note
@@ -774,77 +836,6 @@
       return noteMap[note] || 440;
     }
 
-    // Initialize samplers
-    const samplers = {};
-    async function initSamplers() {
-      try {
-        const sampleUrls = {
-          clarinet: {
-            'C4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/clarinet-mp3/C4.mp3',
-            'D4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/clarinet-mp3/D4.mp3',
-            'E4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/clarinet-mp3/E4.mp3'
-          },
-          flute: {
-            'C4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/flute-mp3/C4.mp3',
-            'D4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/flute-mp3/D4.mp3',
-            'E4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/flute-mp3/E4.mp3'
-          },
-          harpsichord: {
-            'C4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/harpsichord-mp3/C4.mp3',
-            'D4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/harpsichord-mp3/D4.mp3',
-            'E4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/harpsichord-mp3/E4.mp3'
-          },
-          guitar: {
-            'C4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/acoustic_guitar_nylon-mp3/C4.mp3',
-            'D4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/acoustic_guitar_nylon-mp3/D4.mp3',
-            'E4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/acoustic_guitar_nylon-mp3/E4.mp3'
-          },
-          trumpet: {
-            'C4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/trumpet-mp3/C4.mp3',
-            'D4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/trumpet-mp3/D4.mp3',
-            'E4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/trumpet-mp3/E4.mp3'
-          },
-          oboe: {
-            'C4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/oboe-mp3/C4.mp3',
-            'D4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/oboe-mp3/D4.mp3',
-            'E4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/oboe-mp3/E4.mp3'
-          },
-          organ: {
-            'C4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/church_organ-mp3/C4.mp3',
-            'D4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/church_organ-mp3/D4.mp3',
-            'E4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/church_organ-mp3/E4.mp3'
-          },
-          strings: {
-            'C4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/violin-mp3/C4.mp3',
-            'D4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/violin-mp3/D4.mp3',
-            'E4': 'https://cdn.jsdelivr.net/gh/gleitz/midi-js-soundfonts@gh-pages/FatBoy/violin-mp3/E4.mp3'
-          },
-          woof: {
-            'C4': 'audio/Woof.mp3',
-            'D4': 'audio/Woof.mp3',
-            'E4': 'audio/Woof.mp3'
-          }
-        };
-
-        for (const [name, urls] of Object.entries(sampleUrls)) {
-          samplers[name] = new Tone.Sampler({
-            urls: urls,
-            release: 1,
-            baseUrl: ''
-          }).toDestination();
-
-          if (name === 'woof') {
-            samplers[name].volume.value = 6;
-          }
-        }
-
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        console.log('Samplers initialized');
-      } catch (error) {
-        console.error('Error loading samplers:', error);
-      }
-    }
-
     // Play a note
     function playNote(note) {
       if (!audioContext) initAudio();
@@ -853,8 +844,18 @@
         const { oscillator, gainNode } = createOscillator(note);
         oscillator.start();
         oscillators[note] = { oscillator, gainNode };
-      } else if (samplers[currentInstrument]) {
-        samplers[currentInstrument].triggerAttack(note);
+      } else if (audioBuffers[currentInstrument] && audioBuffers[currentInstrument][note]) {
+        const source = audioContext.createBufferSource();
+        const gainNode = audioContext.createGain();
+        
+        source.buffer = audioBuffers[currentInstrument][note];
+        gainNode.gain.value = currentInstrument === 'woof' ? 6 : 1;
+        
+        source.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        source.start();
+        oscillators[note] = { source, gainNode };
       }
       
       activeNotes.add(note);
@@ -864,14 +865,14 @@
 
     // Stop a note
     function stopNote(note) {
-      if (currentInstrument === 'spaceOrgan') {
-        const osc = oscillators[note];
-        if (osc) {
+      const osc = oscillators[note];
+      if (osc) {
+        if (osc.source) {
+          osc.source.stop();
+        } else if (osc.oscillator) {
           osc.oscillator.stop();
-          delete oscillators[note];
         }
-      } else if (samplers[currentInstrument]) {
-        samplers[currentInstrument].triggerRelease(note);
+        delete oscillators[note];
       }
       
       activeNotes.delete(note);
@@ -936,14 +937,14 @@
         currentInstrument = btn.dataset.instrument;
         
         // Stop all current notes
-        if (currentInstrument === 'spaceOrgan') {
-          Object.values(oscillators).forEach(osc => {
+        Object.values(oscillators).forEach(osc => {
+          if (osc.source) {
+            osc.source.stop();
+          } else if (osc.oscillator) {
             osc.oscillator.stop();
-          });
-          oscillators = {};
-        } else if (samplers[currentInstrument]) {
-          samplers[currentInstrument].releaseAll();
-        }
+          }
+        });
+        oscillators = {};
         
         // Update knob states
         const isSpaceOrgan = currentInstrument === 'spaceOrgan';
@@ -967,7 +968,9 @@
     document.getElementById('detune').addEventListener('input', (e) => {
       if (currentInstrument === 'spaceOrgan') {
         Object.values(oscillators).forEach(osc => {
-          osc.oscillator.detune.value = parseFloat(e.target.value);
+          if (osc.oscillator) {
+            osc.oscillator.detune.value = parseFloat(e.target.value);
+          }
         });
       }
     });
@@ -975,20 +978,20 @@
     document.getElementById('filter').addEventListener('input', (e) => {
       if (currentInstrument === 'spaceOrgan') {
         Object.values(oscillators).forEach(osc => {
-          osc.oscillator.frequency.value = getNoteFrequency(note) * (1 + parseFloat(e.target.value) / 100);
+          if (osc.filter) {
+            osc.filter.frequency.value = parseFloat(e.target.value);
+          }
         });
       }
     });
 
     document.getElementById('volume').addEventListener('input', (e) => {
       const volume = parseFloat(e.target.value);
-      if (currentInstrument === 'spaceOrgan') {
-        Object.values(oscillators).forEach(osc => {
-          osc.gainNode.gain.value = volume * 0.3;
-        });
-      } else if (samplers[currentInstrument]) {
-        samplers[currentInstrument].volume.value = volume * 6;
-      }
+      Object.values(oscillators).forEach(osc => {
+        if (osc.gainNode) {
+          osc.gainNode.gain.value = volume * (currentInstrument === 'woof' ? 6 : 0.3);
+        }
+      });
     });
 
     // Initialize audio on first user interaction
