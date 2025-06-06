@@ -1021,7 +1021,7 @@
       osc.type = currentOscillatorType;
       osc.frequency.value = getNoteFrequency(note);
       osc.detune.value = currentDetuneValue;
-      gainNode.gain.value = 0.5;
+      gainNode.gain.value = 0.15; // Lowered gain for space organ
 
       osc.connect(filterNode);
       filterNode.connect(gainNode);
