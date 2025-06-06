@@ -764,49 +764,49 @@
     // Sample URLs for each instrument (only C4, D4, E4)
     const sampleUrls = {
       clarinet: {
-        'C4': 'audio/Instrument sounds/Clarinet/C4.mp3',
-        'D4': 'audio/Instrument sounds/Clarinet/D4.mp3',
-        'E4': 'audio/Instrument sounds/Clarinet/E4.mp3'
+        'C4': 'audio/Instrumentsounds/Clarinet/C4.mp3',
+        'D4': 'audio/Instrumentsounds/Clarinet/D4.mp3',
+        'E4': 'audio/Instrumentsounds/Clarinet/E4.mp3'
       },
       flute: {
-        'C4': 'audio/Instrument sounds/Flute/C4.mp3',
-        'D4': 'audio/Instrument sounds/Flute/D4.mp3',
-        'E4': 'audio/Instrument sounds/Flute/E4.mp3'
+        'C4': 'audio/Instrumentsounds/Flute/C4.mp3',
+        'D4': 'audio/Instrumentsounds/Flute/D4.mp3',
+        'E4': 'audio/Instrumentsounds/Flute/E4.mp3'
       },
       harpsichord: {
-        'C4': 'audio/Instrument sounds/Harpsichord/C4.mp3',
-        'D4': 'audio/Instrument sounds/Harpsichord/D4.mp3',
-        'E4': 'audio/Instrument sounds/Harpsichord/E4.mp3'
+        'C4': 'audio/Instrumentsounds/Harpsichord/C4.mp3',
+        'D4': 'audio/Instrumentsounds/Harpsichord/D4.mp3',
+        'E4': 'audio/Instrumentsounds/Harpsichord/E4.mp3'
       },
       guitar: {
-        'C4': 'audio/Instrument sounds/Guitar/C4.mp3',
-        'D4': 'audio/Instrument sounds/Guitar/D4.mp3',
-        'E4': 'audio/Instrument sounds/Guitar/E4.mp3'
+        'C4': 'audio/Instrumentsounds/Guitar/C4.mp3',
+        'D4': 'audio/Instrumentsounds/Guitar/D4.mp3',
+        'E4': 'audio/Instrumentsounds/Guitar/E4.mp3'
       },
       trumpet: {
-        'C4': 'audio/Instrument sounds/Trumpet/C4.mp3',
-        'D4': 'audio/Instrument sounds/Trumpet/D4.mp3',
-        'E4': 'audio/Instrument sounds/Trumpet/E4.mp3'
+        'C4': 'audio/Instrumentsounds/Trumpet/C4.mp3',
+        'D4': 'audio/Instrumentsounds/Trumpet/D4.mp3',
+        'E4': 'audio/Instrumentsounds/Trumpet/E4.mp3'
       },
       oboe: {
-        'C4': 'audio/Instrument sounds/Oboe/C4.mp3',
-        'D4': 'audio/Instrument sounds/Oboe/D4.mp3',
-        'E4': 'audio/Instrument sounds/Oboe/E4.mp3'
+        'C4': 'audio/Instrumentsounds/Oboe/C4.mp3',
+        'D4': 'audio/Instrumentsounds/Oboe/D4.mp3',
+        'E4': 'audio/Instrumentsounds/Oboe/E4.mp3'
       },
       organ: {
-        'C4': 'audio/Instrument sounds/Organ/C4.mp3',
-        'D4': 'audio/Instrument sounds/Organ/D4.mp3',
-        'E4': 'audio/Instrument sounds/Organ/E4.mp3'
+        'C4': 'audio/Instrumentsounds/Organ/C4.mp3',
+        'D4': 'audio/Instrumentsounds/Organ/D4.mp3',
+        'E4': 'audio/Instrumentsounds/Organ/E4.mp3'
       },
       strings: {
-        'C4': 'audio/Instrument sounds/Violin/C4.mp3',
-        'D4': 'audio/Instrument sounds/Violin/D4.mp3',
-        'E4': 'audio/Instrument sounds/Violin/E4.mp3'
+        'C4': 'audio/Instrumentsounds/Violin/C4.mp3',
+        'D4': 'audio/Instrumentsounds/Violin/D4.mp3',
+        'E4': 'audio/Instrumentsounds/Violin/E4.mp3'
       },
       woof: {
-        'C4': 'audio/Instrument sounds/Woof.mp3',
-        'D4': 'audio/Instrument sounds/Woof.mp3',
-        'E4': 'audio/Instrument sounds/Woof.mp3'
+        'C4': 'audio/Instrumentsounds/Woof.mp3',
+        'D4': 'audio/Instrumentsounds/Woof.mp3',
+        'E4': 'audio/Instrumentsounds/Woof.mp3'
       }
     };
 
@@ -913,9 +913,7 @@
     }
 
     async function fetchImpulseResponse() {
-      const response = await fetch(
-        'https://cdn.jsdelivr.net/gh/mattdiamond/Recorderjs@master/examples/impulse-responses/impulse1.wav'
-      );
+      const response = await fetch('audio/impulse1.wav');
       const arrayBuffer = await response.arrayBuffer();
       return await audioContext.decodeAudioData(arrayBuffer);
     }
