@@ -111,13 +111,24 @@ function generateMonochromatic(hex, variations = 5) {
 
 function generatePastel(hex, variations = 5) {
   const [h, s, l] = hexToHsl(hex);
-  const targetS = Math.max(0, s / 2);   // Half the base saturation
-  const targetL = Math.min(100, l + 20); // 20% lighter than base
   const colors = [];
+  
+  // Pastel characteristics
+  const pastelSaturation = Math.min(40, s * 0.6);  // Reduce saturation but cap at 40%
+  const baseLightness = Math.max(80, l + 15);      // Ensure high lightness for pastel effect
+  
   for (let i = 0; i < variations; i++) {
-    // Create a range around the base hue
-    const hue = (h + (i - (variations - 1) / 2) * 10 + 360) % 360;
-    colors.push(hslToHex(hue, targetS, targetL));
+    // Create a wider range of hues for more variety
+    const hueOffset = (i - (variations - 1) / 2) * 15;  // ±30° for 5 variations
+    const hue = (h + hueOffset + 360) % 360;
+    
+    // Vary lightness slightly for each color
+    const lightness = baseLightness + (Math.random() * 10 - 5);  // ±5 variation
+    
+    // Vary saturation slightly for each color
+    const saturation = pastelSaturation + (Math.random() * 10 - 5);  // ±5 variation
+    
+    colors.push(hslToHex(hue, saturation, lightness));
   }
   return colors;
 }
