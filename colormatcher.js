@@ -231,6 +231,126 @@ function validateVintage(hues, saturations, lightnesses) {
          hues.every(h => h >= 0 && h <= 60);
 }
 
+// Color Theory Explanations
+const colorTheoryExplanations = {
+  // Basic Color Theory
+  complementary: "Complementary colors are opposite on the color wheel (180° apart). They create maximum contrast and visual impact. Example: Red and Green.",
+  analogous: "Analogous colors are next to each other on the color wheel (within 30°). They create harmonious and serene designs. Example: Yellow, Yellow-Green, Green.",
+  triadic: "Triadic colors are evenly spaced around the color wheel (120° apart). They offer strong visual contrast while maintaining harmony. Example: Red, Yellow, Blue.",
+  splitComplementary: "Split complementary uses a base color and two colors adjacent to its complement. It offers high contrast but less tension than complementary. Example: Red with Blue-Green and Yellow-Green.",
+  tetradic: "Tetradic (double complementary) uses two pairs of complementary colors. It offers rich color possibilities but needs careful balance. Example: Red-Green and Blue-Orange.",
+  square: "Square colors are evenly spaced around the color wheel (90° apart). They offer strong contrast and work best when one color dominates. Example: Red, Yellow, Green, Blue.",
+
+  // Seasonal Colors
+  autumn: "Autumn colors are warm earth tones (0-60° hue) with moderate saturation. They evoke feelings of warmth, comfort, and harvest. Typical colors: oranges, browns, and deep reds.",
+  spring: "Spring colors are fresh and light (60-180° hue) with high saturation. They represent new growth and renewal. Typical colors: fresh greens, soft yellows, and light pinks.",
+  summer: "Summer colors are cool and muted (180-300° hue) with medium saturation. They reflect the calm of summer days. Typical colors: sky blues, soft purples, and sea greens.",
+  winter: "Winter colors are cool and intense (240-360° hue) with high saturation. They capture the crispness of winter. Typical colors: deep blues, rich purples, and icy whites.",
+
+  // Mood-based Colors
+  highKey: "High key colors are light and bright (≥70% lightness). They create an airy, optimistic mood. Best for: cheerful, uplifting designs.",
+  lowKey: "Low key colors are dark and muted (≤40% lightness). They create a dramatic, mysterious mood. Best for: sophisticated, dramatic designs.",
+  neon: "Neon colors are highly saturated (≥80%) and bright. They create an energetic, vibrant mood. Best for: attention-grabbing, modern designs.",
+  retro50s: "50s retro colors are pastel-like with moderate saturation. They evoke nostalgia and vintage charm. Typical colors: soft pinks, mint greens, and sky blues.",
+
+  // Accessibility-focused
+  accessible: "Accessible colors ensure sufficient contrast (≥30% difference) between colors. They make designs readable for everyone, including those with visual impairments.",
+  colorBlind: "Color blind friendly colors are distinguishable by lightness, not just hue. They ensure visibility for people with color vision deficiencies.",
+
+  // Special Effects
+  duotone: "Duotone uses two colors with variations. It creates a cohesive, professional look. Popular in photography and modern design.",
+  gradient: "Gradient colors transition smoothly between shades. They create depth and visual interest. Best for: modern, dynamic designs.",
+  metallic: "Metallic colors have moderate saturation and varying lightness. They create a premium, sophisticated look. Best for: luxury and tech designs.",
+  vintage: "Vintage colors are muted and warm (0-60° hue). They evoke nostalgia and timelessness. Typical colors: sepia tones, muted browns, and soft creams."
+};
+
+// Color Theory Examples
+const colorTheoryExamples = {
+  complementary: {
+    colors: ['#ff0000', '#00ff00'],
+    wheelMarks: [0, 180]
+  },
+  analogous: {
+    colors: ['#ff0000', '#ff4000', '#ff8000'],
+    wheelMarks: [0, 30, 60]
+  },
+  triadic: {
+    colors: ['#ff0000', '#00ff00', '#0000ff'],
+    wheelMarks: [0, 120, 240]
+  },
+  splitComplementary: {
+    colors: ['#ff0000', '#00ffff', '#80ff00'],
+    wheelMarks: [0, 150, 210]
+  },
+  tetradic: {
+    colors: ['#ff0000', '#00ff00', '#0000ff', '#ffff00'],
+    wheelMarks: [0, 90, 180, 270]
+  },
+  square: {
+    colors: ['#ff0000', '#00ff00', '#0000ff', '#ffff00'],
+    wheelMarks: [0, 90, 180, 270]
+  }
+};
+
+// Function to create color wheel marks
+function createColorWheelMarks(angles) {
+  const marksContainer = document.createElement('div');
+  marksContainer.className = 'color-wheel-marks';
+  
+  angles.forEach(angle => {
+    const mark = document.createElement('div');
+    mark.className = 'color-wheel-mark';
+    mark.style.transform = `rotate(${angle}deg) translateY(-50px)`;
+    marksContainer.appendChild(mark);
+  });
+  
+  return marksContainer;
+}
+
+// Function to create color circles
+function createColorCircles(colors) {
+  const circlesContainer = document.createElement('div');
+  circlesContainer.className = 'color-circles';
+  
+  colors.forEach(color => {
+    const circle = document.createElement('div');
+    circle.className = 'color-circle';
+    circle.style.backgroundColor = color;
+    circle.title = color;
+    circle.onclick = () => {
+      navigator.clipboard.writeText(color);
+      circle.style.transform = 'scale(1.2)';
+      setTimeout(() => circle.style.transform = '', 200);
+    };
+    circlesContainer.appendChild(circle);
+  });
+  
+  return circlesContainer;
+}
+
+// Function to create example section
+function createExampleSection(scheme) {
+  const example = colorTheoryExamples[scheme];
+  if (!example) return null;
+  
+  const section = document.createElement('div');
+  section.className = 'example-section';
+  
+  const title = document.createElement('div');
+  title.className = 'example-title';
+  title.textContent = 'Example Colors:';
+  section.appendChild(title);
+  
+  const wheel = document.createElement('div');
+  wheel.className = 'color-wheel';
+  wheel.appendChild(createColorWheelMarks(example.wheelMarks));
+  section.appendChild(wheel);
+  
+  section.appendChild(createColorCircles(example.colors));
+  
+  return section;
+}
+
 // Color scheme generators
 function generateComplementary(hex) {
   const [h, s, l] = hexToHsl(hex);
@@ -793,8 +913,20 @@ function showReferenceSwatch(hex) {
 function updateSwatches(hex, scheme) {
   const swatchRow = document.getElementById('swatchRow');
   swatchRow.innerHTML = '';
-  let n = colorCount[scheme] || 5;
+  const n = colorCount[scheme] || 5;
   let colors = [];
+  
+  // Get the explanation for the current scheme
+  const explanation = colorTheoryExplanations[scheme] || "A custom color scheme based on your selected color.";
+  
+  // Update the explanation text and add visual examples
+  const explanationElement = document.getElementById('scheme-explanation');
+  if (explanationElement) {
+    explanationElement.innerHTML = `
+      <p>${explanation}</p>
+      ${createExampleSection(scheme)?.outerHTML || ''}
+    `;
+  }
   
   switch (scheme) {
     case 'complementary':
