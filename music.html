@@ -1057,9 +1057,9 @@
       const detuneRatio   = Math.pow(2, currentDetuneValue / 1200);
       source.playbackRate.value = semitoneRatio * detuneRatio;
 
-      // ❷ If you want a per‐voice gain (e.g. louder "woof" or normal otherwise):
+      // ❷ Set the gain for all instruments to 1.5 for balanced loudness
       const gainNode = audioContext.createGain();
-      gainNode.gain.value = currentInstrument === 'woof' ? 3 : 1;
+      gainNode.gain.value = 1.5;
 
       // ❸ Wire up the chain. Since setupEffectsChain already did:
       //     filterNode → distortionNode → reverbDryGain → afterReverbMerge → delay → mainGain → destination
