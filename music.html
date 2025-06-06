@@ -889,6 +889,7 @@
       const playbackRate = Math.pow(2, nearest.semitoneDelta / 12);
       source.playbackRate.value = playbackRate;
       
+      // Set initial gain
       gainNode.gain.value = currentInstrument === 'woof' ? 6 : 1;
       filter.type = 'lowpass';
       filter.frequency.value = 1500;
@@ -897,8 +898,22 @@
       filter.connect(gainNode);
       gainNode.connect(audioContext.destination);
       
+      // Calculate maximum duration (1 second for most instruments, 0.5 for woof)
+      const maxDuration = currentInstrument === 'woof' ? 0.5 : 1.0;
+      
+      // Start the source
       source.start();
-      oscillators[note] = { source, gainNode, filter };
+      
+      // Stop the source after maxDuration
+      source.stop(audioContext.currentTime + maxDuration);
+      
+      // Store the source and its stop time
+      oscillators[note] = { 
+        source, 
+        gainNode, 
+        filter,
+        stopTime: audioContext.currentTime + maxDuration
+      };
     }
 
     // Play a note
@@ -924,13 +939,16 @@
       if (osc) {
         try {
           if (osc.source) {
-            // Add a small fade out to prevent clicks
-            osc.gainNode.gain.setTargetAtTime(0, audioContext.currentTime, 0.01);
-            setTimeout(() => {
-              if (osc.source) {
-                osc.source.stop();
-              }
-            }, 50);
+            // Only stop if we haven't reached the stop time yet
+            if (audioContext.currentTime < osc.stopTime) {
+              // Add a small fade out to prevent clicks
+              osc.gainNode.gain.setTargetAtTime(0, audioContext.currentTime, 0.01);
+              setTimeout(() => {
+                if (osc.source) {
+                  osc.source.stop();
+                }
+              }, 50);
+            }
           } else if (osc.oscillator) {
             osc.oscillator.stop();
           }
@@ -950,7 +968,10 @@
       Object.entries(oscillators).forEach(([note, osc]) => {
         try {
           if (osc.source) {
-            osc.source.stop();
+            // Only stop if we haven't reached the stop time yet
+            if (audioContext.currentTime < osc.stopTime) {
+              osc.source.stop();
+            }
           } else if (osc.oscillator) {
             osc.oscillator.stop();
           }
