@@ -1112,21 +1112,19 @@
 
     function stopNote(note) {
       const voice = voiceObjects[note];
-      if (!voice) return; // no such note is playing right now
+      if (!voice) return;
 
-      // 1) Stop the AudioBufferSourceNode immediately:
-      //    (If you want a tiny fade-out, you could ramp voice.gainNode.gain down
-      //     instead of calling stop() immediately. But for an instant cut, just do:)
       const now = audioContext.currentTime;
       try {
         voice.node.stop(now);
-      } catch (e) {
-        // Already stopped
-      }
+      } catch (e) {}
 
-      // 2) Clean up your bookkeeping:
       if (voice.timeoutId) clearTimeout(voice.timeoutId);
       delete voiceObjects[note];
+
+      // Remove visual highlight
+      const keyEl = document.querySelector(`[data-note="${note}"]`);
+      if (keyEl) keyEl.classList.remove('active');
     }
 
     function stopAllNotes() {
