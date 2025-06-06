@@ -1141,10 +1141,10 @@
 
       heldKeys.delete(note);
 
-      // ❶ Remove from activeNotes:
+      // Remove from activeNotes:
       activeNotes.delete(note);
 
-      // ❷ If no more active notes, stop the arpeggiator:
+      // If no more active notes, stop the arpeggiator:
       if (activeNotes.size === 0) {
         stopArpeggiator();
       }
