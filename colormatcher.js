@@ -39,15 +39,13 @@ function recordCopy(hex) {
 
   // === 2) Send it to your Google Sheet via Apps Script ===
   fetch(GOOGLE_SHEET_LOGGING_URL, {
-    method: "POST",
-    mode: "no-cors",  // Required for cross-origin requests to work
+    method:  "POST",
+    mode:    "no-cors",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(entry)
+    body:    JSON.stringify(entry)
   })
   .then(() => {
-    // In no-cors mode, you won't see any JSON back,
-    // but the request still reaches your Apps Script.
-    console.log("✅ no-cors POST sent. Check the Sheet to confirm row.");
+    console.log("✅ no-cors POST sent — CORB will block the response, but the row still appends.");
   })
   .catch(err => {
     console.error("recordCopy fetch() error:", err);
