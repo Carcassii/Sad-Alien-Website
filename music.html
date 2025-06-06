@@ -803,6 +803,7 @@
     async function initSamplers() {
       try {
         for (const [name, urls] of Object.entries(sampleUrls)) {
+          console.log(`Initializing sampler for ${name}`);
           samplers[name] = new Tone.Sampler({
             urls: urls,
             release: 1,
@@ -811,18 +812,23 @@
               console.log(`Loaded ${name} sampler`);
             }
           }).connect(gain);
+
+          // Set initial volume
           samplers[name].volume.value = 0;
           if (name === 'woof') {
             samplers[name].volume.value = 6;
           }
+
+          // Wait for each sampler to load
+          await samplers[name].loaded();
+          console.log(`${name} sampler is ready`);
         }
 
-        // Wait a bit for samplers to load
-        await new Promise(resolve => setTimeout(resolve, 2000));
         console.log('All samplers initialized');
         
         // Set initial instrument
         currentInstrument = synth;
+        setSynthKnobsEnabled(true);
       } catch (error) {
         console.error('Error loading samplers:', error);
       }
@@ -831,19 +837,50 @@
     // Initialize audio on first user interaction
     async function initAudio() {
       if (!audioContext) {
-        await Tone.start();
-        console.log('Tone.js started');
-        await initSamplers();
-        createStars();
-        currentInstrument = synth;
-        console.log('Initialization complete');
+        try {
+          await Tone.start();
+          console.log('Tone.js started');
+          await initSamplers();
+          createStars();
+          console.log('Initialization complete');
+        } catch (error) {
+          console.error('Error during initialization:', error);
+        }
       }
     }
+
+    // Function to apply instrument settings
+    function applyInstrument(instrumentName) {
+      if (currentInstrument && currentInstrument.releaseAll) {
+        currentInstrument.releaseAll(); // Release all notes from previous instrument
+      }
+      if (instrumentName === 'spaceOrgan') {
+        currentInstrument = synth;
+        setSynthKnobsEnabled(true);
+        console.log('Switched to space organ');
+      } else if (samplers[instrumentName]) {
+        currentInstrument = samplers[instrumentName];
+        setSynthKnobsEnabled(false);
+        console.log('Switched to', instrumentName);
+      }
+    }
+
+    // Handle instrument selection
+    document.querySelectorAll('.instrument-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.instrument-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const instrumentName = btn.dataset.instrument;
+        console.log('Switching to instrument:', instrumentName);
+        applyInstrument(instrumentName);
+      });
+    });
 
     // Play a note
     function playNote(note) {
       if (!audioContext) initAudio();
       if (currentInstrument) {
+        console.log('Playing note:', note, 'on instrument:', currentInstrument);
         currentInstrument.triggerAttack(note);
         activeNotes.add(note);
         
@@ -856,6 +893,7 @@
     // Stop a note
     function stopNote(note) {
       if (currentInstrument) {
+        console.log('Stopping note:', note, 'on instrument:', currentInstrument);
         currentInstrument.triggerRelease(note);
         activeNotes.delete(note);
         
@@ -915,15 +953,6 @@
       });
     });
 
-    // Handle instrument selection
-    document.querySelectorAll('.instrument-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.instrument-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        applyInstrument(btn.dataset.instrument);
-      });
-    });
-
     // Utility to enable/disable detune and oscillator knobs
     function setSynthKnobsEnabled(enabled) {
       const detune = document.getElementById('detune');
@@ -934,22 +963,6 @@
       oscillator.parentElement.style.opacity = enabled ? '1' : '0.5';
       detune.style.pointerEvents = enabled ? 'auto' : 'none';
       oscillator.style.pointerEvents = enabled ? 'auto' : 'none';
-    }
-
-    // Function to apply instrument settings
-    function applyInstrument(instrumentName) {
-      if (currentInstrument && currentInstrument.releaseAll) {
-        currentInstrument.releaseAll(); // Release all notes from previous instrument
-      }
-      if (instrumentName === 'spaceOrgan') {
-        currentInstrument = synth;
-        setSynthKnobsEnabled(true);
-        console.log('Switched to space organ');
-      } else if (samplers[instrumentName]) {
-        currentInstrument = samplers[instrumentName];
-        setSynthKnobsEnabled(false);
-        console.log('Switched to', instrumentName);
-      }
     }
 
     // Arpeggiator patterns
