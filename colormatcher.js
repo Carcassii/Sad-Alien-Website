@@ -1,5 +1,5 @@
 // === CONFIGURE THIS: paste your Apps Script web app URL inside the quotes ===
-const GOOGLE_SHEET_LOGGING_URL = "https://script.google.com/macros/s/AKfycbzuHGkySv9i6roLqw2RaWgkoCZ0AphdcTF7yTMQ8C5HfeiFJWaAI2ICpSO2uAWcHZ1-/exec";
+const GOOGLE_SHEET_LOGGING_URL = "https://script.google.com/macros/s/AKfycbzWyT0QK3BRNRV6EWhrtW7MwWyS_ID-6R4lR3gI9JeCM6EDiBCJPVetCY5K3-PdW3Km/exec";
 
 // In-memory log array (optional fallback)
 let hexCopyLog = [];
