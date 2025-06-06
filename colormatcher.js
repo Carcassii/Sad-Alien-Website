@@ -980,6 +980,10 @@ function initColorMatcher() {
     // Show reference swatch
     showReferenceSwatch(hex);
     
+    // Update theme description
+    const themeDesc = document.querySelector('.theme-description');
+    themeDesc.textContent = getThemeDescription(scheme);
+    
     // Update scheme description
     const schemeDesc = document.getElementById('schemeDesc');
     schemeDesc.textContent = getSchemeDescription(scheme);
@@ -1019,6 +1023,46 @@ document.getElementById('addColorBtn').addEventListener('click', function() {
   document.getElementById('nColors').value = newN;
   updateSwatches(hex, scheme);
 });
+
+function getThemeDescription(scheme) {
+  const descriptions = {
+    'complementary': 'Opposite colors on the wheel',
+    'analogous': 'Colors next to each other',
+    'triadic': 'Three evenly spaced colors',
+    'split-complementary': 'One color and two near its opposite',
+    'tetradic': 'Two pairs of opposite colors',
+    'square': 'Four evenly spaced colors',
+    'monochromatic': 'Different shades of one color',
+    'diadic': 'Two colors one step apart',
+    'pentadic': 'Five evenly spaced colors',
+    'pastel': 'Soft, light color variations',
+    'earth': 'Natural, muted tones',
+    'warm': 'Reds, oranges, and yellows',
+    'cool': 'Blues, greens, and purples',
+    'highkey': 'Light, bright colors',
+    'lowkey': 'Dark, rich colors',
+    'gradient': 'Smooth color transitions',
+    'gradient-extended': 'More color steps in gradient',
+    'achromatic': 'Black, white, and grays',
+    'accented-neutral': 'Neutrals with one accent',
+    'compound': 'Mix of complementary and analogous',
+    'fauvist': 'Bold, vivid colors',
+    'autumn': 'Warm fall colors',
+    'spring': 'Fresh, light colors',
+    'summer': 'Bright, vibrant colors',
+    'winter': 'Cool, crisp colors',
+    'retro50s': 'Soft pastel colors',
+    'discordant': 'Intentionally clashing colors',
+    'metallic': 'Colors with metallic sheen',
+    'optical-mix': 'Colors that create illusions',
+    'accessible': 'High-contrast colors',
+    'psychology-calm': 'Calming color combinations',
+    'relaxing': 'Soft, peaceful colors',
+    'energetic': 'Bright, exciting colors',
+    'polychromatic': 'Multiple colors from spectrum'
+  };
+  return descriptions[scheme] || '';
+}
 
 function getSchemeDescription(scheme) {
   const descriptions = {
