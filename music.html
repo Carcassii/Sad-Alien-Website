@@ -922,10 +922,20 @@
     function stopNote(note) {
       const osc = oscillators[note];
       if (osc) {
-        if (osc.source) {
-          osc.source.stop();
-        } else if (osc.oscillator) {
-          osc.oscillator.stop();
+        try {
+          if (osc.source) {
+            // Add a small fade out to prevent clicks
+            osc.gainNode.gain.setTargetAtTime(0, audioContext.currentTime, 0.01);
+            setTimeout(() => {
+              if (osc.source) {
+                osc.source.stop();
+              }
+            }, 50);
+          } else if (osc.oscillator) {
+            osc.oscillator.stop();
+          }
+        } catch (error) {
+          console.error('Error stopping note:', error);
         }
         delete oscillators[note];
       }
@@ -933,6 +943,28 @@
       activeNotes.delete(note);
       const key = document.querySelector(`[data-note="${note}"]`);
       if (key) key.classList.remove('active');
+    }
+
+    // Stop all notes
+    function stopAllNotes() {
+      Object.entries(oscillators).forEach(([note, osc]) => {
+        try {
+          if (osc.source) {
+            osc.source.stop();
+          } else if (osc.oscillator) {
+            osc.oscillator.stop();
+          }
+        } catch (error) {
+          console.error('Error stopping note:', error);
+        }
+      });
+      oscillators = {};
+      activeNotes.clear();
+      
+      // Remove all active key classes
+      document.querySelectorAll('.key').forEach(key => {
+        key.classList.remove('active');
+      });
     }
 
     // Handle keyboard events
@@ -953,6 +985,9 @@
       const note = keyMap[e.key.toLowerCase()];
       if (note) stopNote(note);
     });
+
+    // Add window blur handler to stop all notes when window loses focus
+    window.addEventListener('blur', stopAllNotes);
 
     // Handle mouse/touch events
     document.querySelectorAll('.key').forEach(key => {
@@ -991,15 +1026,8 @@
         btn.classList.add('active');
         currentInstrument = btn.dataset.instrument;
         
-        // Stop all current notes
-        Object.values(oscillators).forEach(osc => {
-          if (osc.source) {
-            osc.source.stop();
-          } else if (osc.oscillator) {
-            osc.oscillator.stop();
-          }
-        });
-        oscillators = {};
+        // Stop all current notes before switching instruments
+        stopAllNotes();
         
         // Update knob states
         const isSpaceOrgan = currentInstrument === 'spaceOrgan';
@@ -1055,6 +1083,9 @@
 
     // On page load, set initial knob state
     setSynthKnobsEnabled(true);
+
+    // Add cleanup on page unload
+    window.addEventListener('beforeunload', stopAllNotes);
   </script>
 </body>
 </html>
