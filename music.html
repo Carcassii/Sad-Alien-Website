@@ -1151,18 +1151,24 @@
     }
 
     function stopAllNotes() {
+      // a) Kill every currently playing voice:
       for (const note in voiceObjects) {
         const v = voiceObjects[note];
         if (v.timeoutId) clearTimeout(v.timeoutId);
-        try {
-          if (v.node.stop) v.node.stop();
-        } catch (_) {}
+        try { if (v.node.stop) v.node.stop(); } catch (_) {}
       }
       voiceObjects = {};
-      activeNotes.clear();
 
+      // b) Clear both activeNotes and heldKeys, and remove any “.active” classes:
+      activeNotes.clear();
+      heldKeys.clear();
       document.querySelectorAll('.key').forEach((k) => k.classList.remove('active'));
-      stopArpeggiator();
+
+      // c) Also stop the ARP interval if it's running:
+      if (arpIntervalId !== null) {
+        clearInterval(arpIntervalId);
+        arpIntervalId = null;
+      }
     }
 
     // ------------------------------------------------------------------------------------------------
@@ -1294,12 +1300,9 @@
         currentOscillatorType = types[Math.floor(parseFloat(e.target.value))] || 'sine';
       });
       document.getElementById('arpPattern').addEventListener('change', () => {
-        if (activeNotes.size === 0) return;
-        if (getArpPattern() === 'off') stopArpeggiator();
-        else {
-          stopArpeggiator();
-          startArpeggiator();
-        }
+        stopAllNotes(); // stops voices, clears both activeNotes & heldKeys, removes CSS
+        // at this point, no keys are down. If the new pattern is not "off," 
+        // wait for the user to press a key again (so their next keydown starts a fresh ARP).
       });
       document.getElementById('arpSpeed').addEventListener('input', () => {
         if (arpIntervalId !== null) {
