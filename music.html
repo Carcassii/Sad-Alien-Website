@@ -1021,7 +1021,7 @@
       osc.type = currentOscillatorType;
       osc.frequency.value = getNoteFrequency(note);
       osc.detune.value = currentDetuneValue;
-      gainNode.gain.value = 0.3;
+      gainNode.gain.value = 0.5;
 
       osc.connect(filterNode);
       filterNode.connect(gainNode);
@@ -1159,7 +1159,7 @@
       }
       voiceObjects = {};
 
-      // b) Clear both activeNotes and heldKeys, and remove any “.active” classes:
+      // b) Clear both activeNotes and heldKeys, and remove any ".active" classes:
       activeNotes.clear();
       heldKeys.clear();
       document.querySelectorAll('.key').forEach((k) => k.classList.remove('active'));
