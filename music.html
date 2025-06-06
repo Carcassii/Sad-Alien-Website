@@ -987,12 +987,12 @@
       });
 
       // (b) Clicking a button on the on-screen keyboard:
-      document.getElementById('keyboard').addEventListener('click', (ev) => {
-        const btn = ev.target.closest('.key');
-        if (!btn) return;
-        const note = btn.dataset.note;
-        playNote(note, 0, 1.0);
-    });
+      // document.getElementById('keyboard').addEventListener('click', (ev) => {
+      //   const btn = ev.target.closest('.key');
+      //   if (!btn) return;
+      //   const note = btn.dataset.note;
+      //   playNote(note, 0, 1.0);
+      // });
     }
 
     // ------------------------------------------------------------------------------------------------
@@ -1113,18 +1113,15 @@
       const voice = voiceObjects[note];
       if (!voice) return;
 
-      const now = audioContext.currentTime;
-      try {
-        voice.node.stop(now);
-      } catch (e) {}
+      if (currentInstrument === 'spaceOrgan') {
+        stopOscillatorNote(note);
+      } else {
+        stopSampleBasedNote(note);
+      }
 
-      if (voice.timeoutId) clearTimeout(voice.timeoutId);
-      delete voiceObjects[note];
-
-      // Remove visual highlight
+      // Clean up visuals & state
       const keyEl = document.querySelector(`[data-note="${note}"]`);
       if (keyEl) keyEl.classList.remove('active');
-
       heldKeys.delete(note);
     }
 
