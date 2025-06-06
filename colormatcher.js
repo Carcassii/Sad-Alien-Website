@@ -774,6 +774,15 @@ function generateVintage(hex, variations = 5) {
   return colors;
 }
 
+function generatePentadic(hex) {
+  const [h, s, l] = hexToHsl(hex);
+  const colors = [];
+  for (let i = 0; i < 5; i++) {
+    colors.push(hslToHex((h + i * 72) % 360, s, l));
+  }
+  return colors;
+}
+
 // Event handlers and UI updates
 function showReferenceSwatch(hex) {
   const referenceRow = document.getElementById('referenceRow');
@@ -905,6 +914,9 @@ function updateSwatches(hex, scheme) {
     case 'vintage':
       colors = generateVintage(hex, n);
       break;
+    case 'pentadic':
+      colors = generatePentadic(hex);
+      break;
     default:
       colors = [hex];
   }
@@ -960,7 +972,8 @@ const colorCount = {
   'colorblind': 5,
   'duotone': 5,
   'gradient': 5,
-  'vintage': 5
+  'vintage': 5,
+  'pentadic': 5
 };
 
 // Initialize the color matcher
