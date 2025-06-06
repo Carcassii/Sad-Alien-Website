@@ -82,16 +82,16 @@ function generateSplitComplementary(hex) {
 function generateTetradic(hex) {
   const [h, s, l] = hexToHsl(hex);
   return [
-    hslToHex((h + 90) % 360, s, l),
+    hslToHex((h + 60) % 360, s, l),  // Rectangle form: 60° intervals
     hslToHex((h + 180) % 360, s, l),
-    hslToHex((h + 270) % 360, s, l)
+    hslToHex((h + 240) % 360, s, l)
   ];
 }
 
 function generateSquare(hex) {
   const [h, s, l] = hexToHsl(hex);
   return [
-    hslToHex((h + 90) % 360, s, l),
+    hslToHex((h + 90) % 360, s, l),  // Square form: 90° intervals
     hslToHex((h + 180) % 360, s, l),
     hslToHex((h + 270) % 360, s, l)
   ];
@@ -100,19 +100,24 @@ function generateSquare(hex) {
 function generateMonochromatic(hex, variations = 5) {
   const [h, s, l] = hexToHsl(hex);
   const colors = [];
-  const step = 100 / (variations + 1);
-  for(let i = 1; i <= variations; i++) {
-    let newL = (l + step * i) % 100;
+  const half = Math.floor(variations / 2);
+  // Create a range around the base lightness
+  for (let i = -half; i <= half; i++) {
+    const newL = Math.max(0, Math.min(100, l + i * 20)); // 20% steps
     colors.push(hslToHex(h, s, newL));
   }
   return colors;
 }
 
 function generatePastel(hex, variations = 5) {
-  const [h, , ] = hexToHsl(hex);
+  const [h, s, l] = hexToHsl(hex);
+  const targetS = Math.max(0, s / 2);   // Half the base saturation
+  const targetL = Math.min(100, l + 20); // 20% lighter than base
   const colors = [];
-  for(let i = 0; i < variations; i++) {
-    colors.push(hslToHex((h + i * (360 / variations)) % 360, 40, 85));
+  for (let i = 0; i < variations; i++) {
+    // Create a range around the base hue
+    const hue = (h + (i - (variations - 1) / 2) * 10 + 360) % 360;
+    colors.push(hslToHex(hue, targetS, targetL));
   }
   return colors;
 }
@@ -226,52 +231,75 @@ function generateFauvist(hex, variations = 5) {
 }
 
 function generateAutumnColors(hex, variations = 5) {
-  const [h, , ] = hexToHsl(hex);
+  const baseHue = 30; // Start with orange
   const sat = 60;
   const light = 45;
-  const hues = [h, h + 10, h + 20, h - 10, h - 20].map(v => (v + 360) % 360);
-  return hues.slice(0, variations).map(hue => hslToHex(hue, sat, light));
+  const colors = [];
+  for (let i = 0; i < variations; i++) {
+    const hue = (baseHue + i * 15) % 360;
+    colors.push(hslToHex(hue, sat, light));
+  }
+  return colors;
 }
 
 function generateSpringColors(hex, variations = 5) {
-  const [h, , ] = hexToHsl(hex);
+  const baseHue = 120; // Start with green
+  const sat = 60;
+  const light = 80;
   const colors = [];
   for (let i = 0; i < variations; i++) {
-    const hue = (h + i * 30) % 360;
-    colors.push(hslToHex(hue, 60, 80)); // medium saturation, high light
+    const hue = (baseHue + i * 30) % 360;
+    colors.push(hslToHex(hue, sat, light));
   }
   return colors;
 }
 
 function generateSummerColors(hex, variations = 5) {
-  const [h, , ] = hexToHsl(hex);
+  const baseHue = 200; // Start with blue
+  const sat = 40;
+  const light = 70;
   const colors = [];
   for (let i = 0; i < variations; i++) {
-    const hue = (h + i * 25) % 360;
-    colors.push(hslToHex(hue, 40, 70)); // lower saturation, soft light
+    const hue = (baseHue + i * 25) % 360;
+    colors.push(hslToHex(hue, sat, light));
   }
   return colors;
 }
 
 function generateWinterColors(hex, variations = 5) {
-  const [h, , ] = hexToHsl(hex);
+  const baseHue = 240; // Start with deep blue
+  const sat = 85;
+  const light = 45;
   const colors = [];
   for (let i = 0; i < variations; i++) {
-    const hue = (h + i * 72) % 360;
-    colors.push(hslToHex(hue, 85, 45)); // bold saturation, darker tones
+    const hue = (baseHue + i * 72) % 360;
+    colors.push(hslToHex(hue, sat, light));
   }
   return colors;
 }
 
 function generateRetro50s(hex, variations = 5) {
-  const [h, , ] = hexToHsl(hex);
-  const retroSaturation = [60, 65, 70, 55, 60];
-  const retroLightness = [70, 65, 80, 75, 70];
-  const retroOffsets = [0, 30, -45, 60, -30];
+  // Classic 1950s color palette base hues
+  const retroHues = [
+    350,  // Pink
+    30,   // Coral
+    60,   // Yellow
+    180,  // Turquoise
+    210   // Sky Blue
+  ];
+  
+  // Characteristic 50s pastel saturation and lightness
+  const retroSaturation = 45;  // Moderate saturation
+  const retroLightness = 75;   // High lightness for pastel effect
+  
   const colors = [];
-  for(let i = 0; i < variations; i++) {
-    const hue = (h + retroOffsets[i % retroOffsets.length] + 360) % 360;
-    colors.push(hslToHex(hue, retroSaturation[i % retroSaturation.length], retroLightness[i % retroLightness.length]));
+  for (let i = 0; i < variations; i++) {
+    // Use predefined retro hues instead of offsets from input
+    const hue = retroHues[i % retroHues.length];
+    // Add slight variation to saturation and lightness for more natural look
+    const sat = retroSaturation + (Math.random() * 10 - 5);  // ±5 variation
+    const light = retroLightness + (Math.random() * 10 - 5); // ±5 variation
+    colors.push(hslToHex(hue, sat, light));
   }
   return colors;
 }
