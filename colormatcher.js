@@ -24,6 +24,8 @@ let hexCopyLog = [];
  *   2) sends a POST to your Google Sheet's Apps Script endpoint
  */
 function recordCopy(hex) {
+  console.log("recordCopy fired for:", hex);
+
   const entry = {
     hex: hex.toLowerCase(),
     timestamp: new Date().toISOString()
@@ -38,10 +40,17 @@ function recordCopy(hex) {
   // === 2) Send it to your Google Sheet via Apps Script ===
   fetch(GOOGLE_SHEET_LOGGING_URL, {
     method: "POST",
+    mode: "no-cors",  // Required for cross-origin requests to work
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(entry)
-  }).catch(err => {
-    console.error("Failed to POST to Google Sheet:", err);
+  })
+  .then(() => {
+    // In no-cors mode, you won't see any JSON back,
+    // but the request still reaches your Apps Script.
+    console.log("✅ no-cors POST sent. Check the Sheet to confirm row.");
+  })
+  .catch(err => {
+    console.error("recordCopy fetch() error:", err);
   });
 }
 
@@ -838,12 +847,15 @@ function showReferenceSwatch(hex) {
   swatch.className = 'swatch';
   swatch.innerHTML = `<div class="swatch-color" style="background:${hex}"></div><span class="swatch-hex">${hex}</span>`;
   swatch.onclick = function() {
+    // First copy to clipboard
     navigator.clipboard.writeText(hex)
       .then(() => {
+        // Show visual feedback
         const hexSpan = swatch.querySelector('.swatch-hex');
         hexSpan.textContent = hex + ' ✓';
         setTimeout(() => { hexSpan.textContent = hex; }, 1000);
-        // Log the copy
+        
+        // Log the copy (this will do the no-cors POST)
         recordCopy(hex);
       })
       .catch(err => {
@@ -984,12 +996,15 @@ function updateSwatches(hex, scheme) {
     swatch.className = 'swatch';
     swatch.innerHTML = `<div class="swatch-color" style="background:${color}"></div><span class="swatch-hex">${color}</span>`;
     swatch.onclick = function() {
+      // First copy to clipboard
       navigator.clipboard.writeText(color)
         .then(() => {
+          // Show visual feedback
           const hexSpan = swatch.querySelector('.swatch-hex');
           hexSpan.textContent = color + ' ✓';
           setTimeout(() => { hexSpan.textContent = color; }, 1000);
-          // Log the copy
+          
+          // Log the copy (this will do the no-cors POST)
           recordCopy(color);
         })
         .catch(err => {
