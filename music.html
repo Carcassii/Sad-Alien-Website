@@ -728,6 +728,15 @@
     let oscillators = {};
     let audioBuffers = {};
 
+    // Note to semitone mapping
+    const NOTE_TO_SEMITONE = {
+      'C4': 60, 'C#4': 61, 'D4': 62, 'D#4': 63,
+      'E4': 64, 'F4': 65, 'F#4': 66, 'G4': 67,
+      'G#4': 68, 'A4': 69, 'A#4': 70, 'B4': 71,
+      'C5': 72, 'C#5': 73, 'D5': 74, 'D#5': 75,
+      'E5': 76
+    };
+
     // Initialize audio context
     async function initAudio() {
       if (!audioContext) {
@@ -803,6 +812,31 @@
       }
     }
 
+    // Find nearest sample for a given note
+    function findNearestSample(instrumentBuffers, desiredNote) {
+      const desiredSemitone = NOTE_TO_SEMITONE[desiredNote];
+      if (!desiredSemitone) return null;
+      
+      if (instrumentBuffers[desiredNote]) {
+        return { sampleNote: desiredNote, semitoneDelta: 0 };
+      }
+
+      let bestNote = null;
+      let bestDistance = Infinity;
+      for (const sampleNote of Object.keys(instrumentBuffers)) {
+        const sampleSemitone = NOTE_TO_SEMITONE[sampleNote];
+        const dist = Math.abs(desiredSemitone - sampleSemitone);
+        if (dist < bestDistance) {
+          bestDistance = dist;
+          bestNote = sampleNote;
+        }
+      }
+      if (bestNote === null) return null;
+
+      const semitoneDelta = desiredSemitone - NOTE_TO_SEMITONE[bestNote];
+      return { sampleNote: bestNote, semitoneDelta };
+    }
+
     // Create oscillator for space organ
     function createOscillator(note) {
       const oscillator = audioContext.createOscillator();
@@ -836,6 +870,37 @@
       return noteMap[note] || 440;
     }
 
+    // Play a sample-based note
+    function playSampleBasedNote(note) {
+      const buffersForInst = audioBuffers[currentInstrument];
+      if (!buffersForInst) return;
+
+      const nearest = findNearestSample(buffersForInst, note);
+      if (!nearest) return;
+
+      const sampleBuffer = buffersForInst[nearest.sampleNote];
+      if (!sampleBuffer) return;
+
+      const source = audioContext.createBufferSource();
+      const gainNode = audioContext.createGain();
+      const filter = audioContext.createBiquadFilter();
+      
+      source.buffer = sampleBuffer;
+      const playbackRate = Math.pow(2, nearest.semitoneDelta / 12);
+      source.playbackRate.value = playbackRate;
+      
+      gainNode.gain.value = currentInstrument === 'woof' ? 6 : 1;
+      filter.type = 'lowpass';
+      filter.frequency.value = 1500;
+      
+      source.connect(filter);
+      filter.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+      
+      source.start();
+      oscillators[note] = { source, gainNode, filter };
+    }
+
     // Play a note
     function playNote(note) {
       if (!audioContext) initAudio();
@@ -844,18 +909,8 @@
         const { oscillator, gainNode } = createOscillator(note);
         oscillator.start();
         oscillators[note] = { oscillator, gainNode };
-      } else if (audioBuffers[currentInstrument] && audioBuffers[currentInstrument][note]) {
-        const source = audioContext.createBufferSource();
-        const gainNode = audioContext.createGain();
-        
-        source.buffer = audioBuffers[currentInstrument][note];
-        gainNode.gain.value = currentInstrument === 'woof' ? 6 : 1;
-        
-        source.connect(gainNode);
-        gainNode.connect(audioContext.destination);
-        
-        source.start();
-        oscillators[note] = { source, gainNode };
+      } else {
+        playSampleBasedNote(note);
       }
       
       activeNotes.add(note);
@@ -976,13 +1031,12 @@
     });
 
     document.getElementById('filter').addEventListener('input', (e) => {
-      if (currentInstrument === 'spaceOrgan') {
-        Object.values(oscillators).forEach(osc => {
-          if (osc.filter) {
-            osc.filter.frequency.value = parseFloat(e.target.value);
-          }
-        });
-      }
+      const value = parseFloat(e.target.value);
+      Object.values(oscillators).forEach(osc => {
+        if (osc.filter) {
+          osc.filter.frequency.value = value;
+        }
+      });
     });
 
     document.getElementById('volume').addEventListener('input', (e) => {
