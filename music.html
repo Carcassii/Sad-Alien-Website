@@ -1039,30 +1039,38 @@
         console.warn(`No nearest sample found for note ${note} in instrument ${currentInstrument}`);
         return;
       }
-
       const { sampleNote, semitoneDelta } = nearest;
       const sampleBuffer = buffersForInst[sampleNote];
       if (!sampleBuffer) {
         console.warn(`No sample buffer for ${currentInstrument} ${sampleNote}`);
         return;
       }
+      console.log(
+        `Playing sample for ${currentInstrument} ${note} (using ${sampleNote}, semitoneDelta=${semitoneDelta})`
+      );
 
-      console.log(`Playing sample for ${currentInstrument} ${note} (using ${sampleNote}, semitoneDelta=${semitoneDelta})`);
-
+      // ❶ Create BufferSource AND assign its buffer
       const source = audioContext.createBufferSource();
-      const gainNode = audioContext.createGain();
-
+      source.buffer = sampleBuffer; // ← THIS LINE IS CRUCIAL
+      // pitch‐shift by semitones + global detune
       const semitoneRatio = Math.pow(2, semitoneDelta / 12);
-      const detuneRatio = Math.pow(2, currentDetuneValue / 1200);
+      const detuneRatio   = Math.pow(2, currentDetuneValue / 1200);
       source.playbackRate.value = semitoneRatio * detuneRatio;
 
+      // ❷ If you want a per‐voice gain (e.g. louder "woof" or normal otherwise):
+      const gainNode = audioContext.createGain();
       gainNode.gain.value = currentInstrument === 'woof' ? 3 : 1;
 
-      source.connect(filterNode);
-      filterNode.connect(gainNode);
-      gainNode.connect(distortionNode);
+      // ❸ Wire up the chain. Since setupEffectsChain already did:
+      //     filterNode → distortionNode → reverbDryGain → afterReverbMerge → delay → mainGain → destination
+      // you just need to feed "source" into that filterNode. If you also want your per‐voice gain:
+      source.connect(gainNode);
+      gainNode.connect(filterNode);
 
+      // ❹ Start it:
       source.start();
+
+      // ❺ Keep track of this voice so you can stop it later:
       voiceObjects[note] = { node: source, gainNode: gainNode, timeoutId: null };
     }
 
