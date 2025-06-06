@@ -124,6 +124,113 @@ function validateCool(hues) {
   return hues.every(h => h >= 120 && h <= 300);
 }
 
+// Additional validation utilities for seasonal and mood-based schemes
+function validateAutumn(hues, saturations, lightnesses) {
+  // Autumn colors should be in warm earth tones (0-60°)
+  return hues.every(h => h >= 0 && h <= 60) &&
+         saturations.every(s => s >= 40 && s <= 80) &&
+         lightnesses.every(l => l >= 30 && l <= 70);
+}
+
+function validateSpring(hues, saturations, lightnesses) {
+  // Spring colors should be fresh and light (60-180°)
+  return hues.every(h => h >= 60 && h <= 180) &&
+         saturations.every(s => s >= 50 && s <= 90) &&
+         lightnesses.every(l => l >= 60 && l <= 90);
+}
+
+function validateSummer(hues, saturations, lightnesses) {
+  // Summer colors should be cool and muted (180-300°)
+  return hues.every(h => h >= 180 && h <= 300) &&
+         saturations.every(s => s >= 30 && s <= 70) &&
+         lightnesses.every(l => l >= 50 && l <= 80);
+}
+
+function validateWinter(hues, saturations, lightnesses) {
+  // Winter colors should be cool and intense (240-360°)
+  return hues.every(h => h >= 240 || h <= 60) &&
+         saturations.every(s => s >= 60 && s <= 100) &&
+         lightnesses.every(l => l >= 20 && l <= 60);
+}
+
+function validateHighKey(hues, saturations, lightnesses) {
+  // High key colors should be light and bright
+  return lightnesses.every(l => l >= 70) &&
+         saturations.every(s => s >= 40);
+}
+
+function validateLowKey(hues, saturations, lightnesses) {
+  // Low key colors should be dark and muted
+  return lightnesses.every(l => l <= 40) &&
+         saturations.every(s => s <= 60);
+}
+
+function validateNeon(hues, saturations, lightnesses) {
+  // Neon colors should be highly saturated and bright
+  return saturations.every(s => s >= 80) &&
+         lightnesses.every(l => l >= 50 && l <= 70);
+}
+
+function validateRetro50s(hues, saturations, lightnesses) {
+  // 50s retro colors should be pastel-like
+  return saturations.every(s => s >= 30 && s <= 60) &&
+         lightnesses.every(l => l >= 70 && l <= 90);
+}
+
+// Additional validation utilities for accessibility and remaining schemes
+function validateAccessible(hues, saturations, lightnesses) {
+  // Accessible colors should have good contrast
+  // Check if any pair of colors has sufficient contrast (4.5:1 for normal text)
+  for (let i = 0; i < lightnesses.length; i++) {
+    for (let j = i + 1; j < lightnesses.length; j++) {
+      const contrast = Math.abs(lightnesses[i] - lightnesses[j]);
+      if (contrast < 30) return false; // Minimum contrast ratio
+    }
+  }
+  return true;
+}
+
+function validateColorBlind(hues, saturations, lightnesses) {
+  // Color blind friendly colors should be distinguishable by lightness
+  // Check if each color has a unique lightness value
+  const uniqueLightnesses = new Set(lightnesses.map(l => Math.round(l / 5) * 5));
+  return uniqueLightnesses.size === lightnesses.length;
+}
+
+function validateDuotone(hues, saturations, lightnesses) {
+  // Duotone should have two distinct colors with variations
+  const baseHues = new Set(hues.map(h => Math.round(h / 30) * 30));
+  return baseHues.size === 2;
+}
+
+function validateGradient(hues, saturations, lightnesses) {
+  // Gradient should have smooth transitions
+  // Check if adjacent colors have similar properties
+  for (let i = 1; i < hues.length; i++) {
+    const hueDiff = Math.abs(hues[i] - hues[i-1]);
+    const satDiff = Math.abs(saturations[i] - saturations[i-1]);
+    const lightDiff = Math.abs(lightnesses[i] - lightnesses[i-1]);
+    
+    if (hueDiff > 30 || satDiff > 20 || lightDiff > 20) return false;
+  }
+  return true;
+}
+
+function validateMetallic(hues, saturations, lightnesses) {
+  // Metallic colors should have moderate saturation and varying lightness
+  return saturations.every(s => s >= 20 && s <= 60) &&
+         lightnesses.some((l, i) => lightnesses.some((l2, j) => 
+           i !== j && Math.abs(l - l2) > 20
+         ));
+}
+
+function validateVintage(hues, saturations, lightnesses) {
+  // Vintage colors should be muted and warm
+  return saturations.every(s => s <= 60) &&
+         lightnesses.every(l => l >= 40 && l <= 80) &&
+         hues.every(h => h >= 0 && h <= 60);
+}
+
 // Color scheme generators
 function generateComplementary(hex) {
   const [h, s, l] = hexToHsl(hex);
@@ -369,50 +476,78 @@ function generateFauvist(hex, variations = 5) {
   return colors;
 }
 
-function generateAutumnColors(hex, variations = 5) {
-  const baseHue = 30; // Start with orange
-  const sat = 60;
-  const light = 45;
+function generateAutumn(hex, variations = 5) {
+  const baseHue = 30; // Classic autumn orange
   const colors = [];
   for (let i = 0; i < variations; i++) {
-    const hue = (baseHue + i * 15) % 360;
-    colors.push(hslToHex(hue, sat, light));
+    const hue = (baseHue + i * 10) % 60;
+    const saturation = 60 + (Math.random() * 20 - 10);
+    const lightness = 50 + (Math.random() * 20 - 10);
+    colors.push(hslToHex(hue, saturation, lightness));
+  }
+  // Validate
+  const hues = colors.map(color => hexToHsl(color)[0]);
+  const saturations = colors.map(color => hexToHsl(color)[1]);
+  const lightnesses = colors.map(color => hexToHsl(color)[2]);
+  if (!validateAutumn(hues, saturations, lightnesses)) {
+    console.warn('Autumn colors validation failed');
   }
   return colors;
 }
 
-function generateSpringColors(hex, variations = 5) {
-  const baseHue = 120; // Start with green
-  const sat = 60;
-  const light = 80;
+function generateSpring(hex, variations = 5) {
+  const baseHue = 120; // Fresh green
   const colors = [];
   for (let i = 0; i < variations; i++) {
-    const hue = (baseHue + i * 30) % 360;
-    colors.push(hslToHex(hue, sat, light));
+    const hue = (baseHue + i * 20) % 120;
+    const saturation = 70 + (Math.random() * 20 - 10);
+    const lightness = 75 + (Math.random() * 15 - 5);
+    colors.push(hslToHex(hue, saturation, lightness));
+  }
+  // Validate
+  const hues = colors.map(color => hexToHsl(color)[0]);
+  const saturations = colors.map(color => hexToHsl(color)[1]);
+  const lightnesses = colors.map(color => hexToHsl(color)[2]);
+  if (!validateSpring(hues, saturations, lightnesses)) {
+    console.warn('Spring colors validation failed');
   }
   return colors;
 }
 
-function generateSummerColors(hex, variations = 5) {
-  const baseHue = 200; // Start with blue
-  const sat = 40;
-  const light = 70;
+function generateSummer(hex, variations = 5) {
+  const baseHue = 200; // Cool blue
   const colors = [];
   for (let i = 0; i < variations; i++) {
-    const hue = (baseHue + i * 25) % 360;
-    colors.push(hslToHex(hue, sat, light));
+    const hue = (baseHue + i * 20) % 120;
+    const saturation = 50 + (Math.random() * 20 - 10);
+    const lightness = 65 + (Math.random() * 15 - 5);
+    colors.push(hslToHex(hue, saturation, lightness));
+  }
+  // Validate
+  const hues = colors.map(color => hexToHsl(color)[0]);
+  const saturations = colors.map(color => hexToHsl(color)[1]);
+  const lightnesses = colors.map(color => hexToHsl(color)[2]);
+  if (!validateSummer(hues, saturations, lightnesses)) {
+    console.warn('Summer colors validation failed');
   }
   return colors;
 }
 
-function generateWinterColors(hex, variations = 5) {
-  const baseHue = 240; // Start with deep blue
-  const sat = 85;
-  const light = 45;
+function generateWinter(hex, variations = 5) {
+  const baseHue = 240; // Deep blue
   const colors = [];
   for (let i = 0; i < variations; i++) {
-    const hue = (baseHue + i * 72) % 360;
-    colors.push(hslToHex(hue, sat, light));
+    const hue = (baseHue + i * 20) % 120;
+    const saturation = 80 + (Math.random() * 20 - 10);
+    const lightness = 40 + (Math.random() * 20 - 10);
+    colors.push(hslToHex(hue, saturation, lightness));
+  }
+  // Validate
+  const hues = colors.map(color => hexToHsl(color)[0]);
+  const saturations = colors.map(color => hexToHsl(color)[1]);
+  const lightnesses = colors.map(color => hexToHsl(color)[2]);
+  if (!validateWinter(hues, saturations, lightnesses)) {
+    console.warn('Winter colors validation failed');
   }
   return colors;
 }
@@ -480,13 +615,23 @@ function generateOpticalMix(hex) {
   ];
 }
 
-function generateAccessible(hex) {
-  const [h, , l] = hexToHsl(hex);
-  const highContrastL = l < 50 ? 95 : 5;
-  return [
-    hex,
-    hslToHex(h, 10, highContrastL)
-  ];
+function generateAccessible(hex, variations = 5) {
+  const [h, s, l] = hexToHsl(hex);
+  const colors = [];
+  const baseLightness = l;
+  
+  for (let i = 0; i < variations; i++) {
+    const lightness = baseLightness + (i * 20 - (variations * 10));
+    colors.push(hslToHex(h, s, Math.max(0, Math.min(100, lightness))));
+  }
+  // Validate
+  const hues = colors.map(color => hexToHsl(color)[0]);
+  const saturations = colors.map(color => hexToHsl(color)[1]);
+  const lightnesses = colors.map(color => hexToHsl(color)[2]);
+  if (!validateAccessible(hues, saturations, lightnesses)) {
+    console.warn('Accessible colors validation failed');
+  }
+  return colors;
 }
 
 function generatePsychologyCalm(hex) {
@@ -524,6 +669,107 @@ function generatePolychromatic(hex, variations = 6) {
   const colors = [];
   for(let i = 1; i <= variations; i++) {
     colors.push(hslToHex((i * 360 / variations) % 360, s, l));
+  }
+  return colors;
+}
+
+function generateColorBlind(hex, variations = 5) {
+  const [h, s, l] = hexToHsl(hex);
+  const colors = [];
+  const baseLightness = l;
+  
+  for (let i = 0; i < variations; i++) {
+    const lightness = baseLightness + (i * 15 - (variations * 7.5));
+    colors.push(hslToHex(h, s, Math.max(0, Math.min(100, lightness))));
+  }
+  // Validate
+  const hues = colors.map(color => hexToHsl(color)[0]);
+  const saturations = colors.map(color => hexToHsl(color)[1]);
+  const lightnesses = colors.map(color => hexToHsl(color)[2]);
+  if (!validateColorBlind(hues, saturations, lightnesses)) {
+    console.warn('Color blind friendly colors validation failed');
+  }
+  return colors;
+}
+
+function generateDuotone(hex, variations = 5) {
+  const [h, s, l] = hexToHsl(hex);
+  const colors = [];
+  const secondHue = (h + 180) % 360;
+  
+  for (let i = 0; i < variations; i++) {
+    const ratio = i / (variations - 1);
+    const hue = (h * (1 - ratio) + secondHue * ratio) % 360;
+    const lightness = l + (Math.random() * 20 - 10);
+    colors.push(hslToHex(hue, s, Math.max(0, Math.min(100, lightness))));
+  }
+  // Validate
+  const hues = colors.map(color => hexToHsl(color)[0]);
+  const saturations = colors.map(color => hexToHsl(color)[1]);
+  const lightnesses = colors.map(color => hexToHsl(color)[2]);
+  if (!validateDuotone(hues, saturations, lightnesses)) {
+    console.warn('Duotone colors validation failed');
+  }
+  return colors;
+}
+
+function generateGradient(hex, variations = 5) {
+  const [h, s, l] = hexToHsl(hex);
+  const colors = [];
+  
+  for (let i = 0; i < variations; i++) {
+    const ratio = i / (variations - 1);
+    const hue = (h + ratio * 30) % 360;
+    const saturation = s + (ratio * 20 - 10);
+    const lightness = l + (ratio * 20 - 10);
+    colors.push(hslToHex(hue, saturation, lightness));
+  }
+  // Validate
+  const hues = colors.map(color => hexToHsl(color)[0]);
+  const saturations = colors.map(color => hexToHsl(color)[1]);
+  const lightnesses = colors.map(color => hexToHsl(color)[2]);
+  if (!validateGradient(hues, saturations, lightnesses)) {
+    console.warn('Gradient colors validation failed');
+  }
+  return colors;
+}
+
+function generateMetallic(hex, variations = 5) {
+  const [h, s, l] = hexToHsl(hex);
+  const colors = [];
+  
+  for (let i = 0; i < variations; i++) {
+    const hue = (h + i * 10) % 360;
+    const saturation = 40 + (Math.random() * 20 - 10);
+    const lightness = 50 + (Math.random() * 30 - 15);
+    colors.push(hslToHex(hue, saturation, lightness));
+  }
+  // Validate
+  const hues = colors.map(color => hexToHsl(color)[0]);
+  const saturations = colors.map(color => hexToHsl(color)[1]);
+  const lightnesses = colors.map(color => hexToHsl(color)[2]);
+  if (!validateMetallic(hues, saturations, lightnesses)) {
+    console.warn('Metallic colors validation failed');
+  }
+  return colors;
+}
+
+function generateVintage(hex, variations = 5) {
+  const [h, s, l] = hexToHsl(hex);
+  const colors = [];
+  
+  for (let i = 0; i < variations; i++) {
+    const hue = (h + i * 10) % 60;
+    const saturation = 40 + (Math.random() * 20 - 10);
+    const lightness = 60 + (Math.random() * 20 - 10);
+    colors.push(hslToHex(hue, saturation, lightness));
+  }
+  // Validate
+  const hues = colors.map(color => hexToHsl(color)[0]);
+  const saturations = colors.map(color => hexToHsl(color)[1]);
+  const lightnesses = colors.map(color => hexToHsl(color)[2]);
+  if (!validateVintage(hues, saturations, lightnesses)) {
+    console.warn('Vintage colors validation failed');
   }
   return colors;
 }
@@ -606,16 +852,16 @@ function updateSwatches(hex, scheme) {
       colors = generateFauvist(hex, n);
       break;
     case 'autumn':
-      colors = generateAutumnColors(hex, n);
+      colors = generateAutumn(hex, n);
       break;
     case 'spring':
-      colors = generateSpringColors(hex, n);
+      colors = generateSpring(hex, n);
       break;
     case 'summer':
-      colors = generateSummerColors(hex, n);
+      colors = generateSummer(hex, n);
       break;
     case 'winter':
-      colors = generateWinterColors(hex, n);
+      colors = generateWinter(hex, n);
       break;
     case 'retro50s':
       colors = generateRetro50s(hex, n);
@@ -633,7 +879,7 @@ function updateSwatches(hex, scheme) {
       colors = generateOpticalMix(hex);
       break;
     case 'accessible':
-      colors = generateAccessible(hex);
+      colors = generateAccessible(hex, n);
       break;
     case 'psychology-calm':
       colors = generatePsychologyCalm(hex);
@@ -646,6 +892,18 @@ function updateSwatches(hex, scheme) {
       break;
     case 'polychromatic':
       colors = generatePolychromatic(hex, n);
+      break;
+    case 'colorblind':
+      colors = generateColorBlind(hex, n);
+      break;
+    case 'duotone':
+      colors = generateDuotone(hex, n);
+      break;
+    case 'gradient':
+      colors = generateGradient(hex, n);
+      break;
+    case 'vintage':
+      colors = generateVintage(hex, n);
       break;
     default:
       colors = [hex];
@@ -694,11 +952,15 @@ const colorCount = {
   'metallic': 4,
   'gradient-extended': 7,
   'optical-mix': 2,
-  'accessible': 2,
+  'accessible': 5,
   'psychology-calm': 3,
   'relaxing': 5,
   'energetic': 5,
-  'polychromatic': 6
+  'polychromatic': 6,
+  'colorblind': 5,
+  'duotone': 5,
+  'gradient': 5,
+  'vintage': 5
 };
 
 // Initialize the color matcher
