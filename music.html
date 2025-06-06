@@ -743,6 +743,7 @@
     let currentDetuneValue = 0;  // in cents
 
     const heldKeys = new Set();
+    const heldMouseNotes = new Set();
 
     // ARP settings (pulled from knobs)
     function getArpSpeed() { return parseFloat(document.getElementById('arpSpeed').value); }
@@ -1331,25 +1332,34 @@
     document.querySelectorAll('.key').forEach((keyEl) => {
       keyEl.addEventListener('mousedown', () => {
         const note = keyEl.dataset.note;
-        playNote(note);
+        if (!heldMouseNotes.has(note)) {
+          playNote(note);
+          heldMouseNotes.add(note);
+        }
       });
       keyEl.addEventListener('mouseup', () => {
         const note = keyEl.dataset.note;
         stopNote(note);
+        heldMouseNotes.delete(note);
       });
       keyEl.addEventListener('mouseleave', () => {
         const note = keyEl.dataset.note;
         stopNote(note);
+        heldMouseNotes.delete(note);
       });
       keyEl.addEventListener('touchstart', (ev) => {
         ev.preventDefault();
         const note = keyEl.dataset.note;
-        playNote(note);
+        if (!heldMouseNotes.has(note)) {
+          playNote(note);
+          heldMouseNotes.add(note);
+        }
       });
       keyEl.addEventListener('touchend', (ev) => {
         ev.preventDefault();
         const note = keyEl.dataset.note;
         stopNote(note);
+        heldMouseNotes.delete(note);
       });
     });
 
