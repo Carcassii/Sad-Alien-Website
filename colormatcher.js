@@ -45,10 +45,95 @@ function hslToHex(h, s, l) {
   return `#${f(0)}${f(8)}${f(4)}`;
 }
 
+// Color theory validation utilities
+function validateComplementary(h1, h2) {
+  // Complementary colors should be 180° apart
+  return Math.abs((h1 - h2 + 360) % 360 - 180) < 1;
+}
+
+function validateAnalogous(hues) {
+  // Analogous colors should be within 30° of each other
+  const sorted = [...hues].sort((a, b) => a - b);
+  for (let i = 1; i < sorted.length; i++) {
+    if (Math.abs(sorted[i] - sorted[i-1]) > 30) return false;
+  }
+  return true;
+}
+
+function validateTriadic(hues) {
+  // Triadic colors should be 120° apart
+  const sorted = [...hues].sort((a, b) => a - b);
+  return Math.abs(sorted[1] - sorted[0] - 120) < 1 && 
+         Math.abs(sorted[2] - sorted[1] - 120) < 1;
+}
+
+function validateSplitComplementary(h1, h2, h3) {
+  // Split complementary should be base color and two colors 150° and 210° from it
+  const angles = [150, 210];
+  return angles.some(angle => 
+    Math.abs((h2 - h1 + 360) % 360 - angle) < 1 &&
+    Math.abs((h3 - h1 + 360) % 360 - (360 - angle)) < 1
+  );
+}
+
+function validateTetradic(hues) {
+  // Tetradic (rectangle) should have two pairs of complementary colors
+  const sorted = [...hues].sort((a, b) => a - b);
+  return validateComplementary(sorted[0], sorted[2]) && 
+         validateComplementary(sorted[1], sorted[3]);
+}
+
+function validateSquare(hues) {
+  // Square colors should be 90° apart
+  const sorted = [...hues].sort((a, b) => a - b);
+  for (let i = 1; i < sorted.length; i++) {
+    if (Math.abs(sorted[i] - sorted[i-1] - 90) > 1) return false;
+  }
+  return true;
+}
+
+// Additional validation utilities
+function validateMonochromatic(hues, saturations, lightnesses) {
+  // All hues should be the same
+  const baseHue = hues[0];
+  if (!hues.every(h => Math.abs(h - baseHue) < 1)) return false;
+  
+  // Saturation should be the same
+  const baseSat = saturations[0];
+  if (!saturations.every(s => Math.abs(s - baseSat) < 1)) return false;
+  
+  // Lightness should be different
+  return lightnesses.some((l, i) => 
+    lightnesses.some((l2, j) => i !== j && Math.abs(l - l2) > 5)
+  );
+}
+
+function validatePastel(saturations, lightnesses) {
+  // Pastels should have low saturation and high lightness
+  return saturations.every(s => s <= 40) && 
+         lightnesses.every(l => l >= 75);
+}
+
+function validateWarm(hues) {
+  // Warm colors should be in the red-orange-yellow range (0-60°)
+  return hues.every(h => h >= 0 && h <= 60);
+}
+
+function validateCool(hues) {
+  // Cool colors should be in the green-blue-purple range (120-300°)
+  return hues.every(h => h >= 120 && h <= 300);
+}
+
 // Color scheme generators
 function generateComplementary(hex) {
   const [h, s, l] = hexToHsl(hex);
-  return [hslToHex((h + 180) % 360, s, l)];
+  const complementary = hslToHex((h + 180) % 360, s, l);
+  // Validate
+  const [h2] = hexToHsl(complementary);
+  if (!validateComplementary(h, h2)) {
+    console.warn('Complementary color validation failed');
+  }
+  return [complementary];
 }
 
 function generateAnalogous(hex, numberOfColors = 5, angleStep = 30) {
@@ -60,51 +145,86 @@ function generateAnalogous(hex, numberOfColors = 5, angleStep = 30) {
     const hue = (h + i * angleStep + 360) % 360;
     colors.push(hslToHex(hue, s, l));
   }
+  // Validate
+  const hues = colors.map(color => hexToHsl(color)[0]);
+  if (!validateAnalogous([h, ...hues])) {
+    console.warn('Analogous colors validation failed');
+  }
   return colors;
 }
 
 function generateTriadic(hex) {
   const [h, s, l] = hexToHsl(hex);
-  return [
+  const colors = [
     hslToHex((h + 120) % 360, s, l),
     hslToHex((h + 240) % 360, s, l)
   ];
+  // Validate
+  const hues = [h, ...colors.map(color => hexToHsl(color)[0])];
+  if (!validateTriadic(hues)) {
+    console.warn('Triadic colors validation failed');
+  }
+  return colors;
 }
 
 function generateSplitComplementary(hex) {
   const [h, s, l] = hexToHsl(hex);
-  return [
+  const colors = [
     hslToHex((h + 150) % 360, s, l),
     hslToHex((h + 210) % 360, s, l)
   ];
+  // Validate
+  const hues = [h, ...colors.map(color => hexToHsl(color)[0])];
+  if (!validateSplitComplementary(...hues)) {
+    console.warn('Split complementary colors validation failed');
+  }
+  return colors;
 }
 
 function generateTetradic(hex) {
   const [h, s, l] = hexToHsl(hex);
-  return [
-    hslToHex((h + 60) % 360, s, l),  // Rectangle form: 60° intervals
+  const colors = [
+    hslToHex((h + 60) % 360, s, l),
     hslToHex((h + 180) % 360, s, l),
     hslToHex((h + 240) % 360, s, l)
   ];
+  // Validate
+  const hues = [h, ...colors.map(color => hexToHsl(color)[0])];
+  if (!validateTetradic(hues)) {
+    console.warn('Tetradic colors validation failed');
+  }
+  return colors;
 }
 
 function generateSquare(hex) {
   const [h, s, l] = hexToHsl(hex);
-  return [
-    hslToHex((h + 90) % 360, s, l),  // Square form: 90° intervals
+  const colors = [
+    hslToHex((h + 90) % 360, s, l),
     hslToHex((h + 180) % 360, s, l),
     hslToHex((h + 270) % 360, s, l)
   ];
+  // Validate
+  const hues = [h, ...colors.map(color => hexToHsl(color)[0])];
+  if (!validateSquare(hues)) {
+    console.warn('Square colors validation failed');
+  }
+  return colors;
 }
 
 function generateMonochromatic(hex, variations = 5) {
   const [h, s, l] = hexToHsl(hex);
   const colors = [];
   const half = Math.floor(variations / 2);
-  // Create a range around the base lightness
   for (let i = -half; i <= half; i++) {
-    const newL = Math.max(0, Math.min(100, l + i * 20)); // 20% steps
+    const newL = Math.max(0, Math.min(100, l + i * 20));
     colors.push(hslToHex(h, s, newL));
+  }
+  // Validate
+  const hues = colors.map(color => hexToHsl(color)[0]);
+  const saturations = colors.map(color => hexToHsl(color)[1]);
+  const lightnesses = colors.map(color => hexToHsl(color)[2]);
+  if (!validateMonochromatic(hues, saturations, lightnesses)) {
+    console.warn('Monochromatic colors validation failed');
   }
   return colors;
 }
@@ -112,23 +232,21 @@ function generateMonochromatic(hex, variations = 5) {
 function generatePastel(hex, variations = 5) {
   const [h, s, l] = hexToHsl(hex);
   const colors = [];
-  
-  // Pastel characteristics
-  const pastelSaturation = Math.min(40, s * 0.6);  // Reduce saturation but cap at 40%
-  const baseLightness = Math.max(80, l + 15);      // Ensure high lightness for pastel effect
+  const pastelSaturation = Math.min(40, s * 0.6);
+  const baseLightness = Math.max(80, l + 15);
   
   for (let i = 0; i < variations; i++) {
-    // Create a wider range of hues for more variety
-    const hueOffset = (i - (variations - 1) / 2) * 15;  // ±30° for 5 variations
+    const hueOffset = (i - (variations - 1) / 2) * 15;
     const hue = (h + hueOffset + 360) % 360;
-    
-    // Vary lightness slightly for each color
-    const lightness = baseLightness + (Math.random() * 10 - 5);  // ±5 variation
-    
-    // Vary saturation slightly for each color
-    const saturation = pastelSaturation + (Math.random() * 10 - 5);  // ±5 variation
-    
+    const lightness = baseLightness + (Math.random() * 10 - 5);
+    const saturation = pastelSaturation + (Math.random() * 10 - 5);
     colors.push(hslToHex(hue, saturation, lightness));
+  }
+  // Validate
+  const saturations = colors.map(color => hexToHsl(color)[1]);
+  const lightnesses = colors.map(color => hexToHsl(color)[2]);
+  if (!validatePastel(saturations, lightnesses)) {
+    console.warn('Pastel colors validation failed');
   }
   return colors;
 }
@@ -148,8 +266,13 @@ function generateWarm(hex, variations = 5) {
   const [h, , l] = hexToHsl(hex);
   const colors = [];
   for (let i = 0; i < variations; i++) {
-    const hue = (h + i * 10 + 10) % 60; // Keep hues in red-orange-yellow
+    const hue = (h + i * 10 + 10) % 60;
     colors.push(hslToHex(hue, 80, l));
+  }
+  // Validate
+  const hues = colors.map(color => hexToHsl(color)[0]);
+  if (!validateWarm(hues)) {
+    console.warn('Warm colors validation failed');
   }
   return colors;
 }
@@ -158,8 +281,13 @@ function generateCool(hex, variations = 5) {
   const [h, , l] = hexToHsl(hex);
   const colors = [];
   for (let i = 0; i < variations; i++) {
-    const hue = (h + 180 + i * 10) % 360; // Rotate toward blue/green/purple range
+    const hue = (h + 180 + i * 10) % 360;
     colors.push(hslToHex(hue, 70, l));
+  }
+  // Validate
+  const hues = colors.map(color => hexToHsl(color)[0]);
+  if (!validateCool(hues)) {
+    console.warn('Cool colors validation failed');
   }
   return colors;
 }
