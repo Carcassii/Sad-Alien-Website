@@ -55,14 +55,14 @@
     }
     .content {
       text-align: center;
-      padding: 8rem 2rem 2rem;
+      padding: 4rem 1rem 1rem;
     }
     .poster {
       width: 90%;
       max-width: 700px;
       border-radius: 18px;
       box-shadow: 0 4px 18px rgba(0,0,0,0.10);
-      margin: 2.2rem auto 2.2rem;
+      margin: 1.5rem auto 1.5rem;
       background: #fffdfa;
       display: block;
     }
@@ -80,7 +80,7 @@
       flex-wrap: wrap;
       justify-content: center;
       gap: 1rem;
-      margin-top: 2rem;
+      margin-top: 1.5rem;
     }
     .screenshot-gallery img {
       width: 200px;
@@ -261,9 +261,9 @@
     }
 
     .intro-balloon {
-      margin: 2rem auto 2.5rem;
+      margin: 1.5rem auto 2rem;
       max-width: 800px;
-      padding: 2.5rem 2rem;
+      padding: 2rem 1.5rem;
       background: rgba(255, 255, 255, 0.85);
       border-radius: 28px;
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
@@ -336,10 +336,10 @@
     }
 
     .section-bubble {
-      margin: 2.5rem auto 2.5rem;
+      margin: 2rem auto 2rem;
       max-width: 900px;
-      padding: 1.2rem 1rem 2.2rem 1rem;
-      background: rgba(255,255,255,0.55); /* much lighter */
+      padding: 1rem 0.8rem 1.8rem 0.8rem;
+      background: rgba(255,255,255,0.55);
       border-radius: 18px;
       box-shadow: 0 2px 12px rgba(0,0,0,0.06);
       text-align: center;
@@ -350,6 +350,84 @@
       margin-bottom: 1.3rem;
       position: relative;
       z-index: 2;
+    }
+
+    @media (max-width: 768px) {
+      .content {
+        padding: 3rem 1rem 1rem;
+      }
+      
+      .intro-balloon {
+        margin: 1rem auto 1.5rem;
+        padding: 1.5rem 1rem;
+      }
+
+      .intro-balloon h1 {
+        font-size: 2.8rem;
+      }
+
+      .intro-balloon .subtitle {
+        font-size: 1.2rem;
+      }
+
+      .intro-balloon .description-text {
+        font-size: 1rem;
+      }
+
+      .section-bubble {
+        margin: 1.5rem auto 1.5rem;
+        padding: 0.8rem 0.6rem 1.5rem 0.6rem;
+      }
+
+      .trailer h2,
+      .screenshots h2 {
+        font-size: 2.4rem;
+      }
+
+      .screenshots h2 {
+        font-size: 1.8rem;
+      }
+
+      .screenshot-gallery img {
+        width: 160px;
+      }
+    }
+
+    @media screen and (max-width: 480px) {
+      .content {
+        padding: 2.5rem 0.8rem 0.8rem;
+      }
+
+      .intro-balloon {
+        margin: 0.8rem auto 1.2rem;
+        padding: 1.2rem 0.8rem;
+      }
+
+      .intro-balloon h1 {
+        font-size: 2.2rem;
+      }
+
+      .intro-balloon .subtitle {
+        font-size: 1.1rem;
+      }
+
+      .section-bubble {
+        margin: 1.2rem auto 1.2rem;
+        padding: 0.6rem 0.5rem 1.2rem 0.5rem;
+      }
+
+      .trailer h2,
+      .screenshots h2 {
+        font-size: 2rem;
+      }
+
+      .screenshots h2 {
+        font-size: 1.6rem;
+      }
+
+      .screenshot-gallery img {
+        width: 140px;
+      }
     }
   </style>
 </head>
