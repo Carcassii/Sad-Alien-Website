@@ -3,16 +3,7 @@ function createNavbar() {
   const isHome =
     window.location.href.includes('index.html') ||
     window.location.pathname === '/';
-  
-  // Don't create navbar for home page as it's already in the HTML
-  if (isHome) {
-    const navbarElem = document.querySelector('.navbar');
-    const svgContainer = document.getElementById('svg-container');
-    if (navbarElem && svgContainer) {
-      navbarElem.appendChild(svgContainer);
-    }
-    return;
-  }
+  console.log('isHome?', isHome);
 
   const navbar = `
 <nav class="navbar">
@@ -35,6 +26,14 @@ function createNavbar() {
 </nav>`;
 
   document.body.insertAdjacentHTML('afterbegin', navbar);
+
+  if (isHome) {
+    const navbarElem = document.querySelector('.navbar');
+    const svgContainer = document.getElementById('svg-container');
+    if (navbarElem && svgContainer) {
+      navbarElem.appendChild(svgContainer);
+    }
+  }
 }
 
 // Function to create stars in the navbar
