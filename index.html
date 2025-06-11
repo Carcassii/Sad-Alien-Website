@@ -6,6 +6,7 @@
   <title>Sad Alien Studios</title>
   <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Work+Sans:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="common.css">
+  <script src="common-fixed.js" defer></script>
   <style>
     body {
       margin: 0;
@@ -17,10 +18,12 @@
     }
 
     .content {
-      text-align: center;
-      padding: 1.5rem 1rem;
       max-width: 800px;
       margin: 120px auto 20px;
+      padding: 20px;
+      color: #222;
+      font-size: 1.1em;
+      line-height: 1.6;
     }
 
     .poster {
@@ -28,7 +31,7 @@
       max-width: 700px;
       border-radius: 18px;
       box-shadow: 0 4px 18px rgba(0,0,0,0.10);
-      margin: 1.5rem auto 1.5rem;
+      margin: 1.5rem auto;
       background: #fffdfa;
       display: block;
     }
@@ -309,22 +312,23 @@
       border-radius: 18px;
       box-shadow: 0 2px 12px rgba(0,0,0,0.06);
       text-align: center;
-      position: relative;
     }
     .section-bubble h2 {
-      margin-top: 0.5rem;
-      margin-bottom: 1.3rem;
-      position: relative;
-      z-index: 2;
+      font-family: 'Patrick Hand', cursive;
+      color: #d5002c;
+      font-size: 2.4rem;
+      font-weight: 900;
+      margin-bottom: 1.2rem;
     }
 
     @media (max-width: 768px) {
       .content {
-        padding: 3rem 1rem 1rem;
+        margin: 80px 20px 20px;
+        padding: 20px;
+        font-size: 1em;
       }
       
       .intro-balloon {
-        margin: 1rem auto 1.5rem;
         padding: 1.5rem 1rem;
       }
 
@@ -340,14 +344,8 @@
         font-size: 1rem;
       }
 
-      .section-bubble {
-        margin: 1.5rem auto 1.5rem;
-        padding: 0.8rem 0.6rem 1.5rem 0.6rem;
-      }
-
-      .trailer h2,
-      .screenshots h2 {
-        font-size: 2.4rem;
+      .section-bubble h2 {
+        font-size: 2rem;
       }
 
       .screenshots h2 {
@@ -361,11 +359,12 @@
 
     @media screen and (max-width: 480px) {
       .content {
-        padding: 2.5rem 0.8rem 0.8rem;
+        margin: 50px 10px 10px;
+        padding: 15px;
+        font-size: 0.95em;
       }
 
       .intro-balloon {
-        margin: 0.8rem auto 1.2rem;
         padding: 1.2rem 0.8rem;
       }
 
@@ -377,14 +376,8 @@
         font-size: 1.1rem;
       }
 
-      .section-bubble {
-        margin: 1.2rem auto 1.2rem;
-        padding: 0.6rem 0.5rem 1.2rem 0.5rem;
-      }
-
-      .trailer h2,
-      .screenshots h2 {
-        font-size: 2rem;
+      .section-bubble h2 {
+        font-size: 1.8rem;
       }
 
       .screenshots h2 {
@@ -398,7 +391,6 @@
   </style>
 </head>
 <body>
-  <script src="common-fixed.js" defer></script>
   <div class="content">
     <div class="intro-balloon">
       <p class="subtitle">A whimsical skiing adventure full of secrets and silly characters.</p>
