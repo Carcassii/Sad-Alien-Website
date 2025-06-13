@@ -8,7 +8,7 @@ function createNavbar() {
   const navbar = `
 <nav class="navbar">
   <div class="navbar-inner">
-  
+    <h1 class="site-title">Sad Alien</h1>
     <ul class="nav-links">
       <li><a href="index.html">Home</a></li>
       <li><a href="about.html">About</a></li>
