@@ -56,8 +56,86 @@ function createStars() {
   }
 }
 
+// Screenshot modal functionality
+function initializeScreenshotModal() {
+  const screenshots = document.querySelectorAll('.screenshot-gallery img');
+  const modal = document.querySelector('.modal');
+  const modalBackdrop = document.querySelector('.modal-backdrop');
+  const modalImg = modal.querySelector('img');
+  const closeBtn = modal.querySelector('.modal-close');
+  const prevBtn = modal.querySelector('.modal-prev');
+  const nextBtn = modal.querySelector('.modal-next');
+  
+  let currentIndex = 0;
+  const screenshotArray = Array.from(screenshots);
+
+  function openModal(index) {
+    currentIndex = index;
+    modalImg.src = screenshotArray[index].src;
+    modalImg.alt = screenshotArray[index].alt;
+    
+    modalBackdrop.style.display = 'block';
+    modal.style.display = 'block';
+    
+    // Trigger animation
+    setTimeout(() => {
+      modalBackdrop.classList.add('active');
+      modal.classList.add('active');
+    }, 10);
+  }
+
+  function closeModal() {
+    modalBackdrop.classList.remove('active');
+    modal.classList.remove('active');
+    
+    setTimeout(() => {
+      modalBackdrop.style.display = 'none';
+      modal.style.display = 'none';
+    }, 300);
+  }
+
+  function showPrev() {
+    currentIndex = (currentIndex - 1 + screenshotArray.length) % screenshotArray.length;
+    modalImg.src = screenshotArray[currentIndex].src;
+    modalImg.alt = screenshotArray[currentIndex].alt;
+  }
+
+  function showNext() {
+    currentIndex = (currentIndex + 1) % screenshotArray.length;
+    modalImg.src = screenshotArray[currentIndex].src;
+    modalImg.alt = screenshotArray[currentIndex].alt;
+  }
+
+  // Add click event listeners to screenshots
+  screenshots.forEach((screenshot, index) => {
+    screenshot.addEventListener('click', () => openModal(index));
+  });
+
+  // Add event listeners to modal controls
+  closeBtn.addEventListener('click', closeModal);
+  prevBtn.addEventListener('click', showPrev);
+  nextBtn.addEventListener('click', showNext);
+  
+  // Close modal when clicking on backdrop
+  modalBackdrop.addEventListener('click', closeModal);
+  
+  // Keyboard navigation
+  document.addEventListener('keydown', (e) => {
+    if (modal.style.display === 'block') {
+      if (e.key === 'Escape') {
+        closeModal();
+      } else if (e.key === 'ArrowLeft') {
+        showPrev();
+      } else if (e.key === 'ArrowRight') {
+        showNext();
+      }
+    }
+  });
+}
+
 // Initialize everything when the page has fully loaded
 window.addEventListener('load', () => {
   createNavbar();
   createStars();
+  initializeScreenshotModal();
 });  //<— This "});" is the critical closing brace/paren for the listener
