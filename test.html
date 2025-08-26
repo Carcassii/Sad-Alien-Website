@@ -155,11 +155,7 @@
   </div>
 
   <!-- Three.js CDN -->
-  <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
-  <script src="https://unpkg.com/three@0.160.0/examples/js/controls/OrbitControls.js"></script>
-  <script src="https://unpkg.com/three@0.160.0/examples/js/postprocessing/EffectComposer.js"></script>
-  <script src="https://unpkg.com/three@0.160.0/examples/js/postprocessing/RenderPass.js"></script>
-  <script src="https://unpkg.com/three@0.160.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r160/three.min.js"></script>
 
   <script>
     // Error handling wrapper
@@ -194,48 +190,145 @@
       return 'medium';
     }
 
-    // Check if all scripts loaded properly
-    function checkScriptsLoaded() {
-      if (typeof THREE === 'undefined') {
-        console.log('THREE is undefined');
-        return false;
+    // Simple OrbitControls implementation
+    class SimpleOrbitControls {
+      constructor(camera, domElement) {
+        this.camera = camera;
+        this.domElement = domElement;
+        this.target = new THREE.Vector3(0, 2.2, 0);
+        this.enableDamping = true;
+        this.dampingFactor = 0.06;
+        this.enablePan = false;
+        this.minDistance = 5;
+        this.maxDistance = 14;
+        this.autoRotate = false;
+        this.autoRotateSpeed = 0.6;
+        
+        this.isMouseDown = false;
+        this.mouseX = 0;
+        this.mouseY = 0;
+        this.rotationX = 0;
+        this.rotationY = 0;
+        this.distance = 8;
+        
+        this.setupEventListeners();
       }
-      if (typeof THREE.OrbitControls === 'undefined') {
-        console.log('OrbitControls is undefined');
-        return false;
+      
+      setupEventListeners() {
+        this.domElement.addEventListener('mousedown', this.onMouseDown.bind(this));
+        this.domElement.addEventListener('mousemove', this.onMouseMove.bind(this));
+        this.domElement.addEventListener('mouseup', this.onMouseUp.bind(this));
+        this.domElement.addEventListener('wheel', this.onMouseWheel.bind(this));
       }
-      if (typeof THREE.EffectComposer === 'undefined') {
-        console.log('EffectComposer is undefined');
-        return false;
+      
+      onMouseDown(event) {
+        this.isMouseDown = true;
+        this.mouseX = event.clientX;
+        this.mouseY = event.clientY;
       }
-      if (typeof THREE.RenderPass === 'undefined') {
-        console.log('RenderPass is undefined');
-        return false;
+      
+      onMouseMove(event) {
+        if (!this.isMouseDown) return;
+        
+        const deltaX = event.clientX - this.mouseX;
+        const deltaY = event.clientY - this.mouseY;
+        
+        this.rotationY += deltaX * 0.01;
+        this.rotationX += deltaY * 0.01;
+        this.rotationX = Math.max(-Math.PI/2, Math.min(Math.PI/2, this.rotationX));
+        
+        this.mouseX = event.clientX;
+        this.mouseY = event.clientY;
       }
-      if (typeof THREE.UnrealBloomPass === 'undefined') {
-        console.log('UnrealBloomPass is undefined');
-        return false;
+      
+      onMouseUp() {
+        this.isMouseDown = false;
       }
-      return true;
+      
+      onMouseWheel(event) {
+        this.distance += event.deltaY * 0.01;
+        this.distance = Math.max(this.minDistance, Math.min(this.maxDistance, this.distance));
+      }
+      
+      update() {
+        if (this.autoRotate) {
+          this.rotationY += this.autoRotateSpeed * 0.01;
+        }
+        
+        const x = this.distance * Math.cos(this.rotationX) * Math.sin(this.rotationY);
+        const y = this.distance * Math.sin(this.rotationX) + this.target.y;
+        const z = this.distance * Math.cos(this.rotationX) * Math.cos(this.rotationY);
+        
+        this.camera.position.set(x, y, z);
+        this.camera.lookAt(this.target);
+      }
     }
 
-    // Wait for all scripts to load with timeout
-    let scriptLoadTimeout;
-    let scriptCheckCount = 0;
-    function waitForScripts() {
-      scriptCheckCount++;
-      console.log(`Checking scripts... attempt ${scriptCheckCount}`);
+    // Simple EffectComposer implementation
+    class SimpleEffectComposer {
+      constructor(renderer) {
+        this.renderer = renderer;
+        this.passes = [];
+        this.currentPass = 0;
+      }
       
-      if (checkScriptsLoaded()) {
-        console.log('All scripts loaded successfully!');
-        clearTimeout(scriptLoadTimeout);
-        initializeApp();
-      } else {
-        if (scriptCheckCount > 100) { // 10 seconds at 100ms intervals
-          showError('Three.js scripts failed to load. Please check your internet connection and try again.');
-          return;
+      addPass(pass) {
+        this.passes.push(pass);
+      }
+      
+      render() {
+        if (this.passes.length === 0) return;
+        
+        this.renderer.setRenderTarget(null);
+        this.renderer.clear();
+        
+        for (let i = 0; i < this.passes.length; i++) {
+          const pass = this.passes[i];
+          if (pass.enabled === false) continue;
+          
+          pass.render(this.renderer, null, null, null, null);
         }
-        scriptLoadTimeout = setTimeout(waitForScripts, 100);
+      }
+      
+      setSize(width, height) {
+        this.passes.forEach(pass => {
+          if (pass.setSize) pass.setSize(width, height);
+        });
+      }
+    }
+
+    // Simple RenderPass
+    class SimpleRenderPass {
+      constructor(scene, camera) {
+        this.scene = scene;
+        this.camera = camera;
+        this.enabled = true;
+      }
+      
+      render(renderer, writeBuffer, readBuffer, deltaTime, maskActive) {
+        renderer.setRenderTarget(writeBuffer);
+        renderer.render(this.scene, this.camera);
+      }
+    }
+
+    // Simple UnrealBloomPass
+    class SimpleUnrealBloomPass {
+      constructor(resolution, strength, radius, threshold) {
+        this.resolution = resolution;
+        this.strength = strength || 1.0;
+        this.radius = radius || 0.5;
+        this.threshold = threshold || 0.0;
+        this.enabled = true;
+      }
+      
+      render(renderer, writeBuffer, readBuffer, deltaTime, maskActive) {
+        // Simple bloom effect - just render normally for now
+        renderer.setRenderTarget(writeBuffer);
+        renderer.render(readBuffer.scene, readBuffer.camera);
+      }
+      
+      setSize(width, height) {
+        this.resolution.set(width, height);
       }
     }
 
@@ -276,18 +369,14 @@
         camera.position.set(0, 2.6, 8);
 
         /* Postprocessing */
-        const composer = new THREE.EffectComposer(renderer);
-        const renderPass = new THREE.RenderPass(scene, camera);
+        const composer = new SimpleEffectComposer(renderer);
+        const renderPass = new SimpleRenderPass(scene, camera);
         composer.addPass(renderPass);
-        const bloomPass = new THREE.UnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight), 0.9, 0.45, 0.85);
+        const bloomPass = new SimpleUnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight), 0.9, 0.45, 0.85);
         composer.addPass(bloomPass);
 
         /* Controls */
-        const controls = new THREE.OrbitControls(camera, renderer.domElement);
-        controls.enableDamping = true; controls.dampingFactor = 0.06;
-        controls.target.set(0, 2.2, 0);
-        controls.enablePan = false; controls.minDistance = 5; controls.maxDistance = 14;
-        controls.autoRotate = false; controls.autoRotateSpeed = 0.6;
+        const controls = new SimpleOrbitControls(camera, renderer.domElement);
 
         /* Skydome (procedural gradient + stars) */
         const skyGeo = new THREE.SphereGeometry(80, 64, 64);
@@ -591,9 +680,28 @@
       }
     }
 
-    // Start waiting for scripts to load
-    console.log('Starting script loading check...');
-    waitForScripts();
+    // Start the app when Three.js loads
+    if (typeof THREE !== 'undefined') {
+      console.log('THREE.js loaded, starting app...');
+      initializeApp();
+    } else {
+      // Wait for Three.js to load
+      const checkThree = setInterval(() => {
+        if (typeof THREE !== 'undefined') {
+          console.log('THREE.js loaded, starting app...');
+          clearInterval(checkThree);
+          initializeApp();
+        }
+      }, 100);
+      
+      // Timeout after 10 seconds
+      setTimeout(() => {
+        clearInterval(checkThree);
+        if (typeof THREE === 'undefined') {
+          showError('Three.js failed to load. Please check your internet connection and try again.');
+        }
+      }, 10000);
+    }
 
     // Fallback error handling
     window.addEventListener('error', (e) => {
