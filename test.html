@@ -155,7 +155,7 @@
   </div>
 
   <!-- Three.js CDN -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r160/three.min.js?v=1"></script>
+  <script src="https://unpkg.com/three@0.160.0/build/three.min.js" onerror="console.error('Three.js failed to load from unpkg')"></script>
 
   <script>
     console.log('Script starting...');
@@ -170,6 +170,23 @@
       errorMessage.textContent = message;
       error.style.display = 'grid';
       loading.style.display = 'none';
+    }
+
+    // Check if Three.js loaded properly
+    function checkThreeJS() {
+      if (typeof THREE === 'undefined') {
+        console.log('THREE is still undefined');
+        return false;
+      }
+      
+      // Check if basic Three.js objects are available
+      if (typeof THREE.WebGLRenderer === 'undefined') {
+        console.log('THREE.WebGLRenderer is undefined');
+        return false;
+      }
+      
+      console.log('Three.js loaded successfully!');
+      return true;
     }
 
     // Check WebGL support
@@ -685,13 +702,13 @@
     }
 
     // Start the app when Three.js loads
-    if (typeof THREE !== 'undefined') {
+    if (checkThreeJS()) {
       console.log('THREE.js loaded, starting app...');
       initializeApp();
     } else {
       // Wait for Three.js to load
       const checkThree = setInterval(() => {
-        if (typeof THREE !== 'undefined') {
+        if (checkThreeJS()) {
           console.log('THREE.js loaded, starting app...');
           clearInterval(checkThree);
           initializeApp();
@@ -701,7 +718,7 @@
       // Timeout after 10 seconds
       setTimeout(() => {
         clearInterval(checkThree);
-        if (typeof THREE === 'undefined') {
+        if (!checkThreeJS()) {
           showError('Three.js failed to load. Please check your internet connection and try again.');
         }
       }, 10000);
