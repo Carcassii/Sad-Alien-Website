@@ -154,7 +154,14 @@
     </div>
   </div>
 
-  <script type="module">
+  <!-- Three.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r160/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/EffectComposer.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/RenderPass.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+
+  <script>
     // Error handling wrapper
     function showError(message) {
       const error = document.getElementById('error');
@@ -187,41 +194,21 @@
       return 'medium';
     }
 
-    try {
-      // Check WebGL support first
-      if (!checkWebGL()) {
-        showError('WebGL is not supported in your browser. Please try a modern browser like Chrome, Firefox, or Safari.');
-        throw new Error('WebGL not supported');
-      }
-
-      // Use more reliable CDN with fallback
-      const CDN_BASE = 'https://cdn.jsdelivr.net/npm/three@0.160.0';
-      const FALLBACK_CDN = 'https://unpkg.com/three@0.160.0';
-      
-      // Dynamic import with error handling
-      async function loadThreeJS() {
-        try {
-          const three = await import(`${CDN_BASE}/build/three.module.js`);
-          const {OrbitControls} = await import(`${CDN_BASE}/examples/jsm/controls/OrbitControls.js`);
-          const {EffectComposer} = await import(`${CDN_BASE}/examples/jsm/postprocessing/EffectComposer.js`);
-          const {RenderPass} = await import(`${CDN_BASE}/examples/jsm/postprocessing/RenderPass.js`);
-          const {UnrealBloomPass} = await import(`${CDN_BASE}/examples/jsm/postprocessing/UnrealBloomPass.js`);
-          
-          return { three, OrbitControls, EffectComposer, RenderPass, UnrealBloomPass };
-        } catch (e) {
-          console.warn('Primary CDN failed, trying fallback...');
-          const three = await import(`${FALLBACK_CDN}/build/three.module.js`);
-          const {OrbitControls} = await import(`${FALLBACK_CDN}/examples/jsm/controls/OrbitControls.js`);
-          const {EffectComposer} = await import(`${FALLBACK_CDN}/examples/jsm/postprocessing/EffectComposer.js`);
-          const {RenderPass} = await import(`${FALLBACK_CDN}/examples/jsm/postprocessing/RenderPass.js`);
-          const {UnrealBloomPass} = await import(`${FALLBACK_CDN}/examples/jsm/postprocessing/UnrealBloomPass.js`);
-          
-          return { three, OrbitControls, EffectComposer, RenderPass, UnrealBloomPass };
+    // Wait for all scripts to load
+    window.addEventListener('load', function() {
+      try {
+        // Check WebGL support first
+        if (!checkWebGL()) {
+          showError('WebGL is not supported in your browser. Please try a modern browser like Chrome, Firefox, or Safari.');
+          return;
         }
-      }
 
-      // Load Three.js and initialize
-      loadThreeJS().then(({ three: THREE, OrbitControls, EffectComposer, RenderPass, UnrealBloomPass }) => {
+        // Check if Three.js loaded
+        if (typeof THREE === 'undefined') {
+          showError('Three.js failed to load. Please check your internet connection.');
+          return;
+        }
+
         const app = document.getElementById('app');
         const loading = document.getElementById('loading');
 
@@ -246,14 +233,14 @@
         camera.position.set(0, 2.6, 8);
 
         /* Postprocessing */
-        const composer = new EffectComposer(renderer);
-        const renderPass = new RenderPass(scene, camera);
+        const composer = new THREE.EffectComposer(renderer);
+        const renderPass = new THREE.RenderPass(scene, camera);
         composer.addPass(renderPass);
-        const bloomPass = new UnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight), 0.9, 0.45, 0.85);
+        const bloomPass = new THREE.UnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight), 0.9, 0.45, 0.85);
         composer.addPass(bloomPass);
 
         /* Controls */
-        const controls = new OrbitControls(camera, renderer.domElement);
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true; controls.dampingFactor = 0.06;
         controls.target.set(0, 2.2, 0);
         controls.enablePan = false; controls.minDistance = 5; controls.maxDistance = 14;
@@ -553,15 +540,17 @@
         });
 
         loop();
-      }).catch(error => {
-        console.error('Failed to load Three.js:', error);
-        showError(`Failed to load Three.js: ${error.message}`);
-      });
 
-    } catch (error) {
-      console.error('Initialization error:', error);
-      showError(`Initialization error: ${error.message}`);
-    }
+      } catch (error) {
+        console.error('Initialization error:', error);
+        showError(`Initialization error: ${error.message}`);
+      }
+    });
+
+    // Fallback error handling
+    window.addEventListener('error', (e) => {
+      showError(`Script error: ${e.message}`);
+    });
   </script>
 </body>
 </html>
