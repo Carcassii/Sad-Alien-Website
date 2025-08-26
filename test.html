@@ -155,11 +155,11 @@
   </div>
 
   <!-- Three.js CDN -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r160/three.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r160/examples/js/controls/OrbitControls.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r160/examples/js/postprocessing/EffectComposer.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r160/examples/js/postprocessing/RenderPass.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r160/examples/js/postprocessing/UnrealBloomPass.js"></script>
+  <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+  <script src="https://unpkg.com/three@0.160.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="https://unpkg.com/three@0.160.0/examples/js/postprocessing/EffectComposer.js"></script>
+  <script src="https://unpkg.com/three@0.160.0/examples/js/postprocessing/RenderPass.js"></script>
+  <script src="https://unpkg.com/three@0.160.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
 
   <script>
     // Error handling wrapper
@@ -197,18 +197,23 @@
     // Check if all scripts loaded properly
     function checkScriptsLoaded() {
       if (typeof THREE === 'undefined') {
+        console.log('THREE is undefined');
         return false;
       }
       if (typeof THREE.OrbitControls === 'undefined') {
+        console.log('OrbitControls is undefined');
         return false;
       }
       if (typeof THREE.EffectComposer === 'undefined') {
+        console.log('EffectComposer is undefined');
         return false;
       }
       if (typeof THREE.RenderPass === 'undefined') {
+        console.log('RenderPass is undefined');
         return false;
       }
       if (typeof THREE.UnrealBloomPass === 'undefined') {
+        console.log('UnrealBloomPass is undefined');
         return false;
       }
       return true;
@@ -216,11 +221,20 @@
 
     // Wait for all scripts to load with timeout
     let scriptLoadTimeout;
+    let scriptCheckCount = 0;
     function waitForScripts() {
+      scriptCheckCount++;
+      console.log(`Checking scripts... attempt ${scriptCheckCount}`);
+      
       if (checkScriptsLoaded()) {
+        console.log('All scripts loaded successfully!');
         clearTimeout(scriptLoadTimeout);
         initializeApp();
       } else {
+        if (scriptCheckCount > 100) { // 10 seconds at 100ms intervals
+          showError('Three.js scripts failed to load. Please check your internet connection and try again.');
+          return;
+        }
         scriptLoadTimeout = setTimeout(waitForScripts, 100);
       }
     }
@@ -228,6 +242,8 @@
     // Initialize the application
     function initializeApp() {
       try {
+        console.log('Initializing app...');
+        
         // Check WebGL support first
         if (!checkWebGL()) {
           showError('WebGL is not supported in your browser. Please try a modern browser like Chrome, Firefox, or Safari.');
@@ -241,6 +257,8 @@
         const performanceTier = getPerformanceTier();
         const SNOW_COUNT = performanceTier === 'low' ? 3000 : performanceTier === 'medium' ? 5000 : 7000;
         const PARTICLE_SIZE = performanceTier === 'low' ? 0.05 : 0.035;
+
+        console.log(`Performance tier: ${performanceTier}, Snow count: ${SNOW_COUNT}`);
 
         /* Renderer */
         const renderer = new THREE.WebGLRenderer({antialias:true, powerPreference:'high-performance'});
@@ -564,6 +582,7 @@
           bloomPass.setSize(innerWidth, innerHeight);
         });
 
+        console.log('Starting animation loop...');
         loop();
 
       } catch (error) {
@@ -573,21 +592,12 @@
     }
 
     // Start waiting for scripts to load
-    scriptLoadTimeout = setTimeout(() => {
-      if (!checkScriptsLoaded()) {
-        showError('Three.js scripts failed to load. Please check your internet connection and try again.');
-      }
-    }, 10000); // 10 second timeout
-
-    // Wait for DOM to be ready
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', waitForScripts);
-    } else {
-      waitForScripts();
-    }
+    console.log('Starting script loading check...');
+    waitForScripts();
 
     // Fallback error handling
     window.addEventListener('error', (e) => {
+      console.error('Script error:', e);
       showError(`Script error: ${e.message}`);
     });
   </script>
