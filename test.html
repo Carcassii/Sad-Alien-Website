@@ -156,10 +156,10 @@
 
   <!-- Three.js CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r160/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/controls/OrbitControls.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/EffectComposer.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/RenderPass.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r160/examples/js/controls/OrbitControls.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r160/examples/js/postprocessing/EffectComposer.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r160/examples/js/postprocessing/RenderPass.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r160/examples/js/postprocessing/UnrealBloomPass.js"></script>
 
   <script>
     // Error handling wrapper
@@ -194,18 +194,43 @@
       return 'medium';
     }
 
-    // Wait for all scripts to load
-    window.addEventListener('load', function() {
+    // Check if all scripts loaded properly
+    function checkScriptsLoaded() {
+      if (typeof THREE === 'undefined') {
+        return false;
+      }
+      if (typeof THREE.OrbitControls === 'undefined') {
+        return false;
+      }
+      if (typeof THREE.EffectComposer === 'undefined') {
+        return false;
+      }
+      if (typeof THREE.RenderPass === 'undefined') {
+        return false;
+      }
+      if (typeof THREE.UnrealBloomPass === 'undefined') {
+        return false;
+      }
+      return true;
+    }
+
+    // Wait for all scripts to load with timeout
+    let scriptLoadTimeout;
+    function waitForScripts() {
+      if (checkScriptsLoaded()) {
+        clearTimeout(scriptLoadTimeout);
+        initializeApp();
+      } else {
+        scriptLoadTimeout = setTimeout(waitForScripts, 100);
+      }
+    }
+
+    // Initialize the application
+    function initializeApp() {
       try {
         // Check WebGL support first
         if (!checkWebGL()) {
           showError('WebGL is not supported in your browser. Please try a modern browser like Chrome, Firefox, or Safari.');
-          return;
-        }
-
-        // Check if Three.js loaded
-        if (typeof THREE === 'undefined') {
-          showError('Three.js failed to load. Please check your internet connection.');
           return;
         }
 
@@ -545,7 +570,21 @@
         console.error('Initialization error:', error);
         showError(`Initialization error: ${error.message}`);
       }
-    });
+    }
+
+    // Start waiting for scripts to load
+    scriptLoadTimeout = setTimeout(() => {
+      if (!checkScriptsLoaded()) {
+        showError('Three.js scripts failed to load. Please check your internet connection and try again.');
+      }
+    }, 10000); // 10 second timeout
+
+    // Wait for DOM to be ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', waitForScripts);
+    } else {
+      waitForScripts();
+    }
 
     // Fallback error handling
     window.addEventListener('error', (e) => {
