@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML Test Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        h1, h2, h3 {
+            color: #333;
+        }
+        
+        .test-section {
+            border: 2px solid #ddd;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .test-section h3 {
+            margin-top: 0;
+            color: #007bff;
+        }
+        
+        .form-group {
+            margin: 15px 0;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        
+        button:hover {
+            background-color: #0056b3;
+        }
+        
+        .color-box {
+            width: 50px;
+            height: 50px;
+            display: inline-block;
+            margin: 5px;
+            border: 1px solid #333;
+        }
+        
+        .table-test {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        .table-test th, .table-test td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        
+        .table-test th {
+            background-color: #f2f2f2;
+        }
+        
+        .alert {
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        
+        .alert-success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        
+        .alert-warning {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+        }
+        
+        .alert-error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        
+        .flex-container {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .flex-item {
+            flex: 1;
+            min-width: 200px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+        }
+        
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .grid-item {
+            padding: 15px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+            text-align: center;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background-color: #007bff;
+            transition: width 0.3s ease;
+        }
+        
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 120px;
+            background-color: #555;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -60px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 HTML Test Page</h1>
+        <p>This page contains various HTML elements for testing purposes. Use it to test your website's styling, functionality, and responsiveness.</p>
+        
+        <!-- Headings Test -->
+        <div class="test-section">
+            <h3>📝 Headings</h3>
+            <h1>Heading 1 (H1)</h1>
+            <h2>Heading 2 (H2)</h2>
+            <h3>Heading 3 (H3)</h3>
+            <h4>Heading 4 (H4)</h4>
+            <h5>Heading 5 (H5)</h5>
+            <h6>Heading 6 (H6)</h6>
+        </div>
+
+        <!-- Text Formatting Test -->
+        <div class="test-section">
+            <h3>📄 Text Formatting</h3>
+            <p>This is a regular paragraph with <strong>bold text</strong>, <em>italic text</em>, and <u>underlined text</u>.</p>
+            <p>Here's some <mark>highlighted text</mark> and <del>deleted text</del>.</p>
+            <p><small>This is small text</small> and <big>this is big text</big>.</p>
+            <p>Subscript: H<sub>2</sub>O and Superscript: E=mc<sup>2</sup></p>
+            <blockquote>This is a blockquote. It's used for quoting text from another source.</blockquote>
+            <pre>This is preformatted text.
+It preserves both spaces and line breaks.</pre>
+            <code>This is inline code</code>
+        </div>
+
+        <!-- Lists Test -->
+        <div class="test-section">
+            <h3>📋 Lists</h3>
+            <h4>Unordered List:</h4>
+            <ul>
+                <li>First item</li>
+                <li>Second item</li>
+                <li>Third item with <a href="#">link</a></li>
+                <li>Nested list:
+                    <ul>
+                        <li>Nested item 1</li>
+                        <li>Nested item 2</li>
+                    </ul>
+                </li>
+            </ul>
+            
+            <h4>Ordered List:</h4>
+            <ol>
+                <li>First step</li>
+                <li>Second step</li>
+                <li>Third step</li>
+            </ol>
+            
+            <h4>Definition List:</h4>
+            <dl>
+                <dt>HTML</dt>
+                <dd>HyperText Markup Language</dd>
+                <dt>CSS</dt>
+                <dd>Cascading Style Sheets</dd>
+            </dl>
+        </div>
+
+        <!-- Links Test -->
+        <div class="test-section">
+            <h3>🔗 Links</h3>
+            <p><a href="https://www.google.com" target="_blank">External link (opens in new tab)</a></p>
+            <p><a href="#top">Internal link (anchor)</a></p>
+            <p><a href="mailto:test@example.com">Email link</a></p>
+            <p><a href="tel:+1234567890">Phone link</a></p>
+            <p><a href="#" onclick="alert('Link clicked!')">JavaScript link</a></p>
+        </div>
+
+        <!-- Images Test -->
+        <div class="test-section">
+            <h3>🖼️ Images</h3>
+            <p>Placeholder images:</p>
+            <img src="https://via.placeholder.com/150x100/007bff/ffffff?text=Blue" alt="Blue placeholder" style="margin: 5px;">
+            <img src="https://via.placeholder.com/150x100/28a745/ffffff?text=Green" alt="Green placeholder" style="margin: 5px;">
+            <img src="https://via.placeholder.com/150x100/dc3545/ffffff?text=Red" alt="Red placeholder" style="margin: 5px;">
+            <br>
+            <p>Responsive image:</p>
+            <img src="https://via.placeholder.com/400x200/6c757d/ffffff?text=Responsive" alt="Responsive placeholder" style="max-width: 100%; height: auto;">
+        </div>
+
+        <!-- Forms Test -->
+        <div class="test-section">
+            <h3>📝 Forms</h3>
+            <form action="#" method="post">
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" placeholder="Enter your name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" placeholder="Enter password">
+                </div>
+                
+                <div class="form-group">
+                    <label for="age">Age:</label>
+                    <input type="number" id="age" name="age" min="0" max="120" placeholder="Enter your age">
+                </div>
+                
+                <div class="form-group">
+                    <label for="birthday">Birthday:</label>
+                    <input type="date" id="birthday" name="birthday">
+                </div>
+                
+                <div class="form-group">
+                    <label for="color">Favorite Color:</label>
+                    <input type="color" id="color" name="color" value="#007bff">
+                </div>
+                
+                <div class="form-group">
+                    <label for="range">Rating (1-10):</label>
+                    <input type="range" id="range" name="range" min="1" max="10" value="5">
+                    <span id="rangeValue">5</span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="file">Upload File:</label>
+                    <input type="file" id="file" name="file">
+                </div>
+                
+                <div class="form-group">
+                    <label for="country">Country:</label>
+                    <select id="country" name="country">
+                        <option value="">Select a country</option>
+                        <option value="us">United States</option>
+                        <option value="ca">Canada</option>
+                        <option value="uk">United Kingdom</option>
+                        <option value="au">Australia</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Interests:</label>
+                    <div>
+                        <input type="checkbox" id="sports" name="interests" value="sports">
+                        <label for="sports" style="display: inline;">Sports</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" id="music" name="interests" value="music">
+                        <label for="music" style="display: inline;">Music</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" id="reading" name="interests" value="reading">
+                        <label for="reading" style="display: inline;">Reading</label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Gender:</label>
+                    <div>
+                        <input type="radio" id="male" name="gender" value="male">
+                        <label for="male" style="display: inline;">Male</label>
+                    </div>
+                    <div>
+                        <input type="radio" id="female" name="gender" value="female">
+                        <label for="female" style="display: inline;">Female</label>
+                    </div>
+                    <div>
+                        <input type="radio" id="other" name="gender" value="other">
+                        <label for="other" style="display: inline;">Other</label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="message">Message:</label>
+                    <textarea id="message" name="message" rows="4" placeholder="Enter your message"></textarea>
+                </div>
+                
+                <button type="submit">Submit Form</button>
+                <button type="reset">Reset Form</button>
+            </form>
+        </div>
+
+        <!-- Tables Test -->
+        <div class="test-section">
+            <h3>📊 Tables</h3>
+            <table class="table-test">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Age</th>
+                        <th>City</th>
+                        <th>Occupation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>John Doe</td>
+                        <td>30</td>
+                        <td>New York</td>
+                        <td>Developer</td>
+                    </tr>
+                    <tr>
+                        <td>Jane Smith</td>
+                        <td>25</td>
+                        <td>Los Angeles</td>
+                        <td>Designer</td>
+                    </tr>
+                    <tr>
+                        <td>Bob Johnson</td>
+                        <td>35</td>
+                        <td>Chicago</td>
+                        <td>Manager</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Buttons Test -->
+        <div class="test-section">
+            <h3>🔘 Buttons</h3>
+            <button type="button">Default Button</button>
+            <button type="button" disabled>Disabled Button</button>
+            <button type="button" style="background-color: #28a745;">Success Button</button>
+            <button type="button" style="background-color: #dc3545;">Danger Button</button>
+            <button type="button" style="background-color: #ffc107; color: #000;">Warning Button</button>
+            <button type="button" style="background-color: #6c757d;">Secondary Button</button>
+        </div>
+
+        <!-- Alerts Test -->
+        <div class="test-section">
+            <h3>⚠️ Alerts</h3>
+            <div class="alert alert-success">
+                <strong>Success!</strong> This is a success alert.
+            </div>
+            <div class="alert alert-warning">
+                <strong>Warning!</strong> This is a warning alert.
+            </div>
+            <div class="alert alert-error">
+                <strong>Error!</strong> This is an error alert.
+            </div>
+        </div>
+
+        <!-- Progress Bars Test -->
+        <div class="test-section">
+            <h3>📈 Progress Bars</h3>
+            <label>Progress: 25%</label>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 25%;"></div>
+            </div>
+            
+            <label>Progress: 50%</label>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 50%;"></div>
+            </div>
+            
+            <label>Progress: 75%</label>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 75%;"></div>
+            </div>
+            
+            <label>Progress: 100%</label>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 100%;"></div>
+            </div>
+        </div>
+
+        <!-- Flexbox Test -->
+        <div class="test-section">
+            <h3>📐 Flexbox Layout</h3>
+            <div class="flex-container">
+                <div class="flex-item">
+                    <h4>Flex Item 1</h4>
+                    <p>This is a flex item that will grow and shrink based on available space.</p>
+                </div>
+                <div class="flex-item">
+                    <h4>Flex Item 2</h4>
+                    <p>Another flex item with responsive behavior.</p>
+                </div>
+                <div class="flex-item">
+                    <h4>Flex Item 3</h4>
+                    <p>Third flex item to demonstrate flexbox capabilities.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Grid Test -->
+        <div class="test-section">
+            <h3>🔲 CSS Grid Layout</h3>
+            <div class="grid-container">
+                <div class="grid-item">Grid Item 1</div>
+                <div class="grid-item">Grid Item 2</div>
+                <div class="grid-item">Grid Item 3</div>
+                <div class="grid-item">Grid Item 4</div>
+                <div class="grid-item">Grid Item 5</div>
+                <div class="grid-item">Grid Item 6</div>
+            </div>
+        </div>
+
+        <!-- Interactive Elements Test -->
+        <div class="test-section">
+            <h3>🎮 Interactive Elements</h3>
+            <p>Hover over this <span class="tooltip">text<span class="tooltiptext">This is a tooltip!</span></span> to see a tooltip.</p>
+            
+            <details>
+                <summary>Click to expand details</summary>
+                <p>This is hidden content that can be expanded and collapsed.</p>
+            </details>
+            
+            <p>Click the button below to test JavaScript:</p>
+            <button onclick="testJavaScript()">Test JavaScript</button>
+            <button onclick="changeColors()">Change Colors</button>
+            <button onclick="showTime()">Show Current Time</button>
+            
+            <div id="jsOutput" style="margin-top: 15px; padding: 10px; background-color: #f8f9fa; border-radius: 4px;"></div>
+        </div>
+
+        <!-- Media Test -->
+        <div class="test-section">
+            <h3>🎵 Media Elements</h3>
+            <h4>Video (placeholder):</h4>
+            <video width="320" height="240" controls>
+                <source src="movie.mp4" type="video/mp4">
+                <source src="movie.ogg" type="video/ogg">
+                Your browser does not support the video tag.
+            </video>
+            
+            <h4>Audio (placeholder):</h4>
+            <audio controls>
+                <source src="audio.mp3" type="audio/mpeg">
+                <source src="audio.ogg" type="audio/ogg">
+                Your browser does not support the audio tag.
+            </audio>
+        </div>
+
+        <!-- Special Characters Test -->
+        <div class="test-section">
+            <h3>🔤 Special Characters</h3>
+            <p>HTML Entities: &amp; &lt; &gt; &quot; &apos; &copy; &reg; &trade; &euro; &pound; &yen; &cent;</p>
+            <p>Unicode: ☀️ 🌙 ⭐ 🎉 🚀 💻 🎨 🎵 🎮 📱 🌍</p>
+            <p>Math symbols: ± × ÷ = ≠ ≤ ≥ ∞ ∑ ∏ ∫</p>
+        </div>
+
+        <!-- Responsive Test -->
+        <div class="test-section">
+            <h3>📱 Responsive Design Test</h3>
+            <p>Resize your browser window to test responsive behavior.</p>
+            <div style="background-color: #007bff; color: white; padding: 20px; text-align: center; margin: 10px 0;">
+                <p>This box should adapt to different screen sizes</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript for interactive elements
+        function testJavaScript() {
+            document.getElementById('jsOutput').innerHTML = '<strong>JavaScript is working!</strong> This message was generated by JavaScript.';
+        }
+        
+        function changeColors() {
+            const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#feca57'];
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+            document.body.style.backgroundColor = randomColor;
+            setTimeout(() => {
+                document.body.style.backgroundColor = '#f5f5f5';
+            }, 2000);
+        }
+        
+        function showTime() {
+            const now = new Date();
+            const timeString = now.toLocaleString();
+            document.getElementById('jsOutput').innerHTML = '<strong>Current time:</strong> ' + timeString;
+        }
+        
+        // Update range value display
+        document.getElementById('range').addEventListener('input', function() {
+            document.getElementById('rangeValue').textContent = this.value;
+        });
+        
+        // Form submission handler
+        document.querySelector('form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Form submitted! (This is just a test - no data was actually sent)');
+        });
+        
+        // Add some interactive features
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('HTML Test Page loaded successfully!');
+            
+            // Add click handlers to all buttons for testing
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(button => {
+                button.addEventListener('click', function() {
+                    console.log('Button clicked:', this.textContent);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
