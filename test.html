@@ -342,11 +342,16 @@
         this.enabled = true;
       }
       
-      render(renderer, writeBuffer, readBuffer, deltaTime, maskActive) {
-        // Simple bloom effect - just render normally for now
-        renderer.setRenderTarget(writeBuffer);
-        renderer.render(readBuffer.scene, readBuffer.camera);
-      }
+             render(renderer, writeBuffer, readBuffer, deltaTime, maskActive) {
+         // Simple bloom effect - just render normally for now
+         renderer.setRenderTarget(writeBuffer);
+         if (readBuffer && readBuffer.scene && readBuffer.camera) {
+           renderer.render(readBuffer.scene, readBuffer.camera);
+         } else {
+           // Fallback: render the main scene
+           renderer.render(renderer.scene, renderer.camera);
+         }
+       }
       
       setSize(width, height) {
         this.resolution.set(width, height);
@@ -389,12 +394,9 @@
         const camera = new THREE.PerspectiveCamera(55, innerWidth/innerHeight, 0.1, 200);
         camera.position.set(0, 2.6, 8);
 
-        /* Postprocessing */
-        const composer = new SimpleEffectComposer(renderer);
-        const renderPass = new SimpleRenderPass(scene, camera);
-        composer.addPass(renderPass);
-        const bloomPass = new SimpleUnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight), 0.9, 0.45, 0.85);
-        composer.addPass(bloomPass);
+                 /* Postprocessing - simplified for now */
+         let composer = null;
+         let bloomPass = null;
 
         /* Controls */
         const controls = new SimpleOrbitControls(camera, renderer.domElement);
@@ -577,9 +579,9 @@
         };
 
         let windX = 0; let windHold = false; let night = true; let auroraOn = true;
-        ui.wind.addEventListener('input', ()=> windX = parseFloat(ui.wind.value));
-        ui.bloom.addEventListener('input', ()=> bloomPass.strength = parseFloat(ui.bloom.value));
-        ui.snow.addEventListener('input', ()=> {});
+                 ui.wind.addEventListener('input', ()=> windX = parseFloat(ui.wind.value));
+         ui.bloom.addEventListener('input', ()=> {}); // Bloom disabled for now
+         ui.snow.addEventListener('input', ()=> {});
 
         ui.dayNight.addEventListener('click', ()=> toggleDayNight());
         ui.auroraBtn.addEventListener('click', ()=> {auroraOn = !auroraOn; auroraMat.uniforms.uOn.value = auroraOn ? 1.0 : 0.0; ui.auroraBtn.classList.toggle('active', auroraOn);});
@@ -603,7 +605,7 @@
           hemi.intensity = night? 0.5: 0.9; 
           groundMat.color.set(night? 0xeef5ff: 0xffffff);
           for(const h of houses){ for(const w of h.userData.windows){ w.material.emissiveIntensity = night? 1.6: 0.2; } }
-          bloomPass.strength = night? 0.9: 0.65; ui.bloom.value=bloomPass.strength.toFixed(2);
+                     // bloomPass.strength = night? 0.9: 0.65; ui.bloom.value=bloomPass.strength.toFixed(2);
           ui.dayNight.classList.toggle('active', night);
         }
 
@@ -673,7 +675,7 @@
           inner.rotation.y += 0.02 * dt; // slow scenic spin
           updateSnow(dt);
 
-          composer.render();
+                     renderer.render(scene, camera);
           requestAnimationFrame(loop);
         }
 
@@ -686,11 +688,10 @@
         setTimeout(()=> loading.remove(), 1000);
 
         /* Resize */
-        addEventListener('resize', ()=>{
-          camera.aspect = innerWidth/innerHeight; camera.updateProjectionMatrix();
-          renderer.setSize(innerWidth, innerHeight); composer.setSize(innerWidth, innerHeight);
-          bloomPass.setSize(innerWidth, innerHeight);
-        });
+                 addEventListener('resize', ()=>{
+           camera.aspect = innerWidth/innerHeight; camera.updateProjectionMatrix();
+           renderer.setSize(innerWidth, innerHeight);
+         });
 
         console.log('Starting animation loop...');
         loop();
