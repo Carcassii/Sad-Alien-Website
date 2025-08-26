@@ -155,11 +155,15 @@
   </div>
 
   <!-- Three.js CDN -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r160/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r160/three.min.js?v=1"></script>
 
   <script>
+    console.log('Script starting...');
+    console.log('THREE object available:', typeof THREE);
+    
     // Error handling wrapper
     function showError(message) {
+      console.log('Showing error:', message);
       const error = document.getElementById('error');
       const loading = document.getElementById('loading');
       const errorMessage = document.getElementById('errorMessage');
