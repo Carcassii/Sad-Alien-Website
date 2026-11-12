@@ -3,7 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sad Alien Studios</title>
+  <title>It&rsquo;s Nobby! Skiing For The Scoop | Sad Alien Studios</title>
+  <meta name="description" content="Ski the Strudel Mountains, interview eccentric characters, and investigate a missing champion in It&rsquo;s Nobby!, a 3D skiing adventure from Sad Alien Studios.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="It&rsquo;s Nobby! Skiing For The Scoop">
+  <meta property="og:description" content="Ski the Strudel Mountains and investigate a missing champion in this whimsical 3D adventure.">
+  <link rel="canonical" href="https://sad-alien.com/">
+  <meta property="og:url" content="https://sad-alien.com/">
+  <meta property="og:image" content="https://sad-alien.com/Images/nobby-poster.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="849">
+  <meta property="og:image:alt" content="It&rsquo;s Nobby! Skiing For The Scoop game poster">
+  <meta name="twitter:card" content="summary_large_image">
   <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Work+Sans:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="common.css">
   <script src="common-fixed.js" defer></script>
@@ -26,6 +37,7 @@
 
     .poster {
       width: 90%;
+      height: auto;
       max-width: 700px;
       border-radius: 18px;
       box-shadow: 0 4px 18px rgba(0,0,0,0.10);
@@ -36,7 +48,8 @@
     .trailer iframe {
       width: 100%;
       max-width: 720px;
-      height: 405px;
+      height: auto;
+      aspect-ratio: 16 / 9;
       border: none;
       border-radius: 12px;
       box-shadow: 0 8px 24px rgba(0,0,0,0.2);
@@ -51,9 +64,12 @@
     }
     .screenshot-gallery img {
       width: 200px;
+      height: auto;
+      display: block;
       border-radius: 12px;
       transition: transform 0.3s ease;
     }
+    .screenshot-gallery a:focus-visible img,
     .screenshot-gallery img:hover {
       transform: scale(1.05);
       cursor: pointer;
@@ -126,43 +142,33 @@
       }
     }
 
-    /* Modal styles */
-    .modal-backdrop {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(10, 29, 55, 0.9);
-      z-index: 1000;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-
-    .modal-backdrop.active {
-      opacity: 1;
-    }
-
     .modal {
-      display: none;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) scale(0.9);
-      z-index: 1001;
-      opacity: 0;
-      transition: all 0.3s ease;
-      width: 90vw;
-      height: 80vh;
-      background: rgba(10, 29, 55, 0.4);
+      box-sizing: border-box;
+      width: min(92vw, 1100px);
+      height: 84vh;
+      background: #0a1d37;
+      border: 0;
       border-radius: 12px;
-      padding: 20px;
+      padding: 48px 12px 12px;
     }
 
-    .modal.active {
-      opacity: 1;
-      transform: translate(-50%, -50%) scale(1);
+    .modal::backdrop {
+      background: rgba(10, 29, 55, 0.9);
+    }
+
+    .trailer-button {
+      display: inline-block;
+      margin-top: 1.25rem;
+      padding: 0.75rem 1.2rem;
+      border-radius: 12px;
+      color: white;
+      background: #a90029;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .trailer-button:hover {
+      background: #83001f;
     }
 
     .modal-content {
@@ -183,7 +189,7 @@
 
     .modal-close {
       position: absolute;
-      top: -40px;
+      top: 0;
       right: 0;
       color: white;
       font-size: 32px;
@@ -389,50 +395,47 @@
   </style>
 </head>
 <body>
-  <div class="content">
+  <main class="content">
     <div class="intro-balloon">
+      <h1>It&rsquo;s Nobby! Skiing For The Scoop</h1>
       <p class="subtitle">A whimsical skiing adventure full of secrets and silly characters.</p>
-      <p class="description-text">'It's Nobby! Skiing For The Scoop' is a humorous 3D skiing adventure game in which players become a blogger-journalist investigating the mysterious disappearance of a skiing champion. Explore the Strudel Mountains ski resort, meet eccentric characters, complete thrilling downhill runs, gather coins, and unlock upgrades. Every slope you master and every weird interview you do brings you closer to unraveling the hidden truth. Will you be able to find the champion?</p>
+      <p class="description-text">Ski the Strudel Mountains as a blogger investigating a missing champion. Interview eccentric locals, master downhill runs, and unlock upgrades as you chase the story.</p>
+      <a class="trailer-button" href="#trailer">Watch the trailer</a>
     </div>
 
     <div class="section-bubble">
-      <img src="Images/It's Nobby!.png" alt="It's Nobby!" class="poster" />
+      <img src="Images/nobby-poster.jpg" alt="It&rsquo;s Nobby! game poster" class="poster" width="1200" height="849" decoding="async">
     </div>
 
-    <section class="trailer section-bubble">
+    <section id="trailer" class="trailer section-bubble">
       <h2>Watch the Trailer</h2>
-      <iframe src="https://www.youtube.com/embed/rCQCFR6zvLw" allowfullscreen></iframe>
+      <iframe src="https://www.youtube.com/embed/rCQCFR6zvLw" title="It&rsquo;s Nobby! gameplay trailer" loading="lazy" allowfullscreen></iframe>
     </section>
 
     <section class="screenshots section-bubble">
       <h2>Take a Peek!</h2>
       <div class="screenshot-gallery">
-        <img src="Images/screenshot1.png" alt="Gameplay Screenshot 1" />
-        <img src="Images/screenshot2.png" alt="Gameplay Screenshot 2" />
-        <img src="Images/screenshot3.png" alt="Gameplay Screenshot 3" />
-        <img src="Images/screenshot4.png" alt="Gameplay Screenshot 4" />
-        <img src="Images/Screenshot 5.png" alt="Gameplay Screenshot 5" />
-        <img src="Images/Screenshot 6.png" alt="Gameplay Screenshot 6" />
-        <img src="Images/Screenshot 7.png" alt="Gameplay Screenshot 7" />
+        <a href="Images/screenshot1.png"><img src="Images/screenshot-1-thumb.jpg" alt="View gameplay screenshot 1" width="480" height="270" loading="lazy" decoding="async"></a>
+        <a href="Images/screenshot2.png"><img src="Images/screenshot-2-thumb.jpg" alt="View gameplay screenshot 2" width="480" height="270" loading="lazy" decoding="async"></a>
+        <a href="Images/screenshot3.png"><img src="Images/screenshot-3-thumb.jpg" alt="View gameplay screenshot 3" width="480" height="270" loading="lazy" decoding="async"></a>
+        <a href="Images/screenshot4.png"><img src="Images/screenshot-4-thumb.jpg" alt="View gameplay screenshot 4" width="480" height="270" loading="lazy" decoding="async"></a>
+        <a href="Images/Screenshot%205.png"><img src="Images/screenshot-5-thumb.jpg" alt="View gameplay screenshot 5" width="480" height="270" loading="lazy" decoding="async"></a>
+        <a href="Images/Screenshot%206.png"><img src="Images/screenshot-6-thumb.jpg" alt="View gameplay screenshot 6" width="480" height="270" loading="lazy" decoding="async"></a>
+        <a href="Images/Screenshot%207.png"><img src="Images/screenshot-7-thumb.jpg" alt="View gameplay screenshot 7" width="480" height="270" loading="lazy" decoding="async"></a>
       </div>
     </section>
-  </div>
+  </main>
 
   <div id="flower-container"></div>
 
-  <!-- Add Modal Structure -->
-  <div class="modal-backdrop"></div>
-  <div class="modal">
-    <button class="modal-close">×</button>
+  <dialog class="modal" aria-label="Gameplay screenshot">
+    <button type="button" class="modal-close" aria-label="Close gallery" autofocus>×</button>
     <div class="modal-content">
-      <img src="" alt="Full size screenshot" />
+      <img alt="">
     </div>
-    <button class="modal-nav modal-prev">❮</button>
-    <button class="modal-nav modal-next">❯</button>
-  </div>
-
-
-  </script>
+    <button type="button" class="modal-nav modal-prev" aria-label="Previous screenshot">❮</button>
+    <button type="button" class="modal-nav modal-next" aria-label="Next screenshot">❯</button>
+  </dialog>
 </body>
 </html>
 
